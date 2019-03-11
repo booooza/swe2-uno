@@ -33,7 +33,7 @@ The following describes the official UNO game rules
 * 4 Wild cards
 * 4 Wild Draw 4 cards
 
-![alt text][UNO_cards_deck.svg]
+![alt text](UNO_cards_deck.svg)
 
 ### Setup
 1. Every player starts with seven cards, and they are dealt face down. 
