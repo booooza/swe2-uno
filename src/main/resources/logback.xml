@@ -1,0 +1,33 @@
+<!-- reload each minute -->
+<configuration scan="true">
+
+    <!-- console appender to log into out stream -->
+    <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <Pattern>%d %5p %50.50c{50}:%4L - %m%n</Pattern>
+        </encoder>
+    </appender>
+
+    <root level="INFO">
+        <appender-ref ref="console" />
+    </root>
+
+    <logger name="org.visary.app_backend" level="DEBUG">
+        <appender-ref ref="console" />
+    </logger>
+
+    <logger name="org.springframework" level="WARN">
+        <appender-ref ref="console" />
+    </logger>
+
+    <logger name="org.springframework.transaction" level="WARN">
+        <appender-ref ref="console" />
+    </logger>
+
+    <logger name="org.hibernate" level="WARN">
+        <appender-ref ref="console" />
+    </logger>
+    <logger name="org.hibernate.type" level="WARN">
+        <appender-ref ref="console" />
+    </logger>
+</configuration>
