@@ -9,7 +9,7 @@ import java.awt.Color;
 public abstract class AbstractCard implements ICard {
     // Attributes:
     private Color color;
-    private int value;
+    private int number;
 
     // Methods:
     public void setColor(Color color) {
@@ -20,11 +20,11 @@ public abstract class AbstractCard implements ICard {
         return this.color;
     };
 
-    public void setValue(int value) {
-        this.value = value;
+    public void setNumber(int number) {
+        this.number = number;
     };
 
-    public int getValue() {
-        return this.value;
+    public int getNumber() {
+        return this.number;
     };
 }

@@ -8,6 +8,6 @@ import java.awt.Color;
 public interface ICard {
     void setColor(Color color);
     Color getColor();
-    void setValue(int value);
-    int getValue();
+    void setNumber(int number);
+    int getNumber();
 }

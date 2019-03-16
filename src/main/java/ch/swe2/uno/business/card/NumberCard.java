@@ -10,10 +10,10 @@ public class NumberCard extends AbstractCard {
     /**
      * Constructor for NumberCard
      * @param color Color
-     * @param value int
+     * @param number int
      */
-    public NumberCard(Color color, int value) {
+    public NumberCard(Color color, int number) {
         this.setColor(color);
-        this.setValue(value);
+        this.setNumber(number);
     }
 }
