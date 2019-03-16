@@ -28,27 +28,11 @@ public class PlayerFactory {
     }
 
     /**
-     * Creates a specified number of players and returns their ids
-     *
-     * @param number the personType can be found in person.PersonType
-     * @return personId
-     */
-    public ArrayList<IPlayer> createPlayers(int number) {
-        ArrayList<IPlayer> players = new ArrayList<IPlayer> ();
-        ArrayList<ICard> hand = new ArrayList<ICard> ();
-
-        for(int i = 0; i == number; ++i) {
-            players.add(createPlayer("Name", hand));
-        }
-
-        return players;
-    }
-
-    /**
      * Create a single player
-     * @return ourInstance
+     * @return player
      */
-    public IPlayer createPlayer(String name, ArrayList<ICard> hand) {
+    public IPlayer createPlayer(String name) {
+        ArrayList<ICard> hand = new ArrayList<ICard> ();
         IPlayer player = new Player(name, hand);
         return player;
     }
