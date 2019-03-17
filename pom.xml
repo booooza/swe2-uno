@@ -65,7 +65,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <mainClass>ch.swe2.uno.presentation.gui.JavaFXClient</mainClass>
+                    <mainClass>ch.swe2.uno.presentation.gui.MainApp</mainClass>
                 </configuration>
             </plugin>
         </plugins>

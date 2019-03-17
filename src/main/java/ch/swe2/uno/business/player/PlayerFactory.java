@@ -37,7 +37,7 @@ public class PlayerFactory {
      */
     public IPlayer createPlayer(String name) {
         ArrayList<ICard> hand = new ArrayList<>();
-        IPlayer player = new Player(name, hand);
+        IPlayer player = new Player(name);
         logger.info("Created player {}", name);
         return player;
     }

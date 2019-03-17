@@ -1,8 +1,6 @@
 package ch.swe2.uno.business.player;
 
-import ch.swe2.uno.business.card.ICard;
-
-import java.util.ArrayList;
+import javafx.beans.property.StringProperty;
 
 /**
  * Interface for players
@@ -10,8 +8,5 @@ import java.util.ArrayList;
 public interface IPlayer {
     void setName(String name);
     String getName();
-    void setHand(ArrayList<ICard> hand);
-    ArrayList<ICard> getHand();
-    void draw(ICard card);
-    int getHandSize();
+    StringProperty nameProperty();
 }

@@ -100,10 +100,10 @@ public class Deck {
               Move 7 cards to hand of player
              */
             for (int i = 0; i < 7; i++) {
-                player.draw(drawPile.get(i));
+                // player.draw(drawPile.get(i));
                 drawPile.remove(i);
             }
-            logger.info("Distributed {} cards to {}", player.getHandSize(), player.getName());
+            // logger.info("Distributed {} cards to {}", player.getHandSize(), player.getName());
         }
         logger.info("{} cards remaining in deck", this.getDeckSize());
     }
