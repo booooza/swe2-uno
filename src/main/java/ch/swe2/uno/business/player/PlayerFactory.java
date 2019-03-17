@@ -1,6 +1,8 @@
 package ch.swe2.uno.business.player;
 
 import ch.swe2.uno.business.card.ICard;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 
@@ -9,6 +11,8 @@ import java.util.ArrayList;
  * Implementation of a singleton factory
  */
 public class PlayerFactory {
+    private static final Logger logger = LoggerFactory.getLogger(PlayerFactory.class);
+
     /**
      * Defines the private instance attribute
      */
@@ -32,8 +36,9 @@ public class PlayerFactory {
      * @return player
      */
     public IPlayer createPlayer(String name) {
-        ArrayList<ICard> hand = new ArrayList<ICard> ();
+        ArrayList<ICard> hand = new ArrayList<>();
         IPlayer player = new Player(name, hand);
+        logger.info("Created player {}", name);
         return player;
     }
 }
