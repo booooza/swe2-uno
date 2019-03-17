@@ -3,7 +3,7 @@ package ch.swe2.uno.business.card;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.DisplayName;
 
-@DisplayName("NumberCardTest")
+@DisplayName("NumberCard")
 public class NumberCardTest {
     @Test
     @DisplayName("Test something")

@@ -5,7 +5,7 @@ import java.awt.Color;
 /**
  * Business Class for number card (has color and number).
  */
-public class NumberCard extends AbstractCard {
+class NumberCard extends AbstractCard {
 
     /**
      * Constructor for NumberCard

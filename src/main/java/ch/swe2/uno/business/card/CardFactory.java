@@ -30,8 +30,7 @@ public class CardFactory {
      * @return ICard card
      */
     public ICard createCard(Color color, int number) {
-        ICard card = new NumberCard(color, number);
-        return card;
+        return new NumberCard(color, number);
     }
 
 

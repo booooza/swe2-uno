@@ -7,7 +7,7 @@ import java.util.ArrayList;
 /**
  * Business Class for a player.
  */
-public class Player extends AbstractPlayer {
+class Player extends AbstractPlayer {
 
     /**
      * Constructor for player
