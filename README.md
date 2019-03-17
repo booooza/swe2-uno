@@ -1,6 +1,9 @@
 # UNO Game
 Simple Java-based UNO game developed the course software engineering 2
 
+## Starting the JavaFX GUI
+Run `mvn compile exec:java`
+
 ## Requirements
 * Needs to follow the official game rules
 * JavaFX-based GUI
