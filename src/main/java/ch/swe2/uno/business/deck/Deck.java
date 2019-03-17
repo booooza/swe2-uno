@@ -19,8 +19,9 @@ import static java.util.Map.entry;
 public class Deck {
 
     private static final Logger logger = LoggerFactory.getLogger(Deck.class);
-    private ArrayList<ICard> cards = new ArrayList<>(108);
-    private Map<String, Color> unoColors = Map.ofEntries(
+    private ArrayList<ICard> drawPile = new ArrayList<>(108);
+    private ArrayList<ICard> discardPile = new ArrayList<>(108);
+    private static final Map<String, Color> unoColors = Map.ofEntries(
             entry("blue", Color.blue),
             entry("green", Color.green),
             entry("red", Color.red),
@@ -47,50 +48,83 @@ public class Deck {
 
     /**
      * Generate deck of cards based on game rules
-     * @return void
      */
-    public void initialize(){
-        /**
-         * Get the card factory
+    public void create(){
+        /*
+          Get the card factory
          */
         CardFactory cardFactory = CardFactory.getInstance();
 
-        /**
-         * Iterate through every color
+        /*
+          Iterate through every color
          */
         for (Map.Entry<String, Color> unoColor : unoColors.entrySet()) {
-            /**
-             * Create one card with number: 0
+            /*
+              Create one card with number: 0
              */
-            cards.add(cardFactory.createCard(unoColor.getValue(), 0));
+            drawPile.add(cardFactory.createCard(unoColor.getValue(), 0));
 
-            /**
-             * Create two cards with numbers: 1-9
+            /*
+              Create two cards with numbers: 1-9
              */
             for (int i = 1; i <= 9; i++) {
-                cards.add(cardFactory.createCard(unoColor.getValue(), i));
-                cards.add(cardFactory.createCard(unoColor.getValue(), i));
+                drawPile.add(cardFactory.createCard(unoColor.getValue(), i));
+                drawPile.add(cardFactory.createCard(unoColor.getValue(), i));
             }
         }
 
-        logger.info("Generated {} cards", cards.size());
+        logger.info("Generated {} cards", this.getDeckSize());
     }
 
     /**
      * Randomly permutes the deck using a default source of randomness.
      * Uses Fisher–Yates shuffle (https://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle)
-     * @return void
      */
-    public void shuffle(){
-        Collections.shuffle(cards);
+    public void shuffle(int times){
+        for (int i = 0; i < times; i++) {
+            Collections.shuffle(drawPile);
+        }
+        logger.info("Shuffled deck {} times", times);
     }
 
     /**
      * Distribute cards to players
      * @param players ArrayList<IPlayer>
-     * @return void
      */
     public void distribute(ArrayList<IPlayer> players){
-        // TODO: Distribute cards to players
+        /*
+          Iterate through every player
+         */
+        for (IPlayer player : players) {
+            /*
+              Move 7 cards to hand of player
+             */
+            for (int i = 0; i < 7; i++) {
+                player.draw(drawPile.get(i));
+                drawPile.remove(i);
+            }
+            logger.info("Distributed {} cards to {}", player.getHandSize(), player.getName());
+        }
+        logger.info("{} cards remaining in deck", this.getDeckSize());
+    }
+
+    public void revealTopCard() {
+        if (!drawPile.isEmpty() && drawPile.size() > 0) {
+            ICard topCard;
+            topCard = drawPile.get(0);
+            discardPile.add(topCard);
+            drawPile.remove(topCard);
+            logger.info("Revealed first card {} / {}",
+                    this.getTopCardOfDiscardPile().getColor(),
+                    this.getTopCardOfDiscardPile().getNumber());
+        }
+    }
+
+    public int getDeckSize() {
+        return drawPile.size();
+    }
+
+    public ICard getTopCardOfDiscardPile() {
+        return discardPile.get(0);
     }
 }

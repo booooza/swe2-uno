@@ -16,17 +16,25 @@ public abstract class AbstractPlayer implements IPlayer {
     // Methods:
     public void setName(String name) {
         this.name = name;
-    };
+    }
 
     public String getName() {
         return this.name;
-    };
+    }
 
     public void setHand(ArrayList<ICard> hand) {
         this.hand = hand;
-    };
+    }
 
     public ArrayList<ICard> getHand() {
         return this.hand;
-    };
+    }
+
+    public void draw(ICard card) {
+        hand.add(card);
+    }
+
+    public int getHandSize() {
+        return this.hand.size();
+    }
 }

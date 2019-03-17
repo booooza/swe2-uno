@@ -12,4 +12,6 @@ public interface IPlayer {
     String getName();
     void setHand(ArrayList<ICard> hand);
     ArrayList<ICard> getHand();
+    void draw(ICard card);
+    int getHandSize();
 }

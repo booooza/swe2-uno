@@ -7,7 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Random;
 
 /**
  * Business Class for a game
@@ -41,24 +41,22 @@ public class Game implements IGame {
     /**
      * Prepare the game
      * Create deck, shuffle, players, distribute cards
-     * @return void
      */
     public void setup() {
-        /**
-         * Initialize deck (mixed)
-         */
         Deck deck = Deck.getInstance();
-        deck.initialize();
-        logger.info("Initialized deck {}", deck);
 
-        /**
-         * Shuffle deck (template method)
+        /*
+          Initialize deck (mixed)
          */
-        deck.shuffle();
-        logger.info("Shuffled deck {}", deck);
+        deck.create();
 
-        /**
-         * Initialize players (with empty hand)
+        /*
+          Shuffle deck (template method)
+         */
+        deck.shuffle(2);
+
+        /*
+          Initialize players (with empty hand)
          */
         PlayerFactory playerFactory = PlayerFactory.getInstance();
 
@@ -66,18 +64,22 @@ public class Game implements IGame {
             players.add(playerFactory.createPlayer("Player" + i));
         }
 
-        logger.info("Initialized {} players", players.size());
-
-        /**
-         * Distribute (7) cards to each player
+        /*
+          Distribute (7) cards to each player
          */
         deck.distribute(players);
-        logger.info("Distributed cards to {} players", players.size());
 
-        // TODO: Place cards on draw pile
-        // TODO: Create discard pile
-        // TODO: Draw first card
+        /*
+          Reveal first card card and place in the Discard Pile
+         */
+        deck.revealTopCard();
 
+        /*
+          Randomly picks first player
+         */
+        Random rand = new Random();
+        IPlayer firstPlayer = players.get(rand.nextInt(players.size()));
+        logger.info("Game setup finished. {} starts the game.", firstPlayer.getName());
     }
 
     public void start() {
