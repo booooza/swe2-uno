@@ -1,19 +1,58 @@
 package ch.swe2.uno.business.card;
 
-import java.awt.Color;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 
 /**
  * Business Class for number card (has color and number).
  */
-class NumberCard extends AbstractCard {
+public class NumberCard extends AbstractCard {
+    // Attributes:
+    private final StringProperty color;
+    private final IntegerProperty number;
 
     /**
-     * Constructor for NumberCard
-     * @param color Color
-     * @param number int
+     * Default constructor.
      */
-    public NumberCard(Color color, int number) {
-        this.setColor(color);
-        this.setNumber(number);
+    public NumberCard() {
+        this(null, 0);
+    }
+
+    /**
+     * Constructor
+     *
+     * @param color
+     * @param number
+     */
+    public NumberCard(String color, int number) {
+        this.color = new SimpleStringProperty(color);
+        this.number = new SimpleIntegerProperty(number);
+    }
+
+    // Methods:
+    public void setColor(String color) {
+        this.color.set(color);
+    }
+
+    public String getColor() {
+        return color.get();
+    }
+
+    public StringProperty colorProperty() {
+        return color;
+    }
+
+    public void setNumber(int number) {
+        this.number.set(number);
+    }
+
+    public int getNumber() {
+        return number.get();
+    }
+
+    public IntegerProperty numberProperty() {
+        return number;
     }
 }

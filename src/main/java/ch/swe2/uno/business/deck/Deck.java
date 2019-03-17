@@ -6,7 +6,6 @@ import ch.swe2.uno.business.player.IPlayer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Map;
@@ -21,12 +20,7 @@ public class Deck {
     private static final Logger logger = LoggerFactory.getLogger(Deck.class);
     private ArrayList<ICard> drawPile = new ArrayList<>(108);
     private ArrayList<ICard> discardPile = new ArrayList<>(108);
-    private static final Map<String, Color> unoColors = Map.ofEntries(
-            entry("blue", Color.blue),
-            entry("green", Color.green),
-            entry("red", Color.red),
-            entry("yellow", Color.yellow)
-    );
+    private static final ArrayList<String> unoColors = new ArrayList<>(4);
 
     /**
      * Defines the private instance attribute
@@ -58,18 +52,23 @@ public class Deck {
         /*
           Iterate through every color
          */
-        for (Map.Entry<String, Color> unoColor : unoColors.entrySet()) {
+        unoColors.add("red");
+        unoColors.add("blue");
+        unoColors.add("yellow");
+        unoColors.add("green");
+
+        for (String unoColor: unoColors) {
             /*
               Create one card with number: 0
              */
-            drawPile.add(cardFactory.createCard(unoColor.getValue(), 0));
+            drawPile.add(cardFactory.createCard(unoColor, 0));
 
             /*
               Create two cards with numbers: 1-9
              */
             for (int i = 1; i <= 9; i++) {
-                drawPile.add(cardFactory.createCard(unoColor.getValue(), i));
-                drawPile.add(cardFactory.createCard(unoColor.getValue(), i));
+                drawPile.add(cardFactory.createCard(unoColor, i));
+                drawPile.add(cardFactory.createCard(unoColor, i));
             }
         }
 

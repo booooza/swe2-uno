@@ -1,7 +1,7 @@
 package ch.swe2.uno.presentation.gui;
 
-import ch.swe2.uno.business.player.IPlayer;
-import ch.swe2.uno.business.player.Player;
+import ch.swe2.uno.business.card.ICard;
+import ch.swe2.uno.business.card.NumberCard;
 import ch.swe2.uno.presentation.gui.controller.GameOverviewController;
 import ch.swe2.uno.presentation.gui.controller.WelcomeScreenController;
 import javafx.application.Application;
@@ -21,25 +21,32 @@ public class MainApp extends Application {
     private BorderPane rootLayout;
     
     /**
-     * The data as an observable list of players.
+     * The data as an observable list of cards.
      */
-    private ObservableList<IPlayer> playerData = FXCollections.observableArrayList();
+    private ObservableList<ICard> player1Data = FXCollections.observableArrayList();
+    private ObservableList<ICard> player2Data = FXCollections.observableArrayList();
 
     /**
      * Constructor
      */
     public MainApp() {
         // Add some sample data
-        playerData.add(new Player("Marc"));
-        playerData.add(new Player("Luca"));
+        player1Data.add(new NumberCard("red", 2));
+        player1Data.add(new NumberCard("green", 0));
+        player2Data.add(new NumberCard("yellow", 7));
+        player2Data.add(new NumberCard("blue", 3));
     }
 
     /**
-     * Returns the data as an observable list of players.
+     * Returns the data as an observable list of cards.
      * @return
      */
-    public ObservableList<IPlayer> getPlayerData() {
-        return playerData;
+    public ObservableList<ICard> getPlayer1Data() {
+        return player1Data;
+    }
+
+    public ObservableList<ICard> getPlayer2Data() {
+        return player2Data;
     }
 
     @Override

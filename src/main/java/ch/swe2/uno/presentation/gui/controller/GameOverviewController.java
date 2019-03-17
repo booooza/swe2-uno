@@ -1,7 +1,7 @@
 package ch.swe2.uno.presentation.gui.controller;
 
 
-import ch.swe2.uno.business.player.IPlayer;
+import ch.swe2.uno.business.card.ICard;
 import ch.swe2.uno.presentation.gui.MainApp;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
@@ -9,9 +9,17 @@ import javafx.scene.control.TableView;
 
 public class GameOverviewController {
     @FXML
-    private TableView<IPlayer> personTable;
+    private TableView<ICard> player1Table;
     @FXML
-    private TableColumn<IPlayer, String> nameColumn;
+    private TableColumn<ICard, String> player1CardColorColumn;
+    @FXML
+    private TableColumn<ICard, Number> player1CardNumberColumn;
+    @FXML
+    private TableView<ICard> player2Table;
+    @FXML
+    private TableColumn<ICard, String> player2CardColorColumn;
+    @FXML
+    private TableColumn<ICard, Number> player2CardNumberColumn;
 
     // Reference to the main application.
     private MainApp mainApp;
@@ -30,7 +38,10 @@ public class GameOverviewController {
     @FXML
     private void initialize() {
         // Initialize the person table with the two columns.
-        nameColumn.setCellValueFactory(cellData -> cellData.getValue().nameProperty());
+        player1CardColorColumn.setCellValueFactory(cellData -> cellData.getValue().colorProperty());
+        player1CardNumberColumn.setCellValueFactory(cellData -> cellData.getValue().numberProperty());
+        player2CardColorColumn.setCellValueFactory(cellData -> cellData.getValue().colorProperty());
+        player2CardNumberColumn.setCellValueFactory(cellData -> cellData.getValue().numberProperty());
     }
 
     /**
@@ -42,6 +53,7 @@ public class GameOverviewController {
         this.mainApp = mainApp;
 
         // Add observable list data to the table
-        personTable.setItems(mainApp.getPlayerData());
+        player1Table.setItems(mainApp.getPlayer1Data());
+        player2Table.setItems(mainApp.getPlayer2Data());
     }
 }

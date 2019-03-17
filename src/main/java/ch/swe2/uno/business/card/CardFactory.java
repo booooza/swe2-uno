@@ -29,9 +29,7 @@ public class CardFactory {
      * Create a single card
      * @return ICard card
      */
-    public ICard createCard(Color color, int number) {
+    public ICard createCard(String color, int number) {
         return new NumberCard(color, number);
     }
-
-
 }
