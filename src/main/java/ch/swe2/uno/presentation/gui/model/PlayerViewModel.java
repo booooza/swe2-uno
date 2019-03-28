@@ -1,16 +1,24 @@
 package ch.swe2.uno.presentation.gui.model;
 
+import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+
+import java.util.ArrayList;
 
 public class PlayerViewModel {
-    private final SimpleStringProperty name;
+    private SimpleStringProperty name;
+    private ObservableList<NumberCardViewModel> hand = FXCollections.observableArrayList();
+    private SimpleBooleanProperty currentTurn;
+    private SimpleBooleanProperty uno;
 
     /**
      * Default constructor.
      */
     public PlayerViewModel() {
-        this(null);
+        this(null, null, false, false);
     }
 
     /**
@@ -18,8 +26,12 @@ public class PlayerViewModel {
      *
      * @param name
      */
-    public PlayerViewModel(String name) {
+    public PlayerViewModel(String name, ObservableList<NumberCardViewModel> hand, boolean currentTurn, boolean uno) {
         this.name = new SimpleStringProperty(name);
+        this.hand = new SimpleListProperty(hand);
+        //hand.forEach(card -> this.hand.add(card));
+        this.currentTurn = new SimpleBooleanProperty(currentTurn);
+        this.currentTurn = new SimpleBooleanProperty(uno);
     }
 
     public String getName() {
@@ -30,7 +42,7 @@ public class PlayerViewModel {
         this.name.set(name);
     }
 
-    public StringProperty name() {
-        return name;
+    public ObservableList<NumberCardViewModel> getHand() {
+        return hand;
     }
 }

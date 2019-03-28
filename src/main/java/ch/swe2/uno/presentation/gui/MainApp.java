@@ -1,10 +1,10 @@
 package ch.swe2.uno.presentation.gui;
 
-import ch.swe2.uno.business.game.Game;
-import ch.swe2.uno.business.game.GameInterface;
+import ch.swe2.uno.presentation.gui.client.Client;
 import ch.swe2.uno.presentation.gui.controller.GameOverviewController;
 import ch.swe2.uno.presentation.gui.controller.WelcomeScreenController;
-import ch.swe2.uno.presentation.gui.model.NumberCardViewModel;import ch.swe2.uno.presentation.gui.model.StateViewModel;
+import ch.swe2.uno.presentation.gui.model.NumberCardViewModel;
+import ch.swe2.uno.presentation.gui.model.StateViewModel;
 import com.google.gson.Gson;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
@@ -18,18 +18,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.hildan.fxgson.*;
 
-import java.io.FileReader;
 import java.io.IOException;
-import java.io.Reader;
 
 public class MainApp extends Application {
 
     private Stage primaryStage;
     private BorderPane rootLayout;
     private Gson fxGson = FxGson.create();
-    private StateViewModel gameState;
-    private GameInterface game = Game.getInstance();
-    
+    private StateViewModel gameState = new StateViewModel();
+
     /**
      * The data as an observable list of cards.
      */
@@ -47,11 +44,6 @@ public class MainApp extends Application {
         player1Data.add(new NumberCardViewModel("green", 0));
         player2Data.add(new NumberCardViewModel("yellow", 7));
         player2Data.add(new NumberCardViewModel("blue", 3));
-
-        /**
-         * Instantiate game (singleton)
-         */
-        logger.info("Starting the game");
     }
 
     /**
@@ -74,23 +66,19 @@ public class MainApp extends Application {
         initRootLayout();
 
         /**
-         * Get initial game state from backend
+         * Instantiate game (singleton)
          */
-        game.getState();
+        logger.info("Starting the game... Getting game state...");
+        updateState();
 
-        /**
-         * Set initial game state in frontend
-         */
-        try (Reader reader = new FileReader("src/main/resources/data/state.json")) {
-            gameState = fxGson.fromJson(reader, StateViewModel.class);
-            if (gameState.getPlayers().size() == 0) {
-                showWelcomeScreen();
-            } else {
-                showGameOverview();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
+        // If there are no players yet show welcome screen
+        if (gameState.getPlayers() == null) {
+            showWelcomeScreen();
+        // Otherwise show the game overview
+        } else {
+            showGameOverview();
         }
+
     }
 
     /**
@@ -153,6 +141,21 @@ public class MainApp extends Application {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public StateViewModel updateState() {
+        try {
+            Client client = new Client("localhost");
+            this.gameState = fxGson.fromJson(client.getState(), StateViewModel.class);
+            return this.gameState;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new StateViewModel();
+    }
+
+    public StateViewModel getState() {
+        return this.gameState;
     }
 
     /**

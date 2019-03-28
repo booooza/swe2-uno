@@ -2,6 +2,7 @@ package ch.swe2.uno.presentation.gui.controller;
 
 import ch.swe2.uno.presentation.gui.MainApp;
 import ch.swe2.uno.presentation.gui.model.NumberCardViewModel;
+import ch.swe2.uno.presentation.gui.model.StateViewModel;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -51,7 +52,8 @@ public class GameOverviewController {
         this.mainApp = mainApp;
 
         // Add observable list data to the table
-        player1Table.setItems(mainApp.getPlayer1Data());
-        player2Table.setItems(mainApp.getPlayer2Data());
+        player1Table.setItems(mainApp.getState().getPlayers().get(0).getHand());
+        player2Table.setItems(mainApp.getState().getPlayers().get(1).getHand());
+        mainApp.updateState();
     }
 }

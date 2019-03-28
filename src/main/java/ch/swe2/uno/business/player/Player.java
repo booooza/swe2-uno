@@ -1,13 +1,21 @@
 package ch.swe2.uno.business.player;
 
-import java.io.Serializable;
+import ch.swe2.uno.business.card.CardInterface;
 
-public class Player implements PlayerInterface, Serializable {
+import java.util.ArrayList;
+
+public class Player implements PlayerInterface {
     // Attributes:
     private String name;
+    private ArrayList<CardInterface> hand;
+    private boolean currentTurn;
+    private boolean uno;
 
-    Player(String name) {
+    Player(String name, ArrayList<CardInterface> hand, boolean currentTurn, boolean uno) {
         this.name = name;
+        this.hand = hand;
+        this.currentTurn = currentTurn;
+        this.uno = uno;
     }
 
     public void setName(String name) {
@@ -16,5 +24,29 @@ public class Player implements PlayerInterface, Serializable {
 
     public String getName() {
         return this.name;
+    }
+
+    public void setHand(ArrayList<CardInterface> hand) {
+        this.hand = hand;
+    }
+
+    public ArrayList<CardInterface> getHand() {
+        return hand;
+    }
+
+    public void setCurrentTurn(boolean currentTurn) {
+        this.currentTurn = currentTurn;
+    }
+
+    public boolean isCurrentTurn() {
+        return currentTurn;
+    }
+
+    public void setUno(boolean uno) {
+        this.uno = uno;
+    }
+
+    public boolean isUno() {
+        return uno;
     }
 }
