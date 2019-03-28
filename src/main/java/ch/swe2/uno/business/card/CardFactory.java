@@ -1,7 +1,5 @@
 package ch.swe2.uno.business.card;
 
-import java.awt.*;
-
 /**
  * Class used to create cards
  * Implementation of a singleton factory
@@ -27,9 +25,9 @@ public class CardFactory {
 
     /**
      * Create a single card
-     * @return ICard card
+     * @return CardInterface card
      */
-    public ICard createCard(String color, int number) {
+    public CardInterface createCard(String color, int number) {
         return new NumberCard(color, number);
     }
 }

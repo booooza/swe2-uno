@@ -1,23 +1,24 @@
 package ch.swe2.uno.business.game;
 
-import ch.swe2.uno.business.deck.Deck;
-import ch.swe2.uno.business.player.IPlayer;
-import ch.swe2.uno.business.player.PlayerFactory;
+import ch.swe2.uno.business.player.PlayerInterface;
+import ch.swe2.uno.business.state.State;
+import com.google.gson.Gson;
+import org.hildan.fxgson.FxGson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.*;
 import java.util.ArrayList;
-import java.util.Random;
 
 /**
  * Business Class for a game
  * (rings players and deck together and defines game logic).
  */
-public class Game implements IGame {
-    // Attributes:
-    private String direction;
-    private ArrayList<IPlayer> players = new ArrayList<>();
+public class Game implements GameInterface {
+    private Gson fxGson = FxGson.create();
     private static final Logger logger = LoggerFactory.getLogger(Game.class);
+    private State gameState = new State();
+    private ArrayList<PlayerInterface> playerList = new ArrayList<>(2);
 
     /**
      * Defines the private instance attribute
@@ -38,56 +39,25 @@ public class Game implements IGame {
         return thisInstance;
     }
 
-    /**
-     * Prepare the game
-     * Create deck, shuffle, players, distribute cards
-     */
-    public void setup() {
-        Deck deck = Deck.getInstance();
-
-        /*
-          Initialize deck (mixed)
-         */
-        deck.create();
-
-        /*
-          Shuffle deck (template method)
-         */
-        deck.shuffle(2);
-
-        /*
-          Initialize players (with empty hand)
-         */
-        PlayerFactory playerFactory = PlayerFactory.getInstance();
-
-        for(int i = 0; i < 2; ++i) {
-            players.add(playerFactory.createPlayer("Player" + i));
+    public void getState () {
+        // Write serialized game state to file
+        try (Writer writer = new FileWriter("src/main/resources/data/state.json")) {
+            fxGson.toJson(gameState, writer);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-
-        /*
-          Distribute (7) cards to each player
-         */
-        deck.distribute(players);
-
-        /*
-          Reveal first card card and place in the Discard Pile
-         */
-        deck.revealTopCard();
-
-        /*
-          Randomly picks first player
-         */
-        Random rand = new Random();
-        IPlayer firstPlayer = players.get(rand.nextInt(players.size()));
-        logger.info("Game setup finished. {} starts the game.", firstPlayer.getName());
     }
 
-    public void start() {
-        // TODO: Start game loop
-    }
+    public void setState () {
+        // Read serialized game state to file
+        try (Reader reader = new FileReader("src/main/resources/data/state.json")) {
+            gameState = fxGson.fromJson(reader, State.class);
 
-    public void end() {
-        // TODO: Scoring
-        // TODO: Deconstruct game
+            logger.info("Amount of players: {}", gameState.getPlayers().size());
+            gameState.getPlayers().forEach(player -> System.out.println(player.getName()));
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

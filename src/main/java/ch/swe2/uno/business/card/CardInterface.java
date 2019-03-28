@@ -6,7 +6,7 @@ import javafx.beans.property.StringProperty;
 /**
  * Interface for cards
  */
-public interface ICard {
+public interface CardInterface {
     void setColor(String color);
     String getColor();
     StringProperty colorProperty();

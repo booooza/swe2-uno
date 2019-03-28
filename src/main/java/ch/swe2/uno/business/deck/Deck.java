@@ -1,16 +1,13 @@
 package ch.swe2.uno.business.deck;
 
-import ch.swe2.uno.business.card.ICard;
+import ch.swe2.uno.business.card.CardInterface;
 import ch.swe2.uno.business.card.CardFactory;
-import ch.swe2.uno.business.player.IPlayer;
+import ch.swe2.uno.business.player.PlayerInterface;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Map;
-
-import static java.util.Map.entry;
 
 /**
  * Business Class for a uno deck (contains 108 cards as per uno rules).
@@ -18,8 +15,8 @@ import static java.util.Map.entry;
 public class Deck {
 
     private static final Logger logger = LoggerFactory.getLogger(Deck.class);
-    private ArrayList<ICard> drawPile = new ArrayList<>(108);
-    private ArrayList<ICard> discardPile = new ArrayList<>(108);
+    private ArrayList<CardInterface> drawPile = new ArrayList<>(108);
+    private ArrayList<CardInterface> discardPile = new ArrayList<>(108);
     private static final ArrayList<String> unoColors = new ArrayList<>(4);
 
     /**
@@ -90,11 +87,11 @@ public class Deck {
      * Distribute cards to players
      * @param players ArrayList<IPlayer>
      */
-    public void distribute(ArrayList<IPlayer> players){
+    public void distribute(ArrayList<PlayerInterface> players){
         /*
           Iterate through every player
          */
-        for (IPlayer player : players) {
+        for (PlayerInterface player : players) {
             /*
               Move 7 cards to hand of player
              */
@@ -109,7 +106,7 @@ public class Deck {
 
     public void revealTopCard() {
         if (!drawPile.isEmpty() && drawPile.size() > 0) {
-            ICard topCard;
+            CardInterface topCard;
             topCard = drawPile.get(0);
             discardPile.add(topCard);
             drawPile.remove(topCard);
@@ -123,7 +120,7 @@ public class Deck {
         return drawPile.size();
     }
 
-    public ICard getTopCardOfDiscardPile() {
+    public CardInterface getTopCardOfDiscardPile() {
         return discardPile.get(0);
     }
 }

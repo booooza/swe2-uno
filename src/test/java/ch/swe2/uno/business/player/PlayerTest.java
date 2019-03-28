@@ -11,7 +11,7 @@ public class PlayerTest {
     @DisplayName("Name")
     public void testIfPlayerGetsCorrectName() {
         PlayerFactory playerFactory = PlayerFactory.getInstance();
-        IPlayer player = playerFactory.createPlayer("Player");
+        PlayerInterface player = playerFactory.createPlayer("Player");
         String expected = "Player";
         String actual = player.getName();
         assertEquals(expected, actual);
