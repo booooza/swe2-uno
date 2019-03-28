@@ -30,7 +30,7 @@ public class ClientThread implements Runnable {
     @Override
     public void run() {
         try {
-            fakeState(2);
+            fakeState(3);
             sendState(gameState);
         } catch (Exception e) {
             e.printStackTrace();

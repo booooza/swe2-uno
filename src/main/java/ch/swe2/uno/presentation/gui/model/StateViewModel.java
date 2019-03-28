@@ -41,4 +41,9 @@ public class StateViewModel {
     public ObservableList playersProperty() {
         return this.players;
     }
+
+    public String getMessage() {
+        return message.get();
+    }
+
 }

@@ -45,4 +45,12 @@ public class PlayerViewModel {
     public ObservableList<NumberCardViewModel> getHand() {
         return hand;
     }
+
+    public boolean isUno() {
+        return uno.get();
+    }
+
+    public boolean isCurrentTurn() {
+        return currentTurn.get();
+    }
 }
