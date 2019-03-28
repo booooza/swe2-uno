@@ -70,3 +70,7 @@ The following describes the official UNO game rules
 * The aim of the game is to be the first player to score 500 points, achieved (usually over several rounds of play) by being the first to play all of one's own cards and scoring points for the cards still held by the other players.
 * The first player to get rid of their last card ("going out") wins the hand and scores points for the cards held by the other players. Number cards count their face value, all action cards count 20, and Wild and Wild Draw Four cards count 50. If a Draw Two or Wild Draw Four card is played to go out, the next player in the sequence must draw the appropriate number of cards before the score is tallied.
 * The first player to score 500 points wins the game.
+
+## Docs
+### Activity Diagram
+![alt text](docs/activity.png)
