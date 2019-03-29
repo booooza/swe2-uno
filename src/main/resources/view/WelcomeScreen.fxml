@@ -6,17 +6,33 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ch.swe2.uno.presentation.gui.controller.WelcomeScreenController">
+<AnchorPane prefHeight="400.0"
+            prefWidth="600.0"
+            xmlns="http://javafx.com/javafx/11.0.1"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="ch.swe2.uno.presentation.gui.controller.WelcomeScreenController">
    <children>
-      <Label layoutX="202.0" layoutY="58.0" text="Welcome to UNO">
+      <Label layoutX="202.0"
+             layoutY="58.0"
+             text="Welcome to UNO">
          <font>
             <Font size="24.0" />
          </font>
       </Label>
-      <TextField layoutX="211.0" layoutY="160.0" text="Player 1" />
-      <TextField layoutX="211.0" layoutY="204.0" text="Player 2" />
-      <Button layoutX="265.0" layoutY="252.0" mnemonicParsing="false" onAction="#handleButtonAction" text="Start" />
-      <Label layoutX="218.0" layoutY="112.0" text="Enter Player Names:">
+      <TextField layoutX="211.0"
+                 layoutY="160.0"
+                 text="Player 1" />
+      <TextField layoutX="211.0"
+                 layoutY="204.0"
+                 text="Player 2" />
+      <Button layoutX="265.0"
+              layoutY="252.0"
+              mnemonicParsing="false"
+              onAction="#handleButtonAction"
+              text="Start" />
+      <Label layoutX="218.0"
+             layoutY="112.0"
+             text="Enter Player Names:">
          <font>
             <Font size="16.0" />
          </font>

@@ -21,10 +21,12 @@ public class PlayerFactory {
     /**
      * Constructor must be private for singleton
      */
-    private PlayerFactory() {}
+    private PlayerFactory() {
+    }
 
     /**
      * Return the singleton instance
+     *
      * @return ourInstance
      */
     public static PlayerFactory getInstance() {
@@ -33,6 +35,7 @@ public class PlayerFactory {
 
     /**
      * Create a single player
+     *
      * @return player
      */
     public IPlayer createPlayer(String name) {

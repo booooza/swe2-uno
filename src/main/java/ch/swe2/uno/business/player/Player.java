@@ -1,12 +1,7 @@
 package ch.swe2.uno.business.player;
 
-import ch.swe2.uno.business.card.ICard;
-import javafx.beans.property.ListProperty;
-import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-
-import java.util.ArrayList;
 
 /**
  * Abstract Class for IPlayer
@@ -33,13 +28,13 @@ public class Player implements IPlayer {
         this.name = new SimpleStringProperty(name);
     }
 
+    public String getName() {
+        return name.get();
+    }
+
     // Methods:
     public void setName(String name) {
         this.name.set(name);
-    }
-
-    public String getName() {
-        return name.get();
     }
 
     public StringProperty nameProperty() {
