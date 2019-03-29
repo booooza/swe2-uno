@@ -10,10 +10,10 @@ public class PlayerTest {
     @Test
     @DisplayName("Name")
     public void testIfPlayerGetsCorrectName() {
-        // PlayerFactory playerFactory = PlayerFactory.getInstance();
-        // PlayerInterface player = playerFactory.createPlayer("Player");
-        // String expected = "Player";
-        // String actual = player.getName();
-        // assertEquals(expected, actual);
+        PlayerFactory playerFactory = PlayerFactory.getInstance();
+        IPlayer player = playerFactory.createPlayer("Player");
+        String expected = "Player";
+        String actual = player.getName();
+        assertEquals(expected, actual);
     }
 }

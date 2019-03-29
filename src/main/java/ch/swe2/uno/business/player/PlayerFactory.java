@@ -1,6 +1,6 @@
 package ch.swe2.uno.business.player;
 
-import ch.swe2.uno.business.card.CardInterface;
+import ch.swe2.uno.business.card.ICard;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,8 +38,9 @@ public class PlayerFactory {
      *
      * @return player
      */
-    public PlayerInterface createPlayer(String name, ArrayList<CardInterface> hand, boolean currentTurn, boolean uno) {
-        PlayerInterface player = new Player(name, hand, currentTurn, uno);
+    public IPlayer createPlayer(String name) {
+        ArrayList<ICard> hand = new ArrayList<>();
+        IPlayer player = new Player(name);
         logger.info("Created player {}", name);
         return player;
     }

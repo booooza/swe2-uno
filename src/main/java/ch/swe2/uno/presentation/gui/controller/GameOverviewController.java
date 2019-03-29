@@ -1,43 +1,28 @@
 package ch.swe2.uno.presentation.gui.controller;
 
+
+import ch.swe2.uno.business.card.ICard;
 import ch.swe2.uno.presentation.gui.MainApp;
-import ch.swe2.uno.presentation.gui.model.NumberCardViewModel;
-import ch.swe2.uno.presentation.gui.model.PlayerViewModel;
-import ch.swe2.uno.presentation.gui.model.StateViewModel;
 import javafx.fxml.FXML;
-import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 
 public class GameOverviewController {
     @FXML
-    private TableView<NumberCardViewModel> player1Table;
+    private TableView<ICard> player1Table;
     @FXML
-    private TableColumn<NumberCardViewModel, String> player1CardColorColumn;
+    private TableColumn<ICard, String> player1CardColorColumn;
     @FXML
-    private TableColumn<NumberCardViewModel, Number> player1CardNumberColumn;
+    private TableColumn<ICard, Number> player1CardNumberColumn;
     @FXML
-    private TableView<NumberCardViewModel> player2Table;
+    private TableView<ICard> player2Table;
     @FXML
-    private TableColumn<NumberCardViewModel, String> player2CardColorColumn;
+    private TableColumn<ICard, String> player2CardColorColumn;
     @FXML
-    private TableColumn<NumberCardViewModel, Number> player2CardNumberColumn;
-    @FXML
-    private Label player1Name;
-    @FXML
-    private Label player1Uno;
-    @FXML
-    private Label player2Name;
-    @FXML
-    private Label player2Uno;
-    @FXML
-    private Label currentTurn;
-    @FXML
-    private Label topCard;
-    @FXML
-    private Label message;
+    private TableColumn<ICard, Number> player2CardNumberColumn;
 
-    private MainApp mainApp; // Reference to the main application.
+    // Reference to the main application.
+    private MainApp mainApp;
 
     /**
      * The constructor.
@@ -65,25 +50,10 @@ public class GameOverviewController {
      * @param mainApp
      */
     public void setMainApp(MainApp mainApp) {
-        mainApp = mainApp;
+        this.mainApp = mainApp;
 
-        // Add observable data to the view
-        player1Table.setItems(mainApp.getState().getPlayers().get(0).getHand());
-        player2Table.setItems(mainApp.getState().getPlayers().get(1).getHand());
-        player1Name.setText(mainApp.getState().getPlayers().get(0).getName());
-        player2Name.setText(mainApp.getState().getPlayers().get(1).getName());
-        currentTurn.setText(mainApp.getState().getPlayers().stream()
-                .filter(player -> player.isCurrentTurn())
-                .findFirst().get().getName());
-        if (mainApp.getState().getPlayers().get(0).isUno()) {
-            player1Uno.setText("Uno");
-        }
-        if (mainApp.getState().getPlayers().get(1).isUno()) {
-            player2Uno.setText("Uno");
-        }
-        topCard.setText("Red 7");
-        message.setText(mainApp.getState().getMessage());
-
-        mainApp.updateState();
+        // Add observable list data to the table
+        player1Table.setItems(mainApp.getPlayer1Data());
+        player2Table.setItems(mainApp.getPlayer2Data());
     }
 }

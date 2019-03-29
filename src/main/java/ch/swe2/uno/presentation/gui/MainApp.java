@@ -1,11 +1,9 @@
 package ch.swe2.uno.presentation.gui;
 
-import ch.swe2.uno.presentation.gui.client.Client;
+import ch.swe2.uno.business.card.ICard;
+import ch.swe2.uno.business.card.NumberCard;
 import ch.swe2.uno.presentation.gui.controller.GameOverviewController;
 import ch.swe2.uno.presentation.gui.controller.WelcomeScreenController;
-import ch.swe2.uno.presentation.gui.model.NumberCardViewModel;
-import ch.swe2.uno.presentation.gui.model.StateViewModel;
-import com.google.gson.Gson;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -14,9 +12,6 @@ import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.hildan.fxgson.*;
 
 import java.io.IOException;
 
@@ -24,29 +19,22 @@ public class MainApp extends Application {
 
     private Stage primaryStage;
     private BorderPane rootLayout;
-<<<<<<< HEAD
-=======
-    private Gson fxGson = FxGson.create();
-    private StateViewModel gameState = new StateViewModel();
->>>>>>> 906529f3bc0aec826269637ea9f7caee1538a1ca
 
     /**
      * The data as an observable list of cards.
      */
-    private ObservableList<NumberCardViewModel> player1Data = FXCollections.observableArrayList();
-    private ObservableList<NumberCardViewModel> player2Data = FXCollections.observableArrayList();
-
-    private static final Logger logger = LoggerFactory.getLogger(MainApp.class);
+    private ObservableList<ICard> player1Data = FXCollections.observableArrayList();
+    private ObservableList<ICard> player2Data = FXCollections.observableArrayList();
 
     /**
      * Constructor
      */
     public MainApp() {
         // Add some sample data
-        player1Data.add(new NumberCardViewModel("red", 2));
-        player1Data.add(new NumberCardViewModel("green", 0));
-        player2Data.add(new NumberCardViewModel("yellow", 7));
-        player2Data.add(new NumberCardViewModel("blue", 3));
+        player1Data.add(new NumberCard("red", 2));
+        player1Data.add(new NumberCard("green", 0));
+        player2Data.add(new NumberCard("yellow", 7));
+        player2Data.add(new NumberCard("blue", 3));
     }
 
     public static void main(String[] args) {
@@ -58,11 +46,11 @@ public class MainApp extends Application {
      *
      * @return
      */
-    public ObservableList<NumberCardViewModel> getPlayer1Data() {
+    public ObservableList<ICard> getPlayer1Data() {
         return player1Data;
     }
 
-    public ObservableList<NumberCardViewModel> getPlayer2Data() {
+    public ObservableList<ICard> getPlayer2Data() {
         return player2Data;
     }
 
@@ -73,20 +61,7 @@ public class MainApp extends Application {
 
         initRootLayout();
 
-        /**
-         * Instantiate game (singleton)
-         */
-        logger.info("Starting the game... Getting game state...");
-        updateState();
-
-        // If there are no players yet show welcome screen
-        if (gameState.getPlayers() == null) {
-            showWelcomeScreen();
-        // Otherwise show the game overview
-        } else {
-            showGameOverview();
-        }
-
+        showWelcomeScreen();
     }
 
     /**
@@ -149,21 +124,6 @@ public class MainApp extends Application {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    public StateViewModel updateState() {
-        try {
-            Client client = new Client("localhost");
-            this.gameState = fxGson.fromJson(client.getState(), StateViewModel.class);
-            return this.gameState;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return new StateViewModel();
-    }
-
-    public StateViewModel getState() {
-        return this.gameState;
     }
 
     /**
