@@ -6,9 +6,7 @@ import javafx.beans.property.StringProperty;
  * Interface for players
  */
 public interface IPlayer {
-    String getName();
-
     void setName(String name);
-
+    String getName();
     StringProperty nameProperty();
 }

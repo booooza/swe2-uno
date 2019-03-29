@@ -1,13 +1,16 @@
 package ch.swe2.uno.business.deck;
 
-import ch.swe2.uno.business.card.CardFactory;
 import ch.swe2.uno.business.card.ICard;
+import ch.swe2.uno.business.card.CardFactory;
 import ch.swe2.uno.business.player.IPlayer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Map;
+
+import static java.util.Map.entry;
 
 /**
  * Business Class for a uno deck (contains 108 cards as per uno rules).
@@ -15,33 +18,32 @@ import java.util.Collections;
 public class Deck {
 
     private static final Logger logger = LoggerFactory.getLogger(Deck.class);
+    private ArrayList<ICard> drawPile = new ArrayList<>(108);
+    private ArrayList<ICard> discardPile = new ArrayList<>(108);
     private static final ArrayList<String> unoColors = new ArrayList<>(4);
+
     /**
      * Defines the private instance attribute
      */
     private static Deck ourInstance = new Deck();
-    private ArrayList<ICard> drawPile = new ArrayList<>(108);
-    private ArrayList<ICard> discardPile = new ArrayList<>(108);
 
     /**
      * Constructor must be private for singleton
      */
-    private Deck() {
-    }
+    private Deck(){}
 
     /**
      * Return the singleton instance
-     *
      * @return ourInstance
      */
-    public static Deck getInstance() {
+    public static Deck getInstance(){
         return ourInstance;
     }
 
     /**
      * Generate deck of cards based on game rules
      */
-    public void create() {
+    public void create(){
         /*
           Get the card factory
          */
@@ -55,7 +57,7 @@ public class Deck {
         unoColors.add("yellow");
         unoColors.add("green");
 
-        for (String unoColor : unoColors) {
+        for (String unoColor: unoColors) {
             /*
               Create one card with number: 0
              */
@@ -77,7 +79,7 @@ public class Deck {
      * Randomly permutes the deck using a default source of randomness.
      * Uses Fisher–Yates shuffle (https://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle)
      */
-    public void shuffle(int times) {
+    public void shuffle(int times){
         for (int i = 0; i < times; i++) {
             Collections.shuffle(drawPile);
         }
@@ -86,10 +88,9 @@ public class Deck {
 
     /**
      * Distribute cards to players
-     *
      * @param players ArrayList<IPlayer>
      */
-    public void distribute(ArrayList<IPlayer> players) {
+    public void distribute(ArrayList<IPlayer> players){
         /*
           Iterate through every player
          */

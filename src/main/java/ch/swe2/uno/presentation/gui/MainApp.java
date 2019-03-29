@@ -19,7 +19,7 @@ public class MainApp extends Application {
 
     private Stage primaryStage;
     private BorderPane rootLayout;
-
+    
     /**
      * The data as an observable list of cards.
      */
@@ -37,13 +37,8 @@ public class MainApp extends Application {
         player2Data.add(new NumberCard("blue", 3));
     }
 
-    public static void main(String[] args) {
-        launch(args);
-    }
-
     /**
      * Returns the data as an observable list of cards.
-     *
      * @return
      */
     public ObservableList<ICard> getPlayer1Data() {
@@ -128,10 +123,13 @@ public class MainApp extends Application {
 
     /**
      * Returns the main stage.
-     *
      * @return
      */
     public Stage getPrimaryStage() {
         return primaryStage;
+    }
+
+    public static void main(String[] args) {
+        launch(args);
     }
 }

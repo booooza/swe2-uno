@@ -31,25 +31,25 @@ public class NumberCard extends AbstractCard {
         this.number = new SimpleIntegerProperty(number);
     }
 
-    public String getColor() {
-        return color.get();
-    }
-
     // Methods:
     public void setColor(String color) {
         this.color.set(color);
+    }
+
+    public String getColor() {
+        return color.get();
     }
 
     public StringProperty colorProperty() {
         return color;
     }
 
-    public int getNumber() {
-        return number.get();
-    }
-
     public void setNumber(int number) {
         this.number.set(number);
+    }
+
+    public int getNumber() {
+        return number.get();
     }
 
     public IntegerProperty numberProperty() {

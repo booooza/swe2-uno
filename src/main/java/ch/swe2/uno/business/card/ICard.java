@@ -7,15 +7,10 @@ import javafx.beans.property.StringProperty;
  * Interface for cards
  */
 public interface ICard {
-    String getColor();
-
     void setColor(String color);
-
+    String getColor();
     StringProperty colorProperty();
-
-    int getNumber();
-
     void setNumber(int number);
-
+    int getNumber();
     IntegerProperty numberProperty();
 }
