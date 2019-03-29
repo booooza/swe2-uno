@@ -1,8 +1,14 @@
 package ch.swe2.uno.business.deck;
 
+<<<<<<< HEAD
 import ch.swe2.uno.business.card.CardFactory;
 import ch.swe2.uno.business.card.ICard;
 import ch.swe2.uno.business.player.IPlayer;
+=======
+import ch.swe2.uno.business.card.CardInterface;
+import ch.swe2.uno.business.card.CardFactory;
+import ch.swe2.uno.business.player.PlayerInterface;
+>>>>>>> 906529f3bc0aec826269637ea9f7caee1538a1ca
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,6 +21,11 @@ import java.util.Collections;
 public class Deck {
 
     private static final Logger logger = LoggerFactory.getLogger(Deck.class);
+<<<<<<< HEAD
+=======
+    private ArrayList<CardInterface> drawPile = new ArrayList<>(108);
+    private ArrayList<CardInterface> discardPile = new ArrayList<>(108);
+>>>>>>> 906529f3bc0aec826269637ea9f7caee1538a1ca
     private static final ArrayList<String> unoColors = new ArrayList<>(4);
     /**
      * Defines the private instance attribute
@@ -89,11 +100,15 @@ public class Deck {
      *
      * @param players ArrayList<IPlayer>
      */
+<<<<<<< HEAD
     public void distribute(ArrayList<IPlayer> players) {
+=======
+    public void distribute(ArrayList<PlayerInterface> players){
+>>>>>>> 906529f3bc0aec826269637ea9f7caee1538a1ca
         /*
           Iterate through every player
          */
-        for (IPlayer player : players) {
+        for (PlayerInterface player : players) {
             /*
               Move 7 cards to hand of player
              */
@@ -108,7 +123,7 @@ public class Deck {
 
     public void revealTopCard() {
         if (!drawPile.isEmpty() && drawPile.size() > 0) {
-            ICard topCard;
+            CardInterface topCard;
             topCard = drawPile.get(0);
             discardPile.add(topCard);
             drawPile.remove(topCard);
@@ -122,7 +137,7 @@ public class Deck {
         return drawPile.size();
     }
 
-    public ICard getTopCardOfDiscardPile() {
+    public CardInterface getTopCardOfDiscardPile() {
         return discardPile.get(0);
     }
 }

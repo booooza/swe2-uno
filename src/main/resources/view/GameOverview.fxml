@@ -3,6 +3,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
+<<<<<<< HEAD
 <AnchorPane prefHeight="300.0"
             prefWidth="600.0"
             xmlns="http://javafx.com/javafx/11.0.1"
@@ -130,4 +131,76 @@
             </items>
         </SplitPane>
     </children>
+=======
+
+<AnchorPane prefHeight="300.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ch.swe2.uno.presentation.gui.controller.GameOverviewController">
+   <children>
+      <SplitPane dividerPositions="0.5" layoutX="153.0" layoutY="70.0" prefHeight="300.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <items>
+            <SplitPane dividerPositions="0.5" prefHeight="200.0" prefWidth="200.0">
+               <items>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+                     <children>
+                        <Label fx:id="player1Name" layoutX="14.0" layoutY="10.0" text="Player 1">
+                           <font>
+                              <Font name="System Bold" size="13.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="player1Uno" layoutX="89.0" layoutY="10.0" text="" textFill="RED">
+                             <font>
+                                 <Font name="System Bold" size="13.0" />
+                             </font>
+                        </Label>
+                        <TableView fx:id="player1Table" layoutX="-12.0" layoutY="36.0" prefHeight="262.0" prefWidth="144.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="36.0">
+                          <columns>
+                            <TableColumn fx:id="player1CardColorColumn" prefWidth="75.0" text="" />
+                            <TableColumn fx:id="player1CardNumberColumn" prefWidth="75.0" text="" />
+                          </columns>
+                           <columnResizePolicy>
+                              <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                           </columnResizePolicy>
+                        </TableView>
+
+                     </children>
+                  </AnchorPane>
+                  <AnchorPane layoutX="10.0" layoutY="10.0" minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+                     <children>
+                        <Label fx:id="player2Name" layoutX="13.0" layoutY="10.0" text="Player 2" />
+                        <Label fx:id="player2Uno" layoutX="91.0" layoutY="10.0" text="" textFill="RED">
+                           <font>
+                              <Font name="System Bold" size="13.0" />
+                           </font>
+                        </Label>
+                        <TableView fx:id="player2Table" layoutX="-12.0" layoutY="36.0" prefHeight="262.0" prefWidth="143.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="36.0">
+                           <columns>
+                              <TableColumn fx:id="player2CardColorColumn" prefWidth="75.0" text="" />
+                              <TableColumn fx:id="player2CardNumberColumn" prefWidth="75.0" text="" />
+                           </columns>
+                           <columnResizePolicy>
+                              <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                           </columnResizePolicy>
+                        </TableView>
+                     </children>
+                  </AnchorPane>
+               </items>
+            </SplitPane>
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="277.0" prefWidth="295.0">
+               <children>
+                  <Label layoutX="19.0" layoutY="14.0" text="Current turn:" AnchorPane.leftAnchor="19.0" AnchorPane.topAnchor="14.0" />
+                  <Label fx:id="currentTurn" layoutX="161.0" layoutY="14.0" text="Player 1" />
+                  <Label layoutX="19.0" layoutY="40.0" text="Current Top Card:" />
+                  <Label fx:id="topCard" layoutX="161.0" layoutY="40.0" text="Green 9" />
+                  <Label fx:id="message" layoutX="19.0" layoutY="71.0" text="" textFill="RED">
+                     <font>
+                        <Font name="System Bold" size="13.0" />
+                     </font>
+                  </Label>
+                  <Button layoutX="17.0" layoutY="250.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="82.0" text="Play" />
+                  <Button layoutX="118.0" layoutY="250.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="82.0" text="Draw" />
+               </children>
+            </AnchorPane>
+        </items>
+      </SplitPane>
+   </children>
+>>>>>>> 906529f3bc0aec826269637ea9f7caee1538a1ca
 </AnchorPane>

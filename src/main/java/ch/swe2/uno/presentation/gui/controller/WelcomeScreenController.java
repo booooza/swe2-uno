@@ -1,15 +1,34 @@
 package ch.swe2.uno.presentation.gui.controller;
 
 import ch.swe2.uno.presentation.gui.MainApp;
+import ch.swe2.uno.presentation.gui.model.PlayerViewModel;
+import ch.swe2.uno.presentation.gui.model.StateViewModel;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.TextField;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class WelcomeScreenController {
+    @FXML
+    private TextField player1Name;
+    @FXML
+    private TextField player2Name;
+
     private static final Logger logger = LoggerFactory.getLogger(WelcomeScreenController.class);
-    // Reference to the main application.
-    private MainApp mainApp;
+    private MainApp mainApp; // Reference to the main application.
+    private ObservableList<PlayerViewModel> playerList = FXCollections.observableArrayList();
+
+    /**
+     * Returns the data as an observable list of cards.
+     * @return
+     */
+    public ObservableList<PlayerViewModel> getPlayerList() {
+        return playerList;
+    }
+
 
     /**
      * The constructor.
@@ -36,7 +55,16 @@ public class WelcomeScreenController {
     }
 
     public void handleButtonAction(ActionEvent event) {
-        logger.info("Clicked");
+        logger.info("Selected Player 1: " + player1Name.getText());
+        logger.info("Selected Player 2: " + player2Name.getText());
+
+        // playerList.add(new PlayerViewModel(player1Name.getText()));
+        // playerList.add(new PlayerViewModel(player2Name.getText()));
+
+        // StateViewModel gameState = new StateViewModel(this.getPlayerList());
+
+        // TODO: Send updated info to server
+
         mainApp.showGameOverview();
     }
 }

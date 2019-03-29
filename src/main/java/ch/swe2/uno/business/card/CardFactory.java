@@ -27,10 +27,14 @@ public class CardFactory {
 
     /**
      * Create a single card
+<<<<<<< HEAD
      *
      * @return ICard card
+=======
+     * @return CardInterface card
+>>>>>>> 906529f3bc0aec826269637ea9f7caee1538a1ca
      */
-    public ICard createCard(String color, int number) {
+    public CardInterface createCard(String color, int number) {
         return new NumberCard(color, number);
     }
 }
