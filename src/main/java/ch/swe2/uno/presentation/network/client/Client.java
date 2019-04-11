@@ -1,4 +1,4 @@
-package ch.swe2.uno.presentation.gui.client;
+package ch.swe2.uno.presentation.network.client;
 
 import ch.swe2.uno.presentation.gui.MainApp;
 import com.google.gson.Gson;
@@ -18,7 +18,7 @@ public class Client {
     private BufferedWriter out;
     private Gson fxGson = FxGson.create();
     JsonParser parser = new JsonParser();
-    private static final Logger logger = LoggerFactory.getLogger(MainApp.class);
+    private static final Logger logger = LoggerFactory.getLogger(Client.class);
 
     public Client(String serverAddress) throws Exception {
         socket = new Socket(serverAddress, 1234);

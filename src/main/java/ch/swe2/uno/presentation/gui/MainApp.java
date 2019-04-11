@@ -1,6 +1,6 @@
 package ch.swe2.uno.presentation.gui;
 
-import ch.swe2.uno.presentation.gui.client.Client;
+import ch.swe2.uno.presentation.network.client.Client;
 import ch.swe2.uno.presentation.gui.controller.GameOverviewController;
 import ch.swe2.uno.presentation.gui.controller.WelcomeScreenController;
 import ch.swe2.uno.presentation.gui.model.NumberCardViewModel;
@@ -36,7 +36,7 @@ public class MainApp extends Application {
     private static final Logger logger = LoggerFactory.getLogger(MainApp.class);
 
     /**
-     * Constructor
+     * TODO: Constructor
      */
     public MainApp() {
         // Add some sample data
