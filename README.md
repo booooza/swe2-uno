@@ -1,4 +1,6 @@
 # UNO Game
+[![Build status](https://travis-ci.org/booooza/swe2-uno.svg?branch=master)](https://travis-ci.org/booooza/swe2-uno) [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=ch.swe2.uno%3Aswe2-uno&metric=alert_status)](https://sonarcloud.io/dashboard?id=ch.swe2.uno%3Aswe2-uno)
+
 Simple Java-based UNO game developed during the course software engineering 2
 
 ## Starting the JavaFX GUI
