@@ -7,6 +7,8 @@ import ch.swe2.uno.business.player.PlayerInterface;
 import ch.swe2.uno.business.state.State;
 import com.google.gson.Gson;
 import org.hildan.fxgson.FxGson;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.OutputStreamWriter;
@@ -22,6 +24,7 @@ public class ClientThread implements Runnable {
     Scanner input;
     private Gson fxGson = FxGson.create();
     private State gameState;
+    private static final Logger logger = LoggerFactory.getLogger(ClientThread.class);
 
     public ClientThread(Socket socket) {
         this.socket = socket;
@@ -33,7 +36,7 @@ public class ClientThread implements Runnable {
             // fakeState(3);
             sendState(gameState);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.warn("Exception: {}", e);
         }
     }
 

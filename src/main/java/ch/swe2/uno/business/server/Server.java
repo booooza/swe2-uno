@@ -9,10 +9,8 @@ public class Server {
         try (var listener = new ServerSocket(1234)) {
             System.out.println("Uno Server is Running...");
             var pool = Executors.newFixedThreadPool(200);
-            while (true) {
-                pool.execute(new ClientThread(listener.accept()));
-                pool.execute(new ClientThread(listener.accept()));
-            }
+            pool.execute(new ClientThread(listener.accept()));
+            pool.execute(new ClientThread(listener.accept()));
         }
     }
 }

@@ -33,7 +33,7 @@ public class Client {
             logger.info("Current game state received from server: {}", gameState.toString());
             return gameState;
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.warn("Exception: {}", e);
         }
         finally {
             socket.close();

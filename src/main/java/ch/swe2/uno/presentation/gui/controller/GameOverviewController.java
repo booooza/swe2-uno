@@ -9,6 +9,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 
+import java.util.Optional;
+
 public class GameOverviewController {
     @FXML
     private TableView<NumberCardViewModel> player1Table;
@@ -65,16 +67,18 @@ public class GameOverviewController {
      * @param mainApp
      */
     public void setMainApp(MainApp mainApp) {
-        mainApp = mainApp;
-
         // Add observable data to the view
         player1Table.setItems(mainApp.getState().getPlayers().get(0).getHand());
         player2Table.setItems(mainApp.getState().getPlayers().get(1).getHand());
         player1Name.setText(mainApp.getState().getPlayers().get(0).getName());
         player2Name.setText(mainApp.getState().getPlayers().get(1).getName());
-        currentTurn.setText(mainApp.getState().getPlayers().stream()
-                .filter(player -> player.isCurrentTurn())
-                .findFirst().get().getName());
+
+        Optional<PlayerViewModel> currentPlayer = mainApp.getState().getPlayers().stream()
+                .filter(PlayerViewModel::isCurrentTurn)
+                .findFirst();
+
+        currentPlayer.ifPresent(c -> currentTurn.setText(c.getName()));
+
         if (mainApp.getState().getPlayers().get(0).isUno()) {
             player1Uno.setText("Uno");
         }

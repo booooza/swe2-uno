@@ -60,7 +60,7 @@ public class Game {
         // Check if is the players turn and if the players hand contains the mentioned card
         if (playerState.isCurrentTurn() && playerState.getHand().contains(card)) {
             // Check if card matches current top card
-            if (card.getColor() == state.getTopCard().getColor() ||
+            if (card.getColor().equals(state.getTopCard().getColor()) ||
                     card.getNumber() == state.getTopCard().getNumber()) {
                 // Remove from players hand
                 playerState.getHand().remove(card);
@@ -95,11 +95,16 @@ public class Game {
     }
 
     public PlayerInterface getCurrentPlayer() {
-        return state.getPlayers()
+        Optional currentPlayer = state.getPlayers()
                 .stream()
                 .findFirst()
-                .filter(p -> p.isCurrentTurn())
-                .get();
+                .filter(p -> p.isCurrentTurn());
+
+        if (currentPlayer.isPresent()) {
+            return (PlayerInterface) currentPlayer.get();
+        } else {
+            throw new IllegalStateException();
+        }
     }
 
     public State getState() {

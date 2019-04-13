@@ -96,7 +96,7 @@ public class MainApp extends Application {
             primaryStage.setScene(scene);
             primaryStage.show();
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.warn("Exception: {}", e);
         }
     }
 
@@ -117,7 +117,7 @@ public class MainApp extends Application {
             WelcomeScreenController controller = loader.getController();
             controller.setMainApp(this);
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.warn("Exception: {}", e);
         }
     }
 
@@ -139,7 +139,7 @@ public class MainApp extends Application {
             controller.setMainApp(this);
 
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.warn("Exception: {}", e);
         }
     }
 
@@ -149,7 +149,7 @@ public class MainApp extends Application {
             this.gameState = fxGson.fromJson(client.getState(), StateViewModel.class);
             return this.gameState;
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.warn("Exception: {}", e);
         }
         return new StateViewModel();
     }
