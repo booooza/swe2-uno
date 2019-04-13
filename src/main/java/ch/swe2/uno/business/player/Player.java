@@ -11,11 +11,11 @@ public class Player implements PlayerInterface {
     private boolean currentTurn;
     private boolean uno;
 
-    Player(String name, ArrayList<CardInterface> hand, boolean currentTurn, boolean uno) {
+    Player(String name) {
         this.name = name;
-        this.hand = hand;
-        this.currentTurn = currentTurn;
-        this.uno = uno;
+        this.hand = new ArrayList<CardInterface>();
+        this.currentTurn = false;
+        this.uno = false;
     }
 
     public void setName(String name) {
@@ -42,11 +42,19 @@ public class Player implements PlayerInterface {
         return currentTurn;
     }
 
+    public void toggleCurrentTurn() {
+        currentTurn = !currentTurn;
+    }
+
     public void setUno(boolean uno) {
         this.uno = uno;
     }
 
     public boolean isUno() {
         return uno;
+    }
+
+    public void addCard(CardInterface card) {
+        this.hand.add(card);
     }
 }

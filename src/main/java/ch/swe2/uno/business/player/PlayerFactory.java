@@ -35,8 +35,8 @@ public class PlayerFactory {
      * Create a single player
      * @return player
      */
-    public PlayerInterface createPlayer(String name, ArrayList<CardInterface> hand, boolean currentTurn, boolean uno) {
-        PlayerInterface player = new Player(name, hand, currentTurn, uno);
+    public PlayerInterface create(String name) {
+        PlayerInterface player = new Player(name);
         logger.info("Created player {}", name);
         return player;
     }

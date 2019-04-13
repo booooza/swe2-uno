@@ -4,6 +4,7 @@ import ch.swe2.uno.business.card.CardInterface;
 import ch.swe2.uno.business.player.PlayerInterface;
 
 import java.util.ArrayList;
+import java.util.Optional;
 
 public class State {
     private ArrayList<PlayerInterface> players;
@@ -14,11 +15,21 @@ public class State {
     public State() {
     }
 
-    public State(ArrayList<PlayerInterface> players, CardInterface topCard, String winner, String message) {
+    public State(ArrayList<PlayerInterface> players, String message) {
         this.players = players;
-        this.topCard = topCard;
-        this.winner = winner;
         this.message = message;
+    }
+
+    public PlayerInterface getPlayerByName(String name) {
+        PlayerInterface player = players.stream()
+                .filter(p -> name.equals(p.getName()))
+                .findFirst()
+                .orElse(null);
+        return player;
+    }
+
+    public void toggleCurrentTurn() {
+        players.stream().forEach(p -> p.toggleCurrentTurn());
     }
 
     public void setPlayers(ArrayList<PlayerInterface> players) {

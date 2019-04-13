@@ -30,23 +30,24 @@ public class ClientThread implements Runnable {
     @Override
     public void run() {
         try {
-            fakeState(3);
+            // fakeState(3);
             sendState(gameState);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
+    /*
     private void fakeState(int selection) {
         CardFactory cardFactory = CardFactory.getInstance();
 
         // Create a fake top card
-        CardInterface topCard = cardFactory.createCard("blue", 7);
+        CardInterface topCard = cardFactory.create("blue", 7);
 
         // Create a fake hand
         ArrayList<CardInterface> hand = new ArrayList<>();
         for (int i = 1; i <= 7; i++) {
-            hand.add(cardFactory.createCard("red", i));
+            hand.add(cardFactory.create("red", i));
         }
 
         // Create players
@@ -61,31 +62,32 @@ public class ClientThread implements Runnable {
             case 2:
                 // Regular turn, two players, no uno, no winner, no message
                 players.add(playerFactory
-                        .createPlayer("Marc", hand, true, false));
+                        .create("Marc", hand, true, false));
                 players.add(playerFactory
-                        .createPlayer("Luca", hand, false, false));
+                        .create("Luca", hand, false, false));
                 this.gameState = new State(players, topCard, "", "");
                 break;
             case 3:
                 // Regular turn, one player has uno, message
                 players.add(playerFactory
-                        .createPlayer("Marc", hand, false, true));
+                        .create("Marc", hand, false, true));
                 players.add(playerFactory
-                        .createPlayer("Luca", hand, true, false));
+                        .create("Luca", hand, true, false));
                 this.gameState = new State(players, topCard, "", "Marc has UNO");
                 break;
             case 4:
                 // One player won the game
                 players.add(playerFactory
-                        .createPlayer("Marc", hand, false, false));
+                        .create("Marc", hand, false, false));
                 players.add(playerFactory
-                        .createPlayer("Luca", hand, true, false));
+                        .create("Luca", hand, true, false));
                 this.gameState = new State(players, topCard, "Marc", "Marc won the game");
                 break;
             default:
                 this.gameState = new State();
         }
     }
+    */
 
     private void sendState(State gameState) throws IOException {
         try (OutputStreamWriter output = new OutputStreamWriter(

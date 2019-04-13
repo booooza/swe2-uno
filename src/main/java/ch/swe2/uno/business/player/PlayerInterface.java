@@ -11,6 +11,8 @@ public interface PlayerInterface {
     ArrayList<CardInterface> getHand();
     void setCurrentTurn(boolean currentTurn);
     boolean isCurrentTurn();
+    void toggleCurrentTurn();
     void setUno(boolean uno);
     boolean isUno();
+    void addCard(CardInterface card);
 }

@@ -58,25 +58,28 @@ public class Deck {
             /*
               Create one card with number: 0
              */
-            drawPile.add(cardFactory.createCard(unoColor, 0));
+            drawPile.add(cardFactory.create(unoColor, 0));
 
             /*
               Create two cards with numbers: 1-9
              */
             for (int i = 1; i <= 9; i++) {
-                drawPile.add(cardFactory.createCard(unoColor, i));
-                drawPile.add(cardFactory.createCard(unoColor, i));
+                drawPile.add(cardFactory.create(unoColor, i));
+                drawPile.add(cardFactory.create(unoColor, i));
             }
         }
 
-        logger.info("Generated {} cards", this.getDeckSize());
+        this.shuffle(2);
+        this.revealTopCard();
+
+        logger.info("{} cards in draw pile", this.drawPile.size());
     }
 
     /**
      * Randomly permutes the deck using a default source of randomness.
      * Uses Fisher–Yates shuffle (https://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle)
      */
-    public void shuffle(int times){
+    private void shuffle(int times){
         for (int i = 0; i < times; i++) {
             Collections.shuffle(drawPile);
         }
@@ -96,15 +99,15 @@ public class Deck {
               Move 7 cards to hand of player
              */
             for (int i = 0; i < 7; i++) {
-                // player.draw(drawPile.get(i));
+                player.addCard(drawPile.get(i));
                 drawPile.remove(i);
             }
-            // logger.info("Distributed {} cards to {}", player.getHandSize(), player.getName());
+            logger.info("Distributed {} cards to {}", player.getHand().size(), player.getName());
         }
-        logger.info("{} cards remaining in deck", this.getDeckSize());
+        logger.info("{} cards in draw pile", this.drawPile.size());
     }
 
-    public void revealTopCard() {
+    private void revealTopCard() {
         if (!drawPile.isEmpty() && drawPile.size() > 0) {
             CardInterface topCard;
             topCard = drawPile.get(0);
@@ -122,5 +125,10 @@ public class Deck {
 
     public CardInterface getTopCardOfDiscardPile() {
         return discardPile.get(0);
+    }
+
+    public void drawCard(PlayerInterface player) {
+        player.addCard(drawPile.get(0));
+        drawPile.remove(0);
     }
 }
