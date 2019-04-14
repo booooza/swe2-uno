@@ -2,55 +2,41 @@ package ch.swe2.uno.business.game;
 
 import ch.swe2.uno.business.card.CardInterface;
 import ch.swe2.uno.business.deck.Deck;
-import ch.swe2.uno.business.player.Player;
 import ch.swe2.uno.business.player.PlayerInterface;
 import ch.swe2.uno.business.state.State;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+
+import com.google.gson.Gson;
+import org.hildan.fxgson.FxGson;
 
 public class Game {
     private State state;
     private Deck deck = Deck.getInstance();
+    private Gson fxGson = FxGson.create();
     private static final Logger logger = LoggerFactory.getLogger(Game.class);
 
-    /**
-     * Defines the private instance attribute
-     */
-    private static Game ourInstance = new Game();
-
-    /**
-     * Constructor must be private for singleton
-     */
-    private Game(){}
-
-    /**
-     * Return the singleton instance
-     * @return ourInstance
-     */
-    public static Game getInstance(){
-        return ourInstance;
-    }
-
-    public void initialize(ArrayList<PlayerInterface> players) {
+    public void initialize(List<PlayerInterface> players) {
         logger.info("Starting the game");
         state = new State(players, "Initial state");
 
-        while (players.stream().allMatch(player -> player.getHand().size() == 0)) {
+        while (players.stream().allMatch(player -> player.getHand().isEmpty())) {
             // Create deck & distribute cards
             deck.create();
             deck.distribute(players);
 
-            // Choose first player
+            // Choose first player (TODO: randomize)
             players.get(0).setCurrentTurn(true);
             players.get(1).setCurrentTurn(false);
 
             // Write player info to state
             state.setPlayers(players);
-            state.setMessage("Game initialized");
             state.setTopCard(deck.getTopCardOfDiscardPile());
+            state.setMessage("Game initialized");
+            System.out.println(fxGson.toJson(state));
         }
     }
 
@@ -82,7 +68,7 @@ public class Game {
     public void drawCard(PlayerInterface player) {
         PlayerInterface fromPlayer = state.getPlayerByName(player.getName());
 
-        // Check if is the players turn and if the players hand contains the mentioned card
+        // Check if is the players turn
         if (fromPlayer.isCurrentTurn()) {
             deck.drawCard(player);
             logger.info("Player {} drawed card", player.getName());
@@ -98,7 +84,7 @@ public class Game {
         Optional currentPlayer = state.getPlayers()
                 .stream()
                 .findFirst()
-                .filter(p -> p.isCurrentTurn());
+                .filter(PlayerInterface::isCurrentTurn);
 
         if (currentPlayer.isPresent()) {
             return (PlayerInterface) currentPlayer.get();

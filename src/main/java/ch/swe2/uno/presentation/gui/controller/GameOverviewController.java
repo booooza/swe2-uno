@@ -39,8 +39,6 @@ public class GameOverviewController {
     @FXML
     private Label message;
 
-    private MainApp mainApp; // Reference to the main application.
-
     /**
      * The constructor.
      * The constructor is called before the initialize() method.

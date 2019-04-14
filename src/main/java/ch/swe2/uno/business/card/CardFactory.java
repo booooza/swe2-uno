@@ -1,15 +1,13 @@
 package ch.swe2.uno.business.card;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.lang.invoke.WrongMethodTypeException;
+import java.util.Arrays;
 
 /**
  * Class used to create cards
  * Implementation of a singleton factory
  */
 public class CardFactory {
-    private static final Logger logger = LoggerFactory.getLogger(CardFactory.class);
-
     /**
      * Defines the private instance attribute
      */
@@ -29,10 +27,17 @@ public class CardFactory {
     }
 
     /**
-     * Create a single card
+     * Create a single number card
      * @return CardInterface card
      */
     public CardInterface create(String color, int number) {
-        return new NumberCard(color, number);
+        if (
+                Arrays.stream(UnoColors.values())
+                .anyMatch(c -> c.getColor().equals(color))
+        ) {
+            return new NumberCard(color, number);
+        } else {
+            throw new IllegalArgumentException();
+        }
     }
 }

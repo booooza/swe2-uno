@@ -3,11 +3,10 @@ package ch.swe2.uno.business.state;
 import ch.swe2.uno.business.card.CardInterface;
 import ch.swe2.uno.business.player.PlayerInterface;
 
-import java.util.ArrayList;
-import java.util.Optional;
+import java.util.List;
 
 public class State {
-    private ArrayList<PlayerInterface> players;
+    private List<PlayerInterface> players;
     private CardInterface topCard;
     private String winner;
     private String message;
@@ -15,28 +14,27 @@ public class State {
     public State() {
     }
 
-    public State(ArrayList<PlayerInterface> players, String message) {
+    public State(List<PlayerInterface> players, String message) {
         this.players = players;
         this.message = message;
     }
 
     public PlayerInterface getPlayerByName(String name) {
-        PlayerInterface player = players.stream()
+        return players.stream()
                 .filter(p -> name.equals(p.getName()))
                 .findFirst()
                 .orElse(null);
-        return player;
     }
 
     public void toggleCurrentTurn() {
-        players.stream().forEach(p -> p.toggleCurrentTurn());
+        players.stream().forEach(PlayerInterface::toggleCurrentTurn);
     }
 
-    public void setPlayers(ArrayList<PlayerInterface> players) {
+    public void setPlayers(List<PlayerInterface> players) {
         this.players = players;
     }
 
-    public ArrayList<PlayerInterface> getPlayers() {
+    public List<PlayerInterface> getPlayers() {
         return this.players;
     }
 

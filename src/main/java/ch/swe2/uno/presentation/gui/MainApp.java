@@ -36,7 +36,7 @@ public class MainApp extends Application {
     private static final Logger logger = LoggerFactory.getLogger(MainApp.class);
 
     /**
-     * TODO: Constructor
+     * Constructor
      */
     public MainApp() {
         // Add some sample data
@@ -89,7 +89,7 @@ public class MainApp extends Application {
             // Load root layout from fxml file.
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(MainApp.class.getResource("/view/RootLayout.fxml"));
-            rootLayout = (BorderPane) loader.load();
+            rootLayout = loader.load();
 
             // Show the scene containing the root layout.
             Scene scene = new Scene(rootLayout);
@@ -108,7 +108,7 @@ public class MainApp extends Application {
             // Load welcome screen overview.
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(MainApp.class.getResource("/view/WelcomeScreen.fxml"));
-            AnchorPane welcomeScreen = (AnchorPane) loader.load();
+            AnchorPane welcomeScreen = loader.load();
 
             // Set welcome screen into the center of root layout.
             rootLayout.setCenter(welcomeScreen);
@@ -129,7 +129,7 @@ public class MainApp extends Application {
             // Load player overview.
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(MainApp.class.getResource("/view/GameOverview.fxml"));
-            AnchorPane gameOverview = (AnchorPane) loader.load();
+            AnchorPane gameOverview = loader.load();
 
             // Set player overview into the center of root layout.
             rootLayout.setCenter(gameOverview);

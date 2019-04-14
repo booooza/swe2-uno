@@ -1,0 +1,36 @@
+{
+  "players":[
+    {
+      "name": "Marc",
+      "hand": [
+        {
+          "color": "green",
+          "number": 8
+        }
+      ],
+      "currentTurn": false,
+      "uno": true
+    },
+    {
+      "name": "Luca",
+      "hand": [
+        {
+          "color": "yellow",
+          "number": 7
+        },
+        {
+          "color": "red",
+          "number": 2
+        }
+      ],
+      "currentTurn": true,
+      "uno": false
+    }
+  ],
+  "topCard": {
+    "color": "red",
+    "number": 3
+  },
+  "winner": "",
+  "message": ""
+}

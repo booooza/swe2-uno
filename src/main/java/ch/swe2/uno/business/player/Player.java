@@ -3,34 +3,31 @@ package ch.swe2.uno.business.player;
 import ch.swe2.uno.business.card.CardInterface;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Player implements PlayerInterface {
     // Attributes:
     private String name;
-    private ArrayList<CardInterface> hand;
+    private List<CardInterface> hand;
     private boolean currentTurn;
     private boolean uno;
 
-    Player(String name) {
+    public Player(String name) {
         this.name = name;
-        this.hand = new ArrayList<CardInterface>();
+        this.hand = new ArrayList<>();
         this.currentTurn = false;
         this.uno = false;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public String getName() {
         return this.name;
     }
 
-    public void setHand(ArrayList<CardInterface> hand) {
+    public void setHand(List<CardInterface> hand) {
         this.hand = hand;
     }
 
-    public ArrayList<CardInterface> getHand() {
+    public List<CardInterface> getHand() {
         return hand;
     }
 

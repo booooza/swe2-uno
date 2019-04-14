@@ -8,32 +8,19 @@ import javafx.beans.property.StringProperty;
 /**
  * Business Class for number card (has color and number).
  */
-public class NumberCard extends AbstractCard {
-    // Attributes:
+public class NumberCard implements CardInterface {
     private final StringProperty color;
     private final IntegerProperty number;
 
     /**
-     * Default constructor.
-     */
-    public NumberCard() {
-        this(null, 0);
-    }
-
-    /**
      * Constructor
      *
-     * @param color
-     * @param number
+     * @param color Color of the card
+     * @param number Number of the card
      */
-    public NumberCard(String color, int number) {
+    NumberCard(String color, int number) {
         this.color = new SimpleStringProperty(color);
         this.number = new SimpleIntegerProperty(number);
-    }
-
-    // Methods:
-    public void setColor(String color) {
-        this.color.set(color);
     }
 
     public String getColor() {
@@ -42,10 +29,6 @@ public class NumberCard extends AbstractCard {
 
     public StringProperty colorProperty() {
         return color;
-    }
-
-    public void setNumber(int number) {
-        this.number.set(number);
     }
 
     public int getNumber() {

@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 /**
  * Business Class for a uno deck (contains 108 cards as per uno rules).
@@ -15,8 +16,8 @@ import java.util.Collections;
 public class Deck {
 
     private static final Logger logger = LoggerFactory.getLogger(Deck.class);
-    private ArrayList<CardInterface> drawPile = new ArrayList<>(108);
-    private ArrayList<CardInterface> discardPile = new ArrayList<>(108);
+    private List<CardInterface> drawPile = new ArrayList<>(108);
+    private List<CardInterface> discardPile = new ArrayList<>(108);
     private static final ArrayList<String> unoColors = new ArrayList<>(4);
 
     /**
@@ -90,7 +91,7 @@ public class Deck {
      * Distribute cards to players
      * @param players ArrayList<IPlayer>
      */
-    public void distribute(ArrayList<PlayerInterface> players){
+    public void distribute(List<PlayerInterface> players){
         /*
           Iterate through every player
          */
@@ -108,7 +109,7 @@ public class Deck {
     }
 
     private void revealTopCard() {
-        if (!drawPile.isEmpty() && drawPile.size() > 0) {
+        if (!drawPile.isEmpty()) {
             CardInterface topCard;
             topCard = drawPile.get(0);
             discardPile.add(topCard);

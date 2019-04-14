@@ -3,16 +3,39 @@ package ch.swe2.uno.business.card;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.DisplayName;
 
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @DisplayName("NumberCard")
-public class NumberCardTest {
+class NumberCardTest {
+
     @Test
-    @DisplayName("Creation of number card")
-    public void testCreationOfNumberCard() {
+    @DisplayName("Create valid number card")
+    void testCreationOfValidNumberCard() {
+        // Given
         CardFactory cardFactory = CardFactory.getInstance();
-        CardInterface card = cardFactory.create("red", 2);
-        assertEquals("red", card.getColor());
-        assertEquals(2, card.getNumber());
+
+        // When
+        CardInterface card = cardFactory.create(UnoColors.RED.getColor(), 1);
+
+        // Then
+        assertEquals(card.getColor(), UnoColors.RED.getColor());
+        assertEquals(card.colorProperty().getValue(), UnoColors.RED.getColor());
+        assertEquals(card.getNumber(), 1);
+        assertEquals(card.numberProperty().getValue(), 1);
+    }
+
+    @Test
+    @DisplayName("Create invalid number card")
+    void testCreationOfInvalidNumberCard() {
+        // Given
+        CardFactory cardFactory = CardFactory.getInstance();
+
+        // Then
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> { cardFactory.create("Pink", 99); }
+        );
     }
 }

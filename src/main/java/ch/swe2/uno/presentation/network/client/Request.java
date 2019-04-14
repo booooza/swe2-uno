@@ -11,7 +11,7 @@ public class Request {
         return command;
     }
 
-    public static enum Command {
+    public enum Command {
         QUIT,
         GETSTATE;
     }
