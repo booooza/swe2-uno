@@ -1,12 +1,14 @@
 package ch.swe2.uno.business.deck;
 
 import ch.swe2.uno.business.card.CardInterface;
+import ch.swe2.uno.business.card.UnoColor;
 import ch.swe2.uno.business.card.CardFactory;
 import ch.swe2.uno.business.player.PlayerInterface;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -18,7 +20,6 @@ public class Deck {
     private static final Logger logger = LoggerFactory.getLogger(Deck.class);
     private List<CardInterface> drawPile = new ArrayList<>(108);
     private List<CardInterface> discardPile = new ArrayList<>(108);
-    private static final ArrayList<String> unoColors = new ArrayList<>(4);
 
     /**
      * Defines the private instance attribute
@@ -50,12 +51,7 @@ public class Deck {
         /*
           Iterate through every color
          */
-        unoColors.add("red");
-        unoColors.add("blue");
-        unoColors.add("yellow");
-        unoColors.add("green");
-
-        for (String unoColor: unoColors) {
+        for (UnoColor unoColor: UnoColor.values()) {
             /*
               Create one card with number: 0
              */
@@ -70,28 +66,16 @@ public class Deck {
             }
         }
 
-        this.shuffle(2);
-        this.revealTopCard();
+        drawPile = shuffle(drawPile);
 
-        logger.info("{} cards in draw pile", this.drawPile.size());
-    }
-
-    /**
-     * Randomly permutes the deck using a default source of randomness.
-     * Uses Fisher–Yates shuffle (https://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle)
-     */
-    private void shuffle(int times){
-        for (int i = 0; i < times; i++) {
-            Collections.shuffle(drawPile);
-        }
-        logger.info("Shuffled deck {} times", times);
+        logger.info("{} cards in draw pile", drawPile.size());
     }
 
     /**
      * Distribute cards to players
      * @param players ArrayList<IPlayer>
      */
-    public void distribute(List<PlayerInterface> players){
+    public void distribute(List<PlayerInterface> players) {
         /*
           Iterate through every player
          */
@@ -99,24 +83,32 @@ public class Deck {
             /*
               Move 7 cards to hand of player
              */
-            for (int i = 0; i < 7; i++) {
-                player.addCard(drawPile.get(i));
-                drawPile.remove(i);
-            }
+            drawPile.subList(0, 6).stream().forEach(c -> player.addCard(c));
+            drawPile.remove(drawPile.subList(0, 6));
             logger.info("Distributed {} cards to {}", player.getHand().size(), player.getName());
         }
-        logger.info("{} cards in draw pile", this.drawPile.size());
+        logger.info("{} cards in draw pile", drawPile.size());
     }
 
-    private void revealTopCard() {
+    /**
+     * Randomly permutes the deck using a default source of randomness.
+     * Uses Fisher–Yates shuffle (https://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle)
+     */
+    private static List<CardInterface> shuffle(List<CardInterface> cardsToShuffle){
+        Collections.shuffle(cardsToShuffle);
+        logger.info("Shuffled cards");
+        return cardsToShuffle;
+    }
+
+    public void revealTopCard() {
         if (!drawPile.isEmpty()) {
             CardInterface topCard;
             topCard = drawPile.get(0);
             discardPile.add(topCard);
             drawPile.remove(topCard);
             logger.info("Revealed first card {} / {}",
-                    this.getTopCardOfDiscardPile().getColor(),
-                    this.getTopCardOfDiscardPile().getNumber());
+                    getTopCardOfDiscardPile().getColor(),
+                    getTopCardOfDiscardPile().getNumber());
         }
     }
 
@@ -125,11 +117,20 @@ public class Deck {
     }
 
     public CardInterface getTopCardOfDiscardPile() {
-        return discardPile.get(0);
+        return discardPile.get(discardPile.size() - 1);
     }
 
-    public void drawCard(PlayerInterface player) {
-        player.addCard(drawPile.get(0));
-        drawPile.remove(0);
+    public CardInterface drawCard() {
+        if(drawPile.size() >= 1) {
+            CardInterface topCard = getTopCardOfDiscardPile();
+            List<CardInterface> tempCards = discardPile.subList(0, discardPile.size() - 2);
+            drawPile.addAll(tempCards);
+            drawPile = Deck.shuffle(drawPile);
+            discardPile = new ArrayList<CardInterface>();
+            discardPile.add(topCard);
+        }
+        CardInterface card = drawPile.get(0);
+        drawPile.remove(card);
+        return card;
     }
 }

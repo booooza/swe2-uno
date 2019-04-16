@@ -1,6 +1,6 @@
 package ch.swe2.uno.business.card;
 
-public enum UnoColors {
+public enum UnoColor {
     RED("Red"),
     BLUE("Blue"),
     YELLOW("Yellow"),
@@ -8,7 +8,7 @@ public enum UnoColors {
 
     private String color;
 
-    UnoColors(String color) {
+    UnoColor(String color) {
         this.color = color;
     }
 

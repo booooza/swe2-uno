@@ -18,8 +18,8 @@ public class NumberCard implements CardInterface {
      * @param color Color of the card
      * @param number Number of the card
      */
-    NumberCard(String color, int number) {
-        this.color = new SimpleStringProperty(color);
+    NumberCard(UnoColor color, int number) {
+        this.color = new SimpleStringProperty(color.toString());
         this.number = new SimpleIntegerProperty(number);
     }
 

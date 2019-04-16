@@ -3,11 +3,12 @@ package ch.swe2.uno.business.state;
 import ch.swe2.uno.business.card.CardInterface;
 import ch.swe2.uno.business.player.PlayerInterface;
 
+import java.util.Optional;
 import java.util.List;
 
 public class State {
     private List<PlayerInterface> players;
-    private CardInterface topCard;
+    private CardInterface topDiscardPileCard;
     private String winner;
     private String message;
 
@@ -19,14 +20,14 @@ public class State {
         this.message = message;
     }
 
-    public PlayerInterface getPlayerByName(String name) {
+    public Optional<PlayerInterface> getPlayerByName(String name) {
         return players.stream()
                 .filter(p -> name.equals(p.getName()))
-                .findFirst()
-                .orElse(null);
+                .findFirst();
     }
 
     public void toggleCurrentTurn() {
+        // 
         players.stream().forEach(PlayerInterface::toggleCurrentTurn);
     }
 
@@ -54,11 +55,11 @@ public class State {
         return message;
     }
 
-    public void setTopCard(CardInterface topCard) {
-        this.topCard = topCard;
+    public void setTopDiscardPileCard(CardInterface topCard) {
+        this.topDiscardPileCard = topCard;
     }
 
-    public CardInterface getTopCard() {
-        return topCard;
+    public CardInterface getTopDiscardPileCard() {
+        return topDiscardPileCard;
     }
 }

@@ -146,4 +146,14 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
-# End of https://www.gitignore.io/api/maven,macos,windows,intellij
+### VisualStudioCode ###
+.vscode/*
+.settings
+.classpath
+.project
+
+### VisualStudioCode Patch ###
+# Ignore all local history of files
+.history
+
+# End of https://www.gitignore.io/api/maven,macos,windows,intellij,visualstudiocode

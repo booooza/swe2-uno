@@ -13,5 +13,7 @@ public interface PlayerInterface {
     void toggleCurrentTurn();
     void setUno(boolean uno);
     boolean isUno();
+    void setCanEndTurn(boolean canEndTurn);
+    boolean canEndTurn();
     void addCard(CardInterface card);
 }

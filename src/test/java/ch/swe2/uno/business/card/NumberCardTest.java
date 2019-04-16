@@ -17,11 +17,11 @@ class NumberCardTest {
         CardFactory cardFactory = CardFactory.getInstance();
 
         // When
-        CardInterface card = cardFactory.create(UnoColors.RED.getColor(), 1);
+        CardInterface card = cardFactory.create(UnoColor.RED, 1);
 
         // Then
-        assertEquals(card.getColor(), UnoColors.RED.getColor());
-        assertEquals(card.colorProperty().getValue(), UnoColors.RED.getColor());
+        assertEquals(card.getColor(), UnoColor.RED);
+        assertEquals(card.colorProperty().getValue(), UnoColor.RED);
         assertEquals(card.getNumber(), 1);
         assertEquals(card.numberProperty().getValue(), 1);
     }
@@ -35,7 +35,7 @@ class NumberCardTest {
         // Then
         assertThrows(
                 IllegalArgumentException.class,
-                () -> { cardFactory.create("Pink", 99); }
+                () -> { cardFactory.create(UnoColor.RED, 99); }
         );
     }
 }

@@ -10,13 +10,12 @@ public class Player implements PlayerInterface {
     private String name;
     private List<CardInterface> hand;
     private boolean currentTurn;
+    private boolean canEndTurn;
     private boolean uno;
 
     public Player(String name) {
         this.name = name;
         this.hand = new ArrayList<>();
-        this.currentTurn = false;
-        this.uno = false;
     }
 
     public String getName() {
@@ -41,6 +40,14 @@ public class Player implements PlayerInterface {
 
     public void toggleCurrentTurn() {
         currentTurn = !currentTurn;
+    }
+
+    public void setCanEndTurn(boolean canEndTurn) {
+        this.canEndTurn = canEndTurn;
+    }
+
+    public boolean canEndTurn() {
+        return canEndTurn;
     }
 
     public void setUno(boolean uno) {

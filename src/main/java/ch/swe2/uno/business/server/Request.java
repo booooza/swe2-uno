@@ -23,6 +23,8 @@ public class Request implements Serializable {
 
     public static enum Command {
         QUIT,
+        PLAY, 
+        DRAW, 
         GETSTATE;
     }
 }

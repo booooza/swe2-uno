@@ -2,11 +2,13 @@ package ch.swe2.uno.business.game;
 
 import ch.swe2.uno.business.card.CardInterface;
 import ch.swe2.uno.business.deck.Deck;
+import ch.swe2.uno.business.player.Player;
 import ch.swe2.uno.business.player.PlayerInterface;
 import ch.swe2.uno.business.state.State;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,82 +20,104 @@ public class Game {
     private Deck deck = Deck.getInstance();
     private Gson fxGson = FxGson.create();
     private static final Logger logger = LoggerFactory.getLogger(Game.class);
+    private static boolean isRunning;
+    private List<String> playerNames = new ArrayList<String>();
 
-    public void initialize(List<PlayerInterface> players) {
-        logger.info("Starting the game");
-        state = new State(players, "Initial state");
-
-        while (players.stream().allMatch(player -> player.getHand().isEmpty())) {
-            // Create deck & distribute cards
-            deck.create();
-            deck.distribute(players);
-
-            // Choose first player (TODO: randomize)
-            players.get(0).setCurrentTurn(true);
-            players.get(1).setCurrentTurn(false);
-
-            // Write player info to state
-            state.setPlayers(players);
-            state.setTopCard(deck.getTopCardOfDiscardPile());
-            state.setMessage("Game initialized");
-            System.out.println(fxGson.toJson(state));
+    public void addPlayer(String playerName){
+        if(!isRunning) {
+            playerNames.add(playerName);
         }
     }
 
-    public void playCard(PlayerInterface player, CardInterface card) {
-        PlayerInterface playerState = state.getPlayerByName(player.getName());
+    public State initialize() {
+        logger.info("Starting the game");
+
+        if (!isRunning) {
+            // Create players
+            List<PlayerInterface> players = new ArrayList<PlayerInterface>();
+            playerNames.forEach(p -> players.add(new Player(p)));
+
+            // Create initial state
+            state = new State(players, "Initial state");
+
+            // Create deck & distribute cards
+            deck.create();
+            deck.distribute(players);
+            deck.revealTopCard();
+
+            // Choose first player (TODO: randomize)
+            players.get(0).setCurrentTurn(true);
+
+            // Write player info to state
+            state.setPlayers(players);
+            state.setTopDiscardPileCard(deck.getTopCardOfDiscardPile());
+            isRunning = true;
+            state.setMessage("Game initialized");
+            System.out.println(fxGson.toJson(state));
+        }
+        return state;
+    }
+
+    public State playCard(String playerName, CardInterface card) {
+        Optional<PlayerInterface> optionalOfPlayer = state.getPlayerByName(playerName);
+        // TODO: if(player == null) -> throw new IllegalArgumentException();
+        // TODO: if(card == null) -> throw new IllegalArgumentException();
+
+        if(optionalOfPlayer.isPresent()){
+            throw new IllegalArgumentException("playerName");
+        }
+
+        PlayerInterface player = optionalOfPlayer.get();
 
         // Check if is the players turn and if the players hand contains the mentioned card
-        if (playerState.isCurrentTurn() && playerState.getHand().contains(card)) {
+        // TODO: state.isCurrentTurn(player) && player.hasCard(card)
+        if (player.isCurrentTurn() && player.getHand().contains(card)) {
             // Check if card matches current top card
-            if (card.getColor().equals(state.getTopCard().getColor()) ||
-                    card.getNumber() == state.getTopCard().getNumber()) {
+            // TODO: state.getTopDiscardPileCard()
+            if (card.getColor().equals(state.getTopDiscardPileCard().getColor()) ||
+                    card.getNumber() == state.getTopDiscardPileCard().getNumber()) {
                 // Remove from players hand
-                playerState.getHand().remove(card);
+                player.getHand().remove(card);
                 logger.info("Player {} played card {} / {}", player.getName(), card.getColor(), card.getNumber());
                 logger.info("Player {} has {} cards remaining in hand", player.getName(), player.getHand().size());
                 // Make new top card
-                state.setTopCard(card);
+                state.setTopDiscardPileCard(card);
                 logger.info("Top card is {} / {}", card.getColor(), card.getNumber());
                 // Toggle current turn flags
                 state.toggleCurrentTurn();
             } else {
-                throw new IllegalStateException();
+                state.setMessage("Invalid turn");
             }
         } else {
-            throw new IllegalStateException();
+            state.setMessage("Invalid turn");
         }
+        return state;
     }
 
-    public void drawCard(PlayerInterface player) {
-        PlayerInterface fromPlayer = state.getPlayerByName(player.getName());
+    public State drawCard(String playerName) {
+        Optional<PlayerInterface> optionalOfPlayer = state.getPlayerByName(playerName);
+        
+        if(optionalOfPlayer.isPresent()){
+            throw new IllegalArgumentException("playerName");
+        }
+
+        PlayerInterface player = optionalOfPlayer.get();
 
         // Check if is the players turn
-        if (fromPlayer.isCurrentTurn()) {
-            deck.drawCard(player);
+        if (player.isCurrentTurn()) {
+            player.addCard(deck.drawCard());
+            player.setCanEndTurn(true);
             logger.info("Player {} drawed card", player.getName());
             logger.info("Player {} has {} cards remaining in hand", player.getName(), player.getHand().size());
-            // Toggle current turn flags
-            state.toggleCurrentTurn();
+            // TODO: handle play after drawing
+            // state.toggleCurrentTurn();
         } else {
-            throw new IllegalStateException();
+            state.setMessage("Invalid turn");
         }
-    }
-
-    public PlayerInterface getCurrentPlayer() {
-        Optional currentPlayer = state.getPlayers()
-                .stream()
-                .findFirst()
-                .filter(PlayerInterface::isCurrentTurn);
-
-        if (currentPlayer.isPresent()) {
-            return (PlayerInterface) currentPlayer.get();
-        } else {
-            throw new IllegalStateException();
-        }
+        return state;
     }
 
     public State getState() {
-        return this.state;
+        return state;
     }
 }

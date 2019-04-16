@@ -1,8 +1,5 @@
 package ch.swe2.uno.business.card;
 
-import java.lang.invoke.WrongMethodTypeException;
-import java.util.Arrays;
-
 /**
  * Class used to create cards
  * Implementation of a singleton factory
@@ -30,14 +27,14 @@ public class CardFactory {
      * Create a single number card
      * @return CardInterface card
      */
-    public CardInterface create(String color, int number) {
-        if (
-                Arrays.stream(UnoColors.values())
-                .anyMatch(c -> c.getColor().equals(color))
-        ) {
-            return new NumberCard(color, number);
-        } else {
-            throw new IllegalArgumentException();
+    public CardInterface create(UnoColor color, int number) {
+        if (color == null || (!isValidUnoNumber(number))) {
+            throw new IllegalArgumentException("color");
         }
+        return new NumberCard(color, number);
+    }    
+
+    private boolean isValidUnoNumber(int unoNumber) {
+        return unoNumber < 10 && unoNumber >= 0;
     }
 }
