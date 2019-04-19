@@ -71,6 +71,19 @@ class PlayerTest {
     }
 
     @Test
+    @DisplayName("Test can end turn flag of player")
+    void testCanEndTurnFlagOfPlayer() {
+        // Given
+        PlayerInterface player = new Player("Marc");
+
+        // When
+        player.setCanEndTurn(true);
+
+        // Then
+        assertTrue(player.canEndTurn());
+    }
+
+    @Test
     @DisplayName("Test uno of player")
     void testSettingPlayerUno() {
         // Given

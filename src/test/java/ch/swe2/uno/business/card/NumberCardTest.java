@@ -14,28 +14,29 @@ class NumberCardTest {
     @DisplayName("Create valid number card")
     void testCreationOfValidNumberCard() {
         // Given
-        CardFactory cardFactory = CardFactory.getInstance();
+        NumberCard card = new NumberCard(CardType.NUMBERCARD, UnoColor.RED, 1);
 
         // When
-        CardInterface card = cardFactory.create(UnoColor.RED, 1);
 
         // Then
-        assertEquals(card.getColor(), UnoColor.RED);
-        assertEquals(card.colorProperty().getValue(), UnoColor.RED);
-        assertEquals(card.getNumber(), 1);
-        assertEquals(card.numberProperty().getValue(), 1);
+        assertEquals(UnoColor.RED, card.getColor());
+        assertEquals(UnoColor.RED.getColor(), "Red");
+        assertEquals(1, card.getNumber());
+        assertEquals(CardType.NUMBERCARD, card.getType());
+        assertEquals(CardType.NUMBERCARD.getType(), "Number");
     }
 
     @Test
     @DisplayName("Create invalid number card")
     void testCreationOfInvalidNumberCard() {
         // Given
-        CardFactory cardFactory = CardFactory.getInstance();
+
+        // When
 
         // Then
         assertThrows(
                 IllegalArgumentException.class,
-                () -> { cardFactory.create(UnoColor.RED, 99); }
+                () -> { new NumberCard(CardType.NUMBERCARD, UnoColor.RED, 99); }
         );
     }
 }

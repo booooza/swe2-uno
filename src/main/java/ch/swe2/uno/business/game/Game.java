@@ -17,7 +17,7 @@ import org.hildan.fxgson.FxGson;
 
 public class Game {
     private State state;
-    private Deck deck = Deck.getInstance();
+    private Deck deck = new Deck();
     private Gson fxGson = FxGson.create();
     private static final Logger logger = LoggerFactory.getLogger(Game.class);
     private static boolean isRunning;

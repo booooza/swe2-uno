@@ -1,41 +1,44 @@
 package ch.swe2.uno.business.card;
 
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
-
 /**
  * Business Class for number card (has color and number).
  */
 public class NumberCard implements CardInterface {
-    private final StringProperty color;
-    private final IntegerProperty number;
+    private final CardType type;
+    private final UnoColor color;
+    private final int number;
 
     /**
      * Constructor
      *
+     * @param type Type of the card
      * @param color Color of the card
      * @param number Number of the card
      */
-    NumberCard(UnoColor color, int number) {
-        this.color = new SimpleStringProperty(color.toString());
-        this.number = new SimpleIntegerProperty(number);
+    public NumberCard(CardType type, UnoColor color, int number) {
+        if (color == null || (!isValidUnoNumber(number))) {
+            throw new IllegalArgumentException("color");
+        }
+
+        this.type = type;
+        this.color = color;
+        this.number = number;
     }
 
-    public String getColor() {
-        return color.get();
+    @Override
+    public CardType getType() {
+        return type;
     }
 
-    public StringProperty colorProperty() {
+    public UnoColor getColor() {
         return color;
     }
 
     public int getNumber() {
-        return number.get();
+        return number;
     }
 
-    public IntegerProperty numberProperty() {
-        return number;
+    private boolean isValidUnoNumber(int unoNumber) {
+        return unoNumber < 10 && unoNumber >= 0;
     }
 }
