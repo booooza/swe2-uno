@@ -20,8 +20,8 @@ public class Game {
     private Deck deck = new Deck();
     private Gson fxGson = FxGson.create();
     private static final Logger logger = LoggerFactory.getLogger(Game.class);
-    private static boolean isRunning;
-    private List<String> playerNames = new ArrayList<String>();
+    private boolean isRunning;
+    private List<String> playerNames = new ArrayList<>();
 
     public void addPlayer(String playerName){
         if(!isRunning) {
@@ -34,7 +34,7 @@ public class Game {
 
         if (!isRunning) {
             // Create players
-            List<PlayerInterface> players = new ArrayList<PlayerInterface>();
+            List<PlayerInterface> players = new ArrayList<>();
             playerNames.forEach(p -> players.add(new Player(p)));
 
             // Create initial state
@@ -53,21 +53,21 @@ public class Game {
             state.setTopDiscardPileCard(deck.getTopCardOfDiscardPile());
             isRunning = true;
             state.setMessage("Game initialized");
-            System.out.println(fxGson.toJson(state));
         }
         return state;
     }
 
     public State playCard(String playerName, CardInterface card) {
+        PlayerInterface player;
         Optional<PlayerInterface> optionalOfPlayer = state.getPlayerByName(playerName);
         // TODO: if(player == null) -> throw new IllegalArgumentException();
         // TODO: if(card == null) -> throw new IllegalArgumentException();
 
         if(optionalOfPlayer.isPresent()){
+            player = optionalOfPlayer.get();
+        } else {
             throw new IllegalArgumentException("playerName");
         }
-
-        PlayerInterface player = optionalOfPlayer.get();
 
         // Check if is the players turn and if the players hand contains the mentioned card
         // TODO: state.isCurrentTurn(player) && player.hasCard(card)
@@ -95,13 +95,14 @@ public class Game {
     }
 
     public State drawCard(String playerName) {
+        PlayerInterface player;
         Optional<PlayerInterface> optionalOfPlayer = state.getPlayerByName(playerName);
-        
+
         if(optionalOfPlayer.isPresent()){
+            player = optionalOfPlayer.get();
+        } else {
             throw new IllegalArgumentException("playerName");
         }
-
-        PlayerInterface player = optionalOfPlayer.get();
 
         // Check if is the players turn
         if (player.isCurrentTurn()) {

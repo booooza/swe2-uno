@@ -43,7 +43,7 @@ public class Deck {
             }
         }
 
-        drawPile = shuffle(drawPile);
+        Collections.shuffle(drawPile);
 
         logger.info("{} cards in draw pile", drawPile.size());
     }
@@ -74,7 +74,7 @@ public class Deck {
             discardPile.add(topCard);
             drawPile.remove(topCard);
             logger.info("Revealed first card of type: {}",
-                    getTopCardOfDiscardPile().getType().toString());
+                    getTopCardOfDiscardPile().getType());
         }
     }
 
@@ -84,7 +84,7 @@ public class Deck {
     }
 
     public CardInterface drawCard() {
-        if(drawPile.size() == 0) {
+        if(drawPile.isEmpty()) {
             logger.info("Draw Pile is exhausted, reshuffling piles...");
             // Save the top card from the discard pile for later
             CardInterface topCard = getTopCardOfDiscardPile();
@@ -93,9 +93,10 @@ public class Deck {
             // Move temp card back to the drawpile
             drawPile.addAll(tempCards);
             // Shuffle the draw pule
-            drawPile = Deck.shuffle(drawPile);
+            Collections.shuffle(drawPile);
+            logger.info("Shuffled cards");
             // Create an empty discard pile
-            discardPile = new ArrayList<CardInterface>();
+            discardPile = new ArrayList<>();
             // Put the saved top card on the discard pile
             discardPile.add(topCard);
         }
@@ -115,15 +116,5 @@ public class Deck {
 
     public int getDiscardPileSize() {
         return discardPile.size();
-    }
-
-    /**
-     * Randomly permutes the deck using a default source of randomness.
-     * Uses Fisher–Yates shuffle (https://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle)
-     */
-    private static List<CardInterface> shuffle(List<CardInterface> cardsToShuffle){
-        Collections.shuffle(cardsToShuffle);
-        logger.info("Shuffled cards");
-        return cardsToShuffle;
     }
 }
