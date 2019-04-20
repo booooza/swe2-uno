@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import com.google.gson.Gson;
 import org.hildan.fxgson.FxGson;
@@ -34,8 +35,10 @@ public class Game {
 
         if (!isRunning) {
             // Create players
-            List<PlayerInterface> players = new ArrayList<>();
-            playerNames.forEach(p -> players.add(new Player(p)));
+            List<PlayerInterface> players = playerNames.stream()
+                    .map(Player::new)
+                    .collect(Collectors.toList());
+
 
             // Create initial state
             state = new State(players, "Initial state");
@@ -43,7 +46,6 @@ public class Game {
             // Create deck & distribute cards
             deck.create();
             deck.distribute(players);
-            deck.revealTopCard();
 
             // Choose first player (TODO: randomize)
             players.get(0).setCurrentTurn(true);

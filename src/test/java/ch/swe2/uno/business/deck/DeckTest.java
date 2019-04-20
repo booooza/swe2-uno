@@ -27,7 +27,7 @@ class DeckTest {
         deck.create();
 
         // Then
-        assertEquals(76, deck.getDrawPileSize());
+        assertEquals(75, deck.getDrawPileSize());
     }
 
     @Test
@@ -45,22 +45,7 @@ class DeckTest {
         deck.distribute(players);
 
         // Then
-        assertEquals(62, deck.getDrawPileSize());
-    }
-
-    @Test
-    @DisplayName("Test revealing the top card")
-    void testRevealTopCardOfDeck() {
-        // Given
-        Deck deck = new Deck();
-
-        // When
-        deck.create();
-        deck.revealTopCard();
-
-        // Then
-        assertEquals(75, deck.getDrawPileSize());
-        assertEquals(1, deck.getDiscardPileSize());
+        assertEquals(61, deck.getDrawPileSize());
     }
 
     @Test
@@ -74,7 +59,7 @@ class DeckTest {
         CardInterface drawnCard = deck.drawCard();
 
         // Then
-        assertEquals(75, deck.getDrawPileSize());
+        assertEquals(74, deck.getDrawPileSize());
     }
 
     @Test
@@ -86,11 +71,11 @@ class DeckTest {
         // When
         deck.create();
 
-        for (int i = 0; i <= 76; i++) {
+        for (int i = 0; i < 76; i++) {
             deck.addCardToDiscardPile(deck.drawCard());
         }
 
         assertEquals(74, deck.getDrawPileSize());
-        assertEquals(2, deck.getDiscardPileSize());
+        assertEquals(1, deck.getDiscardPileSize());
     }
 }

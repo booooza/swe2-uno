@@ -6,7 +6,6 @@ import java.util.List;
 
 public interface PlayerInterface {
     String getName();
-    void setHand(List<CardInterface> hand);
     List<CardInterface> getHand();
     void setCurrentTurn(boolean currentTurn);
     boolean isCurrentTurn();

@@ -31,19 +31,6 @@ class PlayerTest {
     }
 
     @Test
-    @DisplayName("Test setting the hand of the player")
-    void testSettingPlayerHand() {
-        // Given
-        PlayerInterface player = new Player("Marc");
-
-        // When
-        player.setHand(hand);
-
-        // Then
-        assertEquals(player.getHand(), hand);
-    }
-
-    @Test
     @DisplayName("Test setting current turn of the player")
     void testSettingPlayerCurrentTurn() {
         // Given

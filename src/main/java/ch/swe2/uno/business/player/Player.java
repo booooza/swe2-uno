@@ -8,22 +8,17 @@ import java.util.List;
 public class Player implements PlayerInterface {
     // Attributes:
     private String name;
-    private List<CardInterface> hand;
+    private final List<CardInterface> hand = new ArrayList<>();
     private boolean currentTurn;
     private boolean canEndTurn;
     private boolean uno;
 
     public Player(String name) {
         this.name = name;
-        this.hand = new ArrayList<>();
     }
 
     public String getName() {
         return this.name;
-    }
-
-    public void setHand(List<CardInterface> hand) {
-        this.hand = hand;
     }
 
     public List<CardInterface> getHand() {
