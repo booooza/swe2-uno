@@ -13,7 +13,7 @@ public class Server {
     public static void main(String[] args) throws Exception {
         try (var listener = new ServerSocket(1234)) {
             logger.info("Uno Server is Running...");
-            var pool = Executors.newFixedThreadPool(200);
+            var pool = Executors.newFixedThreadPool(2);
             pool.execute(new ClientThread(listener.accept()));
             pool.execute(new ClientThread(listener.accept()));
         }
