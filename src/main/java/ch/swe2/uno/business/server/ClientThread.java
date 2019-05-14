@@ -47,7 +47,6 @@ public class ClientThread implements Runnable {
                         break;
                     case GETSTATE:
                         logger.info("Command {}", request.getCommand());
-                        out.writeObject(request.getState());
                         break;
                     default:
                         logger.info("Unknown command {}", request.getCommand());

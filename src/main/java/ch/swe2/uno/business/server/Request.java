@@ -26,32 +26,22 @@ public class Request implements Serializable {
         return payload;
     }
 
-    public State getState () {
-        return (State) payload;
-    }
-
-    public void play () {
-        if (isBodyCard()) {
-            return;
+    public Object getCard () {
+        if (!isBodyCard()) {
+            throw new IllegalArgumentException();
         }
-    }
-
-    public Object start () {
-        if (payload instanceof String) {
-            return payload;
-        }
-        return "Error";
-    }
-
-    public boolean isBodyCard() {
-        return payload instanceof CardInterface;
+        return (CardInterface) payload;
     }
 
     public static enum Command {
         START,
         QUIT,
-        PLAY, 
-        DRAW, 
+        PLAY,
+        DRAW,
         GETSTATE;
+    }
+
+    private boolean isBodyCard() {
+        return payload instanceof CardInterface;
     }
 }

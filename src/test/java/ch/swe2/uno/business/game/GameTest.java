@@ -1,8 +1,10 @@
 package ch.swe2.uno.business.game;
 
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.DisplayName;
 
+@Tag("integration")
 @DisplayName("Game Integration Tests")
 public class GameTest {
     @Test

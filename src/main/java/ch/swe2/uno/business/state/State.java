@@ -12,8 +12,7 @@ public class State {
     private String winner;
     private String message;
 
-    public State() {
-    }
+    public State() {};
 
     public State(List<PlayerInterface> players, String message) {
         this.players = players;
@@ -23,6 +22,12 @@ public class State {
     public Optional<PlayerInterface> getPlayerByName(String name) {
         return players.stream()
                 .filter(p -> name.equals(p.getName()))
+                .findFirst();
+    }
+
+    public Optional<PlayerInterface> getCurrentPlayer() {
+        return players.stream()
+                .filter(PlayerInterface::isCurrentTurn)
                 .findFirst();
     }
 
@@ -55,8 +60,8 @@ public class State {
         return message;
     }
 
-    public void setTopDiscardPileCard(CardInterface topCard) {
-        this.topDiscardPileCard = topCard;
+    public void setTopDiscardPileCard(CardInterface topDiscardPileCard) {
+        this.topDiscardPileCard = topDiscardPileCard;
     }
 
     public CardInterface getTopDiscardPileCard() {
