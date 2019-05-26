@@ -3,10 +3,11 @@ package ch.swe2.uno.business.state;
 import ch.swe2.uno.business.card.CardInterface;
 import ch.swe2.uno.business.player.PlayerInterface;
 
+import java.io.Serializable;
 import java.util.Optional;
 import java.util.List;
 
-public class State {
+public class State implements Serializable {
     private List<PlayerInterface> players;
     private CardInterface topDiscardPileCard;
     private String winner;
@@ -16,7 +17,6 @@ public class State {
 
     public State(List<PlayerInterface> players, String message) {
         this.players = players;
-        this.message = message;
     }
 
     public Optional<PlayerInterface> getPlayerByName(String name) {
@@ -31,12 +31,12 @@ public class State {
                 .findFirst();
     }
 
-    public void toggleCurrentTurn() {
+    public synchronized void toggleCurrentTurn() {
         // 
         players.stream().forEach(PlayerInterface::toggleCurrentTurn);
     }
 
-    public void setPlayers(List<PlayerInterface> players) {
+    public synchronized void setPlayers(List<PlayerInterface> players) {
         this.players = players;
     }
 
@@ -44,7 +44,7 @@ public class State {
         return this.players;
     }
 
-    public void setWinner(String winner) {
+    public synchronized void setWinner(String winner) {
         this.winner = winner;
     }
 
@@ -52,7 +52,7 @@ public class State {
         return winner;
     }
 
-    public void setMessage(String message) {
+    public synchronized void setMessage(String message) {
         this.message = message;
     }
 
@@ -60,7 +60,7 @@ public class State {
         return message;
     }
 
-    public void setTopDiscardPileCard(CardInterface topDiscardPileCard) {
+    public synchronized void setTopDiscardPileCard(CardInterface topDiscardPileCard) {
         this.topDiscardPileCard = topDiscardPileCard;
     }
 

@@ -26,7 +26,11 @@ public class Request implements Serializable {
         return payload;
     }
 
-    public Object getCard () {
+    public String getPlayerName() {
+        return payload.toString();
+    }
+
+    public CardInterface getCard () {
         if (!isBodyCard()) {
             throw new IllegalArgumentException();
         }

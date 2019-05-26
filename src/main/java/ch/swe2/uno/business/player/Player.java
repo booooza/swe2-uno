@@ -2,10 +2,11 @@ package ch.swe2.uno.business.player;
 
 import ch.swe2.uno.business.card.CardInterface;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Player implements PlayerInterface {
+public class Player implements PlayerInterface, Serializable {
     // Attributes:
     private String name;
     private final List<CardInterface> hand = new ArrayList<>();

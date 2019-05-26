@@ -1,7 +1,9 @@
 package ch.swe2.uno.business.deck;
 
 import ch.swe2.uno.business.card.CardInterface;
+import ch.swe2.uno.business.card.CardType;
 import ch.swe2.uno.business.card.NumberCard;
+import ch.swe2.uno.business.card.UnoColor;
 import ch.swe2.uno.business.player.Player;
 import ch.swe2.uno.business.player.PlayerInterface;
 import org.junit.jupiter.api.Test;
@@ -11,6 +13,8 @@ import org.mockito.Mock;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
@@ -46,6 +50,19 @@ class DeckTest {
 
         // Then
         assertEquals(61, deck.getDrawPileSize());
+    }
+
+    @Test
+    @DisplayName("Test get top card of discard pile")
+    void testGetTopCardOfDiscardPile() {
+        // Given
+        Deck deck = new Deck();
+
+        // When
+        CardInterface card = new NumberCard(CardType.NUMBERCARD, UnoColor.RED, 0);
+
+        // Then TODO: assert something
+        deck.getTopCardOfDiscardPile();
     }
 
     @Test

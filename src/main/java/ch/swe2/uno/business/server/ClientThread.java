@@ -1,7 +1,6 @@
 package ch.swe2.uno.business.server;
 
-import ch.swe2.uno.business.card.CardInterface;
-import ch.swe2.uno.business.player.PlayerInterface;
+import ch.swe2.uno.business.game.Game;
 import ch.swe2.uno.business.state.State;
 import com.google.gson.Gson;
 import org.hildan.fxgson.FxGson;
@@ -10,18 +9,16 @@ import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.net.Socket;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Scanner;
 
 public class ClientThread implements Runnable {
-    Socket socket;
+    private Socket socket;
     private Gson fxGson = FxGson.create();
-    private State gameState;
+    private Game game;
     private static final Logger logger = LoggerFactory.getLogger(ClientThread.class);
 
-    public ClientThread(Socket socket) {
+    ClientThread(Socket socket, Game game) {
         this.socket = socket;
+        this.game = game;
     }
 
     @Override
@@ -36,40 +33,35 @@ public class ClientThread implements Runnable {
                 switch (request.getCommand()) {
                     case START:
                         logger.info("Command {}", request.getCommand());
-                        out.writeObject("Hello " + getPayloadSync(request.getPayload()));
+                        game.addPlayer(request.getPlayerName());
+                        if (game.getState().getPlayers() == null) {
+                            game.initialize();
+                            logger.info("Game initialized");
+                        }
+                        out.writeObject("Hello " + request.getPlayerName());
                         break;
                     case PLAY:
-                        //game.play(request.getCard());
                         logger.info("Command {}", request.getCommand());
+                        game.playCard(request.getPlayerName(), request.getCard());
+                        out.writeObject(game.getState());
                         break;
                     case DRAW:
                         logger.info("Command {}", request.getCommand());
+                        game.drawCard(request.getPlayerName());
+                        out.writeObject(game.getState());
                         break;
                     case GETSTATE:
                         logger.info("Command {}", request.getCommand());
+                        out.writeObject(game.getState());
                         break;
                     default:
                         logger.info("Unknown command {}", request.getCommand());
                 }
-                request = (Request) in.readObject();
+                // request = (Request) in.readObject();
             }
 
         } catch (Exception e) {
-            logger.warn("Exception", e);
+            logger.warn("Socket Exception", e);
         }
     }
-
-    // Locked method (can only be used by one thread at a time)
-    // TODO: move to class containing the shared state (the lock is on the )
-    private synchronized Object getPayloadSync(Object payload) {
-        return payload;
-    }
-
-//
-//    private void sendState(State gameState) throws IOException {
-//        try (OutputStreamWriter output = new OutputStreamWriter(
-//                socket.getOutputStream(), StandardCharsets.UTF_8)) {
-//            output.write(fxGson.toJson(gameState));
-//        }
-
 }

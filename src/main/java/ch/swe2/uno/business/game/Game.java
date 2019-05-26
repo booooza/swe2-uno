@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -24,21 +25,24 @@ public class Game {
     private boolean isRunning;
     private List<String> playerNames = new ArrayList<>();
 
-    public void addPlayer(String playerName){
+    public boolean isRunning() {
+        return isRunning;
+    }
+
+    public synchronized void addPlayer(String playerName){
         if(!isRunning) {
             playerNames.add(playerName);
         }
     }
 
-    public State initialize() {
+    public synchronized State initialize() {
         logger.info("Starting the game");
 
-        if (!isRunning) {
+        if (!isRunning && playerNames.size() >= 2 ) {
             // Create players
             List<PlayerInterface> players = playerNames.stream()
                     .map(Player::new)
                     .collect(Collectors.toList());
-
 
             // Create initial state
             state = new State(players, "Initial state");
@@ -55,11 +59,12 @@ public class Game {
             state.setTopDiscardPileCard(deck.getTopCardOfDiscardPile());
             isRunning = true;
             state.setMessage("Game initialized");
+            return state;
         }
-        return state;
+        return new State();
     }
 
-    public State playCard(String playerName, CardInterface card) {
+    public synchronized State playCard(String playerName, CardInterface card) {
         PlayerInterface player;
         Optional<PlayerInterface> optionalOfPlayer = state.getPlayerByName(playerName);
         // TODO: if(player == null) -> throw new IllegalArgumentException();
@@ -96,7 +101,7 @@ public class Game {
         return state;
     }
 
-    public State drawCard(String playerName) {
+    public synchronized State drawCard(String playerName) {
         PlayerInterface player;
         Optional<PlayerInterface> optionalOfPlayer = state.getPlayerByName(playerName);
 
@@ -121,6 +126,6 @@ public class Game {
     }
 
     public State getState() {
-        return state;
+        return Objects.requireNonNullElseGet(state, State::new);
     }
 }

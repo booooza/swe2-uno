@@ -1,9 +1,11 @@
 package ch.swe2.uno.business.card;
 
+import java.io.Serializable;
+
 /**
  * Business Class for number card (has color and number).
  */
-public class NumberCard implements CardInterface {
+public class NumberCard implements CardInterface, Serializable {
     private final CardType type;
     private final UnoColor color;
     private final int number;
