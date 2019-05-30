@@ -17,8 +17,7 @@ public class Server {
             logger.info("Uno Server is Running...");
             Game game = new Game();
 
-            Executor pool = Executors.newFixedThreadPool(2);
-            pool.execute(new ClientThread(listener.accept(), game));
+            Executor pool = Executors.newFixedThreadPool(200);
             pool.execute(new ClientThread(listener.accept(), game));
         }
     }

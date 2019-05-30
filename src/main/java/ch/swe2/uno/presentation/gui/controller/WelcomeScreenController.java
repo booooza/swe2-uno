@@ -1,8 +1,8 @@
 package ch.swe2.uno.presentation.gui.controller;
 
+import ch.swe2.uno.business.server.Request;
 import ch.swe2.uno.presentation.gui.MainApp;
-import ch.swe2.uno.presentation.gui.model.PlayerViewModel;
-import ch.swe2.uno.presentation.gui.model.StateViewModel;
+import ch.swe2.uno.presentation.network.client.Client;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -42,8 +42,18 @@ public class WelcomeScreenController {
         this.mainApp = mainApp;
     }
 
-    public void handleStartButtonAction(ActionEvent event) {
+    public void handleStartButtonAction() {
         logger.info("Selected Player: " + playerName.getText());
+//        Client client = new Client();
+//        try {
+//            mainApp.setState(client.request(Request.Command.START, playerName.getText()));
+//        } catch (Exception e) {
+//            logger.warn("Exception: {}", e);
+//            throw new IllegalArgumentException();
+//        } finally {
+//            mainApp.showGameOverview();
+//        }
+
         mainApp.showGameOverview();
     }
 }

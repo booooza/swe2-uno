@@ -17,6 +17,7 @@ public class State implements Serializable {
 
     public State(List<PlayerInterface> players, String message) {
         this.players = players;
+        this.message = message;
     }
 
     public Optional<PlayerInterface> getPlayerByName(String name) {

@@ -36,22 +36,22 @@
                   </AnchorPane>
                   <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="277.0" prefWidth="295.0" style="-fx-background-color: red;">
                      <children>
-                        <Label layoutX="19.0" layoutY="14.0" text="Current turn:" textFill="WHITE" AnchorPane.leftAnchor="19.0" AnchorPane.topAnchor="14.0">
+                        <Label layoutX="19.0" layoutY="7.0" text="Current turn:" textFill="WHITE" AnchorPane.leftAnchor="19.0" AnchorPane.topAnchor="7.0">
                            <font>
                               <Font size="18.0" />
                            </font>
                         </Label>
-                        <Label fx:id="currentTurn" layoutX="186.0" layoutY="14.0" text="Player 1" textFill="WHITE">
+                        <Label fx:id="currentTurn" layoutX="186.0" layoutY="7.0" text="Player 1" textFill="WHITE">
                            <font>
                               <Font size="18.0" />
                            </font>
                         </Label>
-                        <Label layoutX="19.0" layoutY="51.0" text="Current Top Card:" textFill="WHITE">
+                        <Label layoutX="19.0" layoutY="44.0" text="Current Top Card:" textFill="WHITE">
                            <font>
                               <Font size="18.0" />
                            </font>
                         </Label>
-                        <Label fx:id="topCard" layoutX="186.0" layoutY="51.0" text="Green 9" textFill="WHITE">
+                        <Label fx:id="topCard" layoutX="186.0" layoutY="44.0" text="Green 9" textFill="WHITE">
                            <font>
                               <Font size="18.0" />
                            </font>

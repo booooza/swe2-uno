@@ -1,5 +1,7 @@
 package ch.swe2.uno.presentation.network.client;
 
+import ch.swe2.uno.business.server.Request;
+import ch.swe2.uno.business.state.State;
 import ch.swe2.uno.presentation.gui.MainApp;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
@@ -16,28 +18,23 @@ public class Client {
     private Socket socket;
     private BufferedReader in;
     private BufferedWriter out;
-    private Gson fxGson = FxGson.create();
-    JsonParser parser = new JsonParser();
     private static final Logger logger = LoggerFactory.getLogger(Client.class);
 
-    public Client(String serverAddress) throws Exception {
-        socket = new Socket(serverAddress, 1234);
-        in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-        out = new BufferedWriter( new OutputStreamWriter(socket.getOutputStream()));
-    }
-
-    public JsonElement getState() throws Exception {
+    public State request(Request.Command command, Object payload) throws Exception {
         try {
-            JsonElement gameState = parser.parse(in);
-            fxGson.toJson(gameState);
-            logger.info("Current game state received from server: {}", gameState.toString());
-            return gameState;
+            socket = new Socket("localhost", 1234);
+            ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
+            ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
+            out.writeObject(new Request(command, payload));
+            State state = (State) in.readObject();
+            out.writeObject(new Request(Request.Command.QUIT));
+            return state;
         } catch (Exception e) {
             logger.warn("Exception: {}", e);
+            throw new IllegalArgumentException();
         }
         finally {
             socket.close();
         }
-        return new JsonObject();
     }
 }
