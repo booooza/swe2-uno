@@ -4,40 +4,36 @@ import ch.swe2.uno.presentation.gui.MainApp;
 import ch.swe2.uno.presentation.gui.model.NumberCardViewModel;
 import ch.swe2.uno.presentation.gui.model.PlayerViewModel;
 import ch.swe2.uno.presentation.gui.model.StateViewModel;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Optional;
 
 public class GameOverviewController {
     @FXML
-    private TableView<NumberCardViewModel> player1Table;
+    private TableView<NumberCardViewModel> playerTable;
     @FXML
-    private TableColumn<NumberCardViewModel, String> player1CardColorColumn;
+    private TableColumn<NumberCardViewModel, String> playerCardColorColumn;
     @FXML
-    private TableColumn<NumberCardViewModel, Number> player1CardNumberColumn;
+    private TableColumn<NumberCardViewModel, Number> playerCardNumberColumn;
     @FXML
-    private TableView<NumberCardViewModel> player2Table;
+    private Label playerName;
     @FXML
-    private TableColumn<NumberCardViewModel, String> player2CardColorColumn;
-    @FXML
-    private TableColumn<NumberCardViewModel, Number> player2CardNumberColumn;
-    @FXML
-    private Label player1Name;
-    @FXML
-    private Label player1Uno;
-    @FXML
-    private Label player2Name;
-    @FXML
-    private Label player2Uno;
+    private Label playerUno;
     @FXML
     private Label currentTurn;
     @FXML
     private Label topCard;
     @FXML
     private Label message;
+
+    private static final Logger logger = LoggerFactory.getLogger(WelcomeScreenController.class);
+    private MainApp mainApp; // Reference to the main application.
 
     /**
      * The constructor.
@@ -53,10 +49,8 @@ public class GameOverviewController {
     @FXML
     private void initialize() {
         // Initialize the person table with the two columns.
-        player1CardColorColumn.setCellValueFactory(cellData -> cellData.getValue().colorProperty());
-        player1CardNumberColumn.setCellValueFactory(cellData -> cellData.getValue().numberProperty());
-        player2CardColorColumn.setCellValueFactory(cellData -> cellData.getValue().colorProperty());
-        player2CardNumberColumn.setCellValueFactory(cellData -> cellData.getValue().numberProperty());
+        playerCardColorColumn.setCellValueFactory(cellData -> cellData.getValue().colorProperty());
+        playerCardNumberColumn.setCellValueFactory(cellData -> cellData.getValue().numberProperty());
     }
 
     /**
@@ -65,27 +59,27 @@ public class GameOverviewController {
      * @param mainApp
      */
     public void setMainApp(MainApp mainApp) {
+        this.mainApp = mainApp;
+
         // Add observable data to the view
-        player1Table.setItems(mainApp.getState().getPlayers().get(0).getHand());
-        player2Table.setItems(mainApp.getState().getPlayers().get(1).getHand());
-        player1Name.setText(mainApp.getState().getPlayers().get(0).getName());
-        player2Name.setText(mainApp.getState().getPlayers().get(1).getName());
-
-        Optional<PlayerViewModel> currentPlayer = mainApp.getState().getPlayers().stream()
-                .filter(PlayerViewModel::isCurrentTurn)
-                .findFirst();
-
-        currentPlayer.ifPresent(c -> currentTurn.setText(c.getName()));
-
-        if (mainApp.getState().getPlayers().get(0).isUno()) {
-            player1Uno.setText("Uno");
-        }
-        if (mainApp.getState().getPlayers().get(1).isUno()) {
-            player2Uno.setText("Uno");
-        }
+        playerTable.setItems(mainApp.getPlayerData());
         topCard.setText("Red 7");
-        message.setText(mainApp.getState().getMessage());
+        message.setText("Game started");
+    }
 
-        mainApp.updateState();
+    public void handlePlayButtonAction(ActionEvent event) {
+        logger.info("Play button pressed");
+        NumberCardViewModel selectedCard = playerTable.getSelectionModel().getSelectedItem();
+        if (selectedCard != null) {
+            logger.info("Selected card {} {}", selectedCard.getColor(), selectedCard.getNumber());
+        }
+    }
+
+    public void handleDrawButtonAction(ActionEvent event) {
+        logger.info("Draw button pressed");
+    }
+
+    public void handleUnoButtonAction(ActionEvent event) {
+        logger.info("Uno button pressed");
     }
 }

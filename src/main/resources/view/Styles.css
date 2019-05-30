@@ -1,0 +1,70 @@
+.background {
+    -fx-background-color: red;
+}
+
+.label {
+    -fx-font-size: 12pt;
+    -fx-font-family: "Helvetica";
+    -fx-text-fill: white;
+}
+
+.table-view {
+    -fx-base: red;
+    -fx-control-inner-background: red;
+    -fx-background-color: red;
+    -fx-table-cell-border-color: transparent;
+    -fx-table-header-border-color: transparent;
+    -fx-padding: 5;
+}
+
+.table-view .column-header-background {
+    -fx-background-color: transparent;
+}
+
+.table-view .column-header, .table-view .filler {
+    -fx-background-color: transparent;
+}
+
+.table-view .column-header .label {
+    -fx-font-size: 14pt;
+    -fx-font-family: "Helvetica";
+    -fx-text-fill: white;
+    -fx-alignment: center;
+    -fx-opacity: 1;
+}
+
+.table-view:focused .table-row-cell:filled:focused:selected {
+    -fx-background-color: -fx-focus-color;
+}
+
+.split-pane:horizontal > .split-pane-divider {
+    -fx-border-color: transparent red transparent red;
+    -fx-background-color: transparent, derive(red,20%);
+}
+
+.split-pane {
+    -fx-padding: 1 0 0 0;
+}
+
+.text-field {
+    -fx-font-size: 14pt;
+    -fx-font-family: "Helvetica";
+}
+
+.button {
+    -fx-padding: 5 22 5 22;
+    -fx-background-radius: 0;
+    -fx-background-color: yellow;
+    -fx-font-family: Helvetica, Arial, sans-serif;
+    -fx-font-size: 12pt;
+    -fx-text-fill: black;
+}
+
+.button:hover {
+    -fx-background-color: orange;
+}
+
+.button:pressed, .button:default:hover:pressed {
+    -fx-background-color: orange;
+    -fx-text-fill: black;
+}

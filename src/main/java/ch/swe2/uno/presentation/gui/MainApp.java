@@ -30,8 +30,7 @@ public class MainApp extends Application {
     /**
      * The data as an observable list of cards.
      */
-    private ObservableList<NumberCardViewModel> player1Data = FXCollections.observableArrayList();
-    private ObservableList<NumberCardViewModel> player2Data = FXCollections.observableArrayList();
+    private ObservableList<NumberCardViewModel> playerData = FXCollections.observableArrayList();
 
     private static final Logger logger = LoggerFactory.getLogger(MainApp.class);
 
@@ -40,22 +39,16 @@ public class MainApp extends Application {
      */
     public MainApp() {
         // Add some sample data
-        player1Data.add(new NumberCardViewModel("red", 2));
-        player1Data.add(new NumberCardViewModel("green", 0));
-        player2Data.add(new NumberCardViewModel("yellow", 7));
-        player2Data.add(new NumberCardViewModel("blue", 3));
+        playerData.add(new NumberCardViewModel("red", 2));
+        playerData.add(new NumberCardViewModel("green", 0));
     }
 
     /**
      * Returns the data as an observable list of cards.
      * @return
      */
-    public ObservableList<NumberCardViewModel> getPlayer1Data() {
-        return player1Data;
-    }
-
-    public ObservableList<NumberCardViewModel> getPlayer2Data() {
-        return player2Data;
+    public ObservableList<NumberCardViewModel> getPlayerData() {
+        return playerData;
     }
 
     @Override
@@ -69,16 +62,7 @@ public class MainApp extends Application {
          * Instantiate game (singleton)
          */
         logger.info("Starting the game... Getting game state...");
-        updateState();
-
-        // If there are no players yet show welcome screen
-        if (gameState.getPlayers() == null) {
-            showWelcomeScreen();
-        // Otherwise show the game overview
-        } else {
-            showGameOverview();
-        }
-
+        showWelcomeScreen();
     }
 
     /**

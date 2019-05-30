@@ -13,22 +13,10 @@ import org.slf4j.LoggerFactory;
 
 public class WelcomeScreenController {
     @FXML
-    private TextField player1Name;
-    @FXML
-    private TextField player2Name;
+    private TextField playerName;
 
     private static final Logger logger = LoggerFactory.getLogger(WelcomeScreenController.class);
     private MainApp mainApp; // Reference to the main application.
-    private ObservableList<PlayerViewModel> playerList = FXCollections.observableArrayList();
-
-    /**
-     * Returns the data as an observable list of cards.
-     * @return
-     */
-    public ObservableList<PlayerViewModel> getPlayerList() {
-        return playerList;
-    }
-
 
     /**
      * The constructor.
@@ -54,17 +42,8 @@ public class WelcomeScreenController {
         this.mainApp = mainApp;
     }
 
-    public void handleButtonAction(ActionEvent event) {
-        logger.info("Selected Player 1: " + player1Name.getText());
-        logger.info("Selected Player 2: " + player2Name.getText());
-
-        // playerList.add(new PlayerViewModel(player1Name.getText()));
-        // playerList.add(new PlayerViewModel(player2Name.getText()));
-
-        // StateViewModel gameState = new StateViewModel(this.getPlayerList());
-
-        // TODO: Send updated info to server
-
+    public void handleStartButtonAction(ActionEvent event) {
+        logger.info("Selected Player: " + playerName.getText());
         mainApp.showGameOverview();
     }
 }
