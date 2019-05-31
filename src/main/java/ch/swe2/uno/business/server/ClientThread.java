@@ -42,11 +42,13 @@ public class ClientThread implements Runnable {
                 case PLAY:
                     logger.info("Command {}", request.getCommand());
                     game.playCard(request.getPlayerName(), request.getCard());
+                    game.botAction();
                     out.writeObject(game.getState());
                     break;
                 case DRAW:
                     logger.info("Command {}", request.getCommand());
                     game.drawCard(request.getPlayerName());
+                    game.botAction();
                     out.writeObject(game.getState());
                     break;
                 case GETSTATE:

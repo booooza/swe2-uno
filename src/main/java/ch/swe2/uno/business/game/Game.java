@@ -74,7 +74,7 @@ public class Game {
         }
 
         // Check if is the players turn and if the players hand contains the mentioned card
-        if (player.isCurrentTurn() && playersHandContainsCard(player, card)) {
+        if (player.isCurrentTurn() && playersHandContainsExactCard(player, card)) {
             // Check if card matches current top card
             if (card.getColor().equals(state.getTopDiscardPileCard().getColor()) ||
                     card.getNumber() == state.getTopDiscardPileCard().getNumber()) {
@@ -121,11 +121,55 @@ public class Game {
         return state;
     }
 
+    public void botAction() {
+        // If hand matches topcard play first match
+        Optional<CardInterface> optionalMatchingCard = randomCardMatchingTopCard("Bot");
+        if (optionalMatchingCard.isPresent()) {
+            CardInterface matchingCard = optionalMatchingCard.get();
+            playCard("Bot", matchingCard);
+            state.setMessage("Bot has played card " + matchingCard.getColor().toString() + " " + matchingCard.getNumber());
+            logger.info("Bot has played card {} {}", matchingCard.getColor().toString(), matchingCard.getNumber());
+            if (cardsLeftInPlayersHand("Bot") == 1) {
+                // TODO: Say uno
+            }
+        } else {
+            drawCard("Bot");
+            state.setMessage("Bot has drawn a card");
+            logger.info("Bot has drawn a card");
+        }
+
+            // If only one card is left in hand say uno
+        // Else draw card
+
+    }
+
     public State getState() {
         return Objects.requireNonNullElseGet(state, State::new);
     }
 
-    private boolean playersHandContainsCard(PlayerInterface player, CardInterface playedCard) {
+    private Optional<CardInterface> randomCardMatchingTopCard(String playerName) {
+        if (state.getPlayerByName(playerName).isPresent()) {
+            return state.getPlayerByName(playerName)
+                    .get().getHand()
+                    .stream()
+                    .filter(card -> card.getColor().equals(state.getTopDiscardPileCard().getColor()) ||
+                            card.getNumber() == state.getTopDiscardPileCard().getNumber())
+                    .findAny();
+        } else {
+            throw new NullPointerException();
+        }
+    }
+
+    private int cardsLeftInPlayersHand(String playerName) {
+        if (state.getPlayerByName(playerName).isPresent()) {
+            return state.getPlayerByName(playerName)
+                    .get().getHand().size();
+        } else {
+            throw new NullPointerException();
+        }
+    }
+
+    private boolean playersHandContainsExactCard(PlayerInterface player, CardInterface playedCard) {
         return player.getHand().stream()
                 .anyMatch(card ->
                         (card.getColor().equals(playedCard.getColor()) && card.getNumber() == playedCard.getNumber()));
