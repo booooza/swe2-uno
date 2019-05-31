@@ -16,9 +16,6 @@ import javafx.scene.control.TableView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Date;
-import java.util.Optional;
-
 public class GameOverviewController {
     @FXML
     private TableView<CardInterface> playerTable;

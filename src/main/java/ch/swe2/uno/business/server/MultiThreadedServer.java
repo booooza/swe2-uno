@@ -9,10 +9,10 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 public class MultiThreadedServer implements Runnable {
-    protected int serverPort = 1234;
-    protected ServerSocket serverSocket = null;
-    protected boolean isStopped = false;
-    protected Thread runningThread = null;
+    protected int serverPort;
+    protected ServerSocket serverSocket;
+    protected boolean isStopped;
+    protected Thread runningThread;
     protected Game game;
 
     private static final Logger logger = LoggerFactory.getLogger(MultiThreadedServer.class);

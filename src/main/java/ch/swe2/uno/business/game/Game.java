@@ -67,9 +67,6 @@ public class Game {
     public synchronized State playCard(String playerName, CardInterface card) {
         PlayerInterface player;
         Optional<PlayerInterface> optionalOfPlayer = state.getPlayerByName(playerName);
-        // TODO: if(player == null) -> throw new IllegalArgumentException();
-        // TODO: if(card == null) -> throw new IllegalArgumentException();
-
         if(optionalOfPlayer.isPresent()){
             player = optionalOfPlayer.get();
         } else {
@@ -77,14 +74,13 @@ public class Game {
         }
 
         // Check if is the players turn and if the players hand contains the mentioned card
-        // TODO: state.isCurrentTurn(player) && player.hasCard(card)
-        if (player.isCurrentTurn() && player.getHand().contains(card)) {
+        if (player.isCurrentTurn() && playersHandContainsCard(player, card)) {
             // Check if card matches current top card
-            // TODO: state.getTopDiscardPileCard()
             if (card.getColor().equals(state.getTopDiscardPileCard().getColor()) ||
                     card.getNumber() == state.getTopDiscardPileCard().getNumber()) {
                 // Remove from players hand
-                player.getHand().remove(card);
+                removeCardFromPlayersHand(player, card);
+
                 logger.info("Player {} played card {} / {}", player.getName(), card.getColor(), card.getNumber());
                 logger.info("Player {} has {} cards remaining in hand", player.getName(), player.getHand().size());
                 // Make new top card
@@ -118,7 +114,7 @@ public class Game {
             logger.info("Player {} drawed card", player.getName());
             logger.info("Player {} has {} cards remaining in hand", player.getName(), player.getHand().size());
             // TODO: handle play after drawing
-            // state.toggleCurrentTurn();
+            state.toggleCurrentTurn();
         } else {
             state.setMessage("Invalid turn");
         }
@@ -127,5 +123,18 @@ public class Game {
 
     public State getState() {
         return Objects.requireNonNullElseGet(state, State::new);
+    }
+
+    private boolean playersHandContainsCard(PlayerInterface player, CardInterface playedCard) {
+        return player.getHand().stream()
+                .anyMatch(card ->
+                        (card.getColor().equals(playedCard.getColor()) && card.getNumber() == playedCard.getNumber()));
+    }
+
+    private void removeCardFromPlayersHand(PlayerInterface player, CardInterface playedCard) {
+        player.getHand().stream()
+                .filter(card -> card.getColor().equals(playedCard.getColor()) && card.getNumber() == playedCard.getNumber())
+                .findFirst()
+                .ifPresent(card -> player.getHand().remove(card));
     }
 }
