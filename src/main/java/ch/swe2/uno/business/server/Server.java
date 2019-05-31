@@ -13,12 +13,9 @@ public class Server {
     private static final Logger logger = LoggerFactory.getLogger(Server.class);
 
     public static void main(String[] args) throws Exception {
-        try (var listener = new ServerSocket(1234)) {
-            logger.info("Uno Server is Running...");
-            Game game = new Game();
-
-            Executor pool = Executors.newFixedThreadPool(200);
-            pool.execute(new ClientThread(listener.accept(), game));
-        }
+        Game game = new Game();
+        MultiThreadedServer server = new MultiThreadedServer(1234, game);
+        new Thread(server).start();
+        logger.info("Server started...");
     }
 }

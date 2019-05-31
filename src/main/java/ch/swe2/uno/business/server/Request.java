@@ -7,15 +7,22 @@ import java.io.Serializable;
 
 public class Request implements Serializable {
     private Command command;
-    private Object payload;
+    private String playerName;
+    private CardInterface card;
 
     public Request(Command command) {
         this.command = command;
     }
 
-    public Request(Command command, Object payload) {
+    public Request(Command command, String playerName) {
         this.command = command;
-        this.payload = payload;
+        this.playerName = playerName;
+    }
+
+    public Request(Command command, String playerName, CardInterface card) {
+        this.command = command;
+        this.playerName = playerName;
+        this.card = card;
     }
 
     public Command getCommand() {
@@ -23,18 +30,15 @@ public class Request implements Serializable {
     }
 
     public Object getPayload() {
-        return payload;
+        return card;
     }
 
     public String getPlayerName() {
-        return payload.toString();
+        return playerName;
     }
 
     public CardInterface getCard () {
-        if (!isBodyCard()) {
-            throw new IllegalArgumentException();
-        }
-        return (CardInterface) payload;
+        return card;
     }
 
     public static enum Command {
@@ -45,7 +49,4 @@ public class Request implements Serializable {
         GETSTATE;
     }
 
-    private boolean isBodyCard() {
-        return payload instanceof CardInterface;
-    }
 }

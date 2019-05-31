@@ -21,7 +21,6 @@ class ClientThreadTest {
     @Test
     @DisplayName("Test client thread START command")
     void testClientThreadStartCommand() throws Exception {
-
         // Given
         Socket socket = new Socket("127.0.0.1", 1234);
         ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
@@ -29,40 +28,26 @@ class ClientThreadTest {
 
         // When
         out.writeObject(new Request(Request.Command.START, "Marc"));
-        out.writeObject(new Request(Request.Command.QUIT));
 
         // Then
-        assertEquals("Hello Marc", in.readObject());
+        assertEquals(State.class, in.readObject().getClass());
     }
 
-    @Test
-    @DisplayName("Test client thread PLAY command")
-    void testClientThreadPlayCommand() throws Exception {
-        // Given
-        Socket socket = new Socket("127.0.0.1", 1234);
-        ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
-        ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
-
-        // When
-        out.writeObject(new Request(Request.Command.START, "Marc"));
-        out.writeObject(new Request(Request.Command.START, "Luca"));
-        out.writeObject(new Request(Request.Command.GETSTATE));
-
-        // out.writeObject(new Request(Request.Command.QUIT));
-
-        // Then
-
-    }
 
     @Test
     @DisplayName("Test client thread DRAW command")
     void testClientThreadDrawCommand() throws Exception {
         // Given
+        Socket socket = new Socket("127.0.0.1", 1234);
+        ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
+        ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
 
         // When
+        out.writeObject(new Request(Request.Command.DRAW, "Marc"));
+        out.writeObject(new Request(Request.Command.QUIT));
 
         // Then
-
+        assertEquals(State.class, in.readObject().getClass());
     }
 
     @Test
@@ -74,11 +59,6 @@ class ClientThreadTest {
         ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
 
         // When
-        out.writeObject(new Request(Request.Command.START, "Marc"));
-        System.out.println(in.readObject());
-
-        out.writeObject(new Request(Request.Command.START, "Luca"));
-        System.out.println(in.readObject());
 
         out.writeObject(new Request(Request.Command.GETSTATE));
         State state = ((State) (in.readObject()));

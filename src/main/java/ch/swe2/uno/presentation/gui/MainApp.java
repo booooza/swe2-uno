@@ -1,20 +1,9 @@
 package ch.swe2.uno.presentation.gui;
 
-import ch.swe2.uno.business.card.CardInterface;
-import ch.swe2.uno.business.card.CardType;
-import ch.swe2.uno.business.card.NumberCard;
-import ch.swe2.uno.business.card.UnoColor;
-import ch.swe2.uno.business.player.Player;
-import ch.swe2.uno.business.player.PlayerInterface;
-import ch.swe2.uno.business.server.Request;
 import ch.swe2.uno.business.state.State;
-import ch.swe2.uno.presentation.network.client.Client;
 import ch.swe2.uno.presentation.gui.controller.GameOverviewController;
 import ch.swe2.uno.presentation.gui.controller.WelcomeScreenController;
 import javafx.application.Application;
-import javafx.beans.Observable;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
@@ -22,51 +11,21 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 public class MainApp extends Application {
 
     private Stage primaryStage;
     private BorderPane rootLayout;
-
-
     private State gameState;
-    private ObservableList<CardInterface> observablePlayerData = FXCollections.observableArrayList();
-
+    private String playerName;
     private static final Logger logger = LoggerFactory.getLogger(MainApp.class);
 
     /**
      * Constructor
      */
     public MainApp() {
-        // Create a fake state for easy gui testing
-        CardInterface card = new NumberCard(CardType.NUMBERCARD, UnoColor.RED, 0);
-        List<PlayerInterface> players = new ArrayList<>(2);
-        PlayerInterface player1 = new Player("Marc");
-        player1.addCard(card);
-        player1.setCurrentTurn(true);
-        PlayerInterface player2 = new Player("Luca");
-        player2.addCard(card);
-        player2.setCurrentTurn(false);
-        players.add(player1);
-        players.add(player2);
 
-        gameState = new State(players, "dummy state");
-        gameState.setWinner("Winner");
-        gameState.setTopDiscardPileCard(card);
-
-        observablePlayerData.addAll(gameState.getPlayerByName("Marc").get().getHand());
-    }
-
-    /**
-     * Returns the data as an list of cards.
-     * @return
-     */
-    public ObservableList<CardInterface> getPlayerData() {
-        return this.observablePlayerData;
     }
 
     @Override
@@ -75,11 +34,6 @@ public class MainApp extends Application {
         this.primaryStage.setTitle("UNO Game");
 
         initRootLayout();
-
-        /**
-         * Instantiate game (singleton)
-         */
-        logger.info("Starting the game... Getting game state...");
         showWelcomeScreen();
     }
 
@@ -145,9 +99,20 @@ public class MainApp extends Application {
         }
     }
 
+    public void setState(State state) {
+        this.gameState = state;
+    }
+
     public State getState() {
-        // TODO: get state from server over socket
         return gameState;
+    }
+
+    public void setPlayerName(String playerName) {
+        this.playerName = playerName;
+    }
+
+    public String getPlayerName() {
+        return playerName;
     }
 
     public static void main(String[] args) {

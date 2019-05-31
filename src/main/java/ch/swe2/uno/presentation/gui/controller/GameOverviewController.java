@@ -1,9 +1,12 @@
 package ch.swe2.uno.presentation.gui.controller;
 
 import ch.swe2.uno.business.card.CardInterface;
+import ch.swe2.uno.business.server.Request;
 import ch.swe2.uno.presentation.gui.MainApp;
+import ch.swe2.uno.presentation.network.client.Client;
 import javafx.beans.property.ReadOnlyIntegerWrapper;
 import javafx.beans.property.ReadOnlyStringWrapper;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -20,6 +23,8 @@ public class GameOverviewController {
     @FXML
     private TableView<CardInterface> playerTable;
     @FXML
+    private TableColumn<CardInterface, String> playerCardTypeColumn;
+    @FXML
     private TableColumn<CardInterface, String> playerCardColorColumn;
     @FXML
     private TableColumn<CardInterface, Number> playerCardNumberColumn;
@@ -30,6 +35,7 @@ public class GameOverviewController {
     @FXML
     private Label message;
 
+    private ObservableList<CardInterface> observablePlayerData = FXCollections.observableArrayList();
     private static final Logger logger = LoggerFactory.getLogger(WelcomeScreenController.class);
     private MainApp mainApp; // Reference to the main application.
 
@@ -46,7 +52,11 @@ public class GameOverviewController {
      */
     @FXML
     private void initialize() {
-        // Initialize the person table with the two columns.
+        // Initialize the player table columns
+        playerCardTypeColumn.setCellValueFactory(cellData ->
+                new ReadOnlyStringWrapper(
+                        cellData.getValue().getType().toString()
+                ));
         playerCardColorColumn.setCellValueFactory(cellData ->
                 new ReadOnlyStringWrapper(
                         cellData.getValue().getColor().toString()
@@ -72,13 +82,29 @@ public class GameOverviewController {
         CardInterface selectedCard = playerTable.getSelectionModel().getSelectedItem();
         if (selectedCard != null) {
             logger.info("Selected card {} {}", selectedCard.getColor(), selectedCard.getNumber());
+            Client client = new Client();
+            try {
+                mainApp.setState(client.request(Request.Command.PLAY, mainApp.getPlayerName(), selectedCard));
+            } catch (Exception e) {
+                logger.warn("Exception: {}", e);
+                throw new IllegalArgumentException();
+            } finally {
+                updateViewFromState();
+            }
         }
-        updateViewFromState();
     }
 
     public void handleDrawButtonAction(ActionEvent event) {
         logger.info("Draw button pressed");
-        updateViewFromState();
+        Client client = new Client();
+        try {
+            mainApp.setState(client.request(Request.Command.DRAW, mainApp.getPlayerName()));
+        } catch (Exception e) {
+            logger.warn("Exception: {}", e);
+            throw new IllegalArgumentException();
+        } finally {
+            updateViewFromState();
+        }
     }
 
     public void handleUnoButtonAction(ActionEvent event) {
@@ -87,13 +113,18 @@ public class GameOverviewController {
     }
 
     private void updateViewFromState() {
-        // Add observable data to the view
-        playerTable.setItems(mainApp.getPlayerData());
+        mainApp.getState().getPlayerByName(mainApp.getPlayerName()).ifPresent(p -> {
+            observablePlayerData.clear();
+            observablePlayerData.addAll(p.getHand());
+            playerTable.setItems(observablePlayerData);
+        });
+        mainApp.getState().getCurrentPlayer().ifPresent(p -> {
+            currentTurn.setText(p.getName());
+        });
         topCard.setText(
                 mainApp.getState().getTopDiscardPileCard().getColor().toString() + " " +
                         mainApp.getState().getTopDiscardPileCard().getNumber());
         message.setText(mainApp.getState().getMessage());
-        currentTurn.setText(mainApp.getState().getCurrentPlayer().get().getName());
         logger.info("View updated");
     }
 }

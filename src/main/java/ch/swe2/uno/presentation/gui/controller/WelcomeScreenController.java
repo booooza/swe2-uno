@@ -44,16 +44,15 @@ public class WelcomeScreenController {
 
     public void handleStartButtonAction() {
         logger.info("Selected Player: " + playerName.getText());
-//        Client client = new Client();
-//        try {
-//            mainApp.setState(client.request(Request.Command.START, playerName.getText()));
-//        } catch (Exception e) {
-//            logger.warn("Exception: {}", e);
-//            throw new IllegalArgumentException();
-//        } finally {
-//            mainApp.showGameOverview();
-//        }
-
-        mainApp.showGameOverview();
+        Client client = new Client();
+        try {
+            mainApp.setState(client.request(Request.Command.START, playerName.getText()));
+            mainApp.setPlayerName(playerName.getText());
+        } catch (Exception e) {
+            logger.warn("Exception: {}", e);
+            throw new IllegalArgumentException();
+        } finally {
+            mainApp.showGameOverview();
+        }
     }
 }

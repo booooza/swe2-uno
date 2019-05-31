@@ -40,7 +40,7 @@ class RequestTest {
     void getCardWithValidCard() {
         // Given
         CardInterface card = new NumberCard(CardType.NUMBERCARD, UnoColor.RED, 0);
-        Request request = new Request(Request.Command.PLAY, card);
+        Request request = new Request(Request.Command.PLAY, "Marc", card);
 
         // When
 
@@ -48,18 +48,4 @@ class RequestTest {
         assertEquals(card, request.getCard());
     }
 
-    @Test
-    void getCardWithInvalidCard() {
-        // Given
-        String noCard = "Not a Card";
-        Request request = new Request(Request.Command.PLAY, noCard);
-
-        // When
-
-        // Then
-        assertThrows(
-                IllegalArgumentException.class,
-                () -> { request.getCard(); }
-        );
-    }
 }

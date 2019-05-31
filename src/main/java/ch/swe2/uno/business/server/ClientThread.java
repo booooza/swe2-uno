@@ -23,43 +23,42 @@ public class ClientThread implements Runnable {
 
     @Override
     public void run() {
-        try (
-             ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
-             ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
-        ) {
+        try {
+            ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
+            ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
+            long time = System.currentTimeMillis();
             logger.info("Thread \"{}\" state {}", Thread.currentThread().getName(), Thread.currentThread().getState());
             Request request = (Request) in.readObject();
-            while (!Request.Command.QUIT.equals(request.getCommand())) {
-                switch (request.getCommand()) {
-                    case START:
-                        logger.info("Command {}", request.getCommand());
-                        game.addPlayer(request.getPlayerName());
-                        if (game.getState().getPlayers() == null) {
-                            game.initialize();
-                            logger.info("Game initialized");
-                        }
-                        out.writeObject("Hello " + request.getPlayerName());
-                        break;
-                    case PLAY:
-                        logger.info("Command {}", request.getCommand());
-                        game.playCard(request.getPlayerName(), request.getCard());
-                        out.writeObject(game.getState());
-                        break;
-                    case DRAW:
-                        logger.info("Command {}", request.getCommand());
-                        game.drawCard(request.getPlayerName());
-                        out.writeObject(game.getState());
-                        break;
-                    case GETSTATE:
-                        logger.info("Command {}", request.getCommand());
-                        out.writeObject(game.getState());
-                        break;
-                    default:
-                        logger.info("Unknown command {}", request.getCommand());
-                }
-                // request = (Request) in.readObject();
+            switch (request.getCommand()) {
+                case START:
+                    logger.info("Command {}", request.getCommand());
+                    game.addPlayer(request.getPlayerName());
+                    game.addPlayer("Bot");
+                    if (game.getState().getPlayers() == null) {
+                        out.writeObject(game.initialize());
+                        logger.info("Game initialized");
+                    }
+                    break;
+                case PLAY:
+                    logger.info("Command {}", request.getCommand());
+                    game.playCard(request.getPlayerName(), request.getCard());
+                    out.writeObject(game.getState());
+                    break;
+                case DRAW:
+                    logger.info("Command {}", request.getCommand());
+                    game.drawCard(request.getPlayerName());
+                    out.writeObject(game.getState());
+                    break;
+                case GETSTATE:
+                    logger.info("Command {}", request.getCommand());
+                    out.writeObject(game.getState());
+                    break;
+                default:
+                    logger.info("Unknown command {}", request.getCommand());
             }
-
+            out.close();
+            in.close();
+            logger.info("Request processed: {}", time);
         } catch (Exception e) {
             logger.warn("Socket Exception", e);
         }
