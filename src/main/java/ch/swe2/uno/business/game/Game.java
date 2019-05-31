@@ -83,11 +83,23 @@ public class Game {
 
                 logger.info("Player {} played card {} / {}", player.getName(), card.getColor(), card.getNumber());
                 logger.info("Player {} has {} cards remaining in hand", player.getName(), player.getHand().size());
-                // Make new top card
-                state.setTopDiscardPileCard(card);
-                logger.info("Top card is {} / {}", card.getColor(), card.getNumber());
-                // Toggle current turn flags
-                state.toggleCurrentTurn();
+
+                // Check if player has won the game
+                if (player.getHand().size() == 0) {
+                    state.setWinner(player.getName());
+                    state.setMessage("Player " + player.getName() + " has won the game");
+                    logger.info("Player {} has won the game", player.getName());
+                } else {
+                    // Make new top card
+                    state.setTopDiscardPileCard(card);
+                    logger.info("Top card is {} / {}", card.getColor(), card.getNumber());
+                    // Toggle current turn flags
+                    state.toggleCurrentTurn();
+                    // If its the players move let the bot play
+                    if (!playerName.equals("Bot")) {
+                        botAction();
+                    }
+                }
             } else {
                 state.setMessage("Invalid turn");
             }
@@ -115,6 +127,10 @@ public class Game {
             logger.info("Player {} has {} cards remaining in hand", player.getName(), player.getHand().size());
             // TODO: handle play after drawing
             state.toggleCurrentTurn();
+            // If its the players move let the bot play
+            if (!playerName.equals("Bot")) {
+                botAction();
+            }
         } else {
             state.setMessage("Invalid turn");
         }

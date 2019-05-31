@@ -86,7 +86,12 @@ public class GameOverviewController {
                 logger.warn("Exception: {}", e);
                 throw new IllegalArgumentException();
             } finally {
-                updateViewFromState();
+                // If someone has won
+                if (mainApp.getState().getWinner() != null) {
+                    mainApp.showEndScreen();
+                } else {
+                    updateViewFromState();
+                }
             }
         }
     }

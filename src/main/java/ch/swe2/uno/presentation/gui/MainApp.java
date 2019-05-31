@@ -1,6 +1,7 @@
 package ch.swe2.uno.presentation.gui;
 
 import ch.swe2.uno.business.state.State;
+import ch.swe2.uno.presentation.gui.controller.EndScreenController;
 import ch.swe2.uno.presentation.gui.controller.GameOverviewController;
 import ch.swe2.uno.presentation.gui.controller.WelcomeScreenController;
 import javafx.application.Application;
@@ -61,7 +62,7 @@ public class MainApp extends Application {
      */
     public void showWelcomeScreen() {
         try {
-            // Load welcome screen overview.
+            // Load welcome screen.
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(MainApp.class.getResource("/view/WelcomeScreen.fxml"));
             AnchorPane welcomeScreen = loader.load();
@@ -82,18 +83,43 @@ public class MainApp extends Application {
      */
     public void showGameOverview() {
         try {
-            // Load player overview.
+            // Load game overview.
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(MainApp.class.getResource("/view/GameOverview.fxml"));
             AnchorPane gameOverview = loader.load();
 
-            // Set player overview into the center of root layout.
+            // Set game overview into the center of root layout.
             rootLayout.setCenter(gameOverview);
 
             // Give the controller access to the main app.
             GameOverviewController controller = loader.getController();
             controller.setMainApp(this);
 
+        } catch (IOException e) {
+            logger.warn("Exception: {}", e);
+        }
+    }
+
+    /**
+     * Shows the end screen inside the root layout.
+     */
+    public void showEndScreen() {
+        try {
+            // Load end screen.
+            FXMLLoader loader = new FXMLLoader();
+            if (gameState.getWinner().equals("Bot")) {
+                loader.setLocation(MainApp.class.getResource("/view/FailScreen.fxml"));
+            } else {
+                loader.setLocation(MainApp.class.getResource("/view/SuccessScreen.fxml"));
+            }
+            AnchorPane endScreen = loader.load();
+
+            // Set welcome screen into the center of root layout.
+            rootLayout.setCenter(endScreen);
+
+            // Give the controller access to the main app.
+            EndScreenController controller = loader.getController();
+            controller.setMainApp(this);
         } catch (IOException e) {
             logger.warn("Exception: {}", e);
         }
