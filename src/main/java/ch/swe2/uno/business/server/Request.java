@@ -25,15 +25,11 @@ public class Request implements Serializable {
         this.card = card;
     }
 
-    public Command getCommand() {
+    Command getCommand() {
         return command;
     }
 
-    public Object getPayload() {
-        return card;
-    }
-
-    public String getPlayerName() {
+    String getPlayerName() {
         return playerName;
     }
 
@@ -41,7 +37,7 @@ public class Request implements Serializable {
         return card;
     }
 
-    public static enum Command {
+    public enum Command {
         JOIN,
         START,
         QUIT,

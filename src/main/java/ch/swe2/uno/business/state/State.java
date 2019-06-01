@@ -20,13 +20,13 @@ public class State implements Serializable {
         this.message = message;
     }
 
-    public Optional<PlayerInterface> getPlayerByName(String name) {
+    public synchronized Optional<PlayerInterface> getPlayerByName(String name) {
         return players.stream()
                 .filter(p -> name.equals(p.getName()))
                 .findFirst();
     }
 
-    public Optional<PlayerInterface> getCurrentPlayer() {
+    public synchronized Optional<PlayerInterface> getCurrentPlayer() {
         return players.stream()
                 .filter(PlayerInterface::isCurrentTurn)
                 .findFirst();
@@ -41,7 +41,7 @@ public class State implements Serializable {
         this.players = players;
     }
 
-    public List<PlayerInterface> getPlayers() {
+    public synchronized List<PlayerInterface> getPlayers() {
         return this.players;
     }
 
@@ -49,7 +49,7 @@ public class State implements Serializable {
         this.winner = winner;
     }
 
-    public String getWinner() {
+    public synchronized String getWinner() {
         return winner;
     }
 
@@ -57,7 +57,7 @@ public class State implements Serializable {
         this.message = message;
     }
 
-    public String getMessage() {
+    public synchronized String getMessage() {
         return message;
     }
 
@@ -65,7 +65,7 @@ public class State implements Serializable {
         this.topDiscardPileCard = topDiscardPileCard;
     }
 
-    public CardInterface getTopDiscardPileCard() {
+    public synchronized CardInterface getTopDiscardPileCard() {
         return topDiscardPileCard;
     }
 }
