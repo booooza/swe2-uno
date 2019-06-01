@@ -25,18 +25,6 @@ class RequestTest {
     }
 
     @Test
-    void getPayload() {
-        // Given
-        String payload = "Payload";
-        Request request = new Request(Request.Command.START, payload);
-
-        // When
-
-        // Then
-        assertEquals("Payload", request.getPayload());
-    }
-
-    @Test
     void getCardWithValidCard() {
         // Given
         CardInterface card = new NumberCard(CardType.NUMBERCARD, UnoColor.RED, 0);
