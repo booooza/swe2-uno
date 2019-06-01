@@ -45,12 +45,12 @@ public class Client {
         }
     }
 
-    public State request(Request.Command command, String playerName, CardInterface card) throws Exception {
+    public State request(Request.Command command, String playerName, CardInterface card, boolean uno) throws Exception {
         try {
             socket = new Socket("localhost", 1234);
             ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
             ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
-            out.writeObject(new Request(command, playerName, card));
+            out.writeObject(new Request(command, playerName, card, uno));
             return (State) in.readObject();
         } catch (Exception e) {
             logger.warn("Exception: {}", e);
