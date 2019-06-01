@@ -60,11 +60,11 @@
     -fx-text-fill: black;
 }
 
-.button:hover {
+.button:hover, .toggle-button:hover {
     -fx-background-color: orange;
 }
 
-.button:pressed, .button:default:hover:pressed {
+.button:pressed, .button:default:hover:pressed, .toggle-button:selected {
     -fx-background-color: orange;
     -fx-text-fill: black;
 }
