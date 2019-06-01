@@ -41,6 +41,10 @@ public class Request implements Serializable {
         return playerName;
     }
 
+    boolean getUno() {
+        return uno;
+    }
+
     public CardInterface getCard () {
         return card;
     }

@@ -110,6 +110,7 @@ public class GameOverviewController {
     }
 
     public void handleCheckButtonAction(ActionEvent event){
+        // TODO Should only be called if player.canDraw() returns false!
         logger.info("Check button pressed");
         Client client = new Client();
         try {

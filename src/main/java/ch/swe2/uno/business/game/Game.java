@@ -24,6 +24,9 @@ public class Game {
 	private boolean isRunning;
 	private List<String> playerNames = new ArrayList<>();
 
+	public Deck getDeck() {
+		return deck;
+	}
 
 	public boolean isRunning() {
 		return isRunning;
@@ -65,7 +68,7 @@ public class Game {
 		return new State();
 	}
 
-	public synchronized State playCard(String playerName, CardInterface card) {
+	public synchronized State playCard(String playerName, CardInterface card, boolean uno) {
 		PlayerInterface player;
 		Optional<PlayerInterface> optionalOfPlayer = state.getPlayerByName(playerName);
 		if (optionalOfPlayer.isPresent()) {
@@ -73,7 +76,6 @@ public class Game {
 		} else {
 			throw new IllegalArgumentException("playerName");
 		}
-
 		// Check if is the players turn and if the players hand contains the mentioned card
 		if (player.isCurrentTurn() && playersHandContainsExactCard(player, card)) {
 			// Check if card matches current top card
@@ -81,6 +83,7 @@ public class Game {
 					card.getNumber() == state.getTopDiscardPileCard().getNumber()) {
 				// Remove from players hand
 				removeCardFromPlayersHand(player, card);
+				player.setUno(uno);
 
 				logger.info("Player {} played card {} / {}", player.getName(), card.getColor(), card.getNumber());
 				logger.info("Player {} has {} cards remaining in hand", player.getName(), player.getHand().size());
@@ -96,6 +99,7 @@ public class Game {
 					state.setTopDiscardPileCard(card);
 					logger.info("Top card is {} / {}", card.getColor(), card.getNumber());
 					// Toggle current turn flags
+					checkUno();
 					state.toggleCurrentTurn();
 					// If its the players move let the bot play
 					if (!playerName.equals("Bot")) {
@@ -116,6 +120,7 @@ public class Game {
 
 		// If its the players move let the bot play
 		if (playerNames.contains("Bot") && !playerName.equals("Bot")) {
+			checkUno();
 			state.toggleCurrentTurn();
 			botAction();
 		}
@@ -141,6 +146,7 @@ public class Game {
 
 			if (playerNames.contains("Bot") && playerName.equals("Bot")) {
 				botAction();
+				checkUno();
 				state.toggleCurrentTurn();
 			}
 		} else {
@@ -154,12 +160,9 @@ public class Game {
 		Optional<CardInterface> optionalMatchingCard = randomCardMatchingTopCard("Bot");
 		if (optionalMatchingCard.isPresent()) {
 			CardInterface matchingCard = optionalMatchingCard.get();
-			playCard("Bot", matchingCard);
+			playCard("Bot", matchingCard, cardsLeftInPlayersHand("Bot") == 1);
 			state.setMessage("Bot has played card " + matchingCard.getColor().toString() + " " + matchingCard.getNumber());
 			logger.info("Bot has played card {} {}", matchingCard.getColor().toString(), matchingCard.getNumber());
-			if (cardsLeftInPlayersHand("Bot") == 1) {
-				// TODO: Say uno
-			}
 		} else {
 			PlayerInterface player;
 			Optional<PlayerInterface> optionalOfPlayer = state.getPlayerByName("Bot");
@@ -169,6 +172,7 @@ public class Game {
 				throw new IllegalArgumentException("playerName");
 			}
 			if (!player.canDraw()) {
+				checkUno();
 				state.toggleCurrentTurn();
 				state.setMessage("Bot has already drawn a card, next player");
 				logger.info("Bot has already drawn a card, next player");
@@ -222,5 +226,16 @@ public class Game {
 				.filter(card -> card.getColor().equals(playedCard.getColor()) && card.getNumber() == playedCard.getNumber())
 				.findFirst()
 				.ifPresent(card -> player.getHand().remove(card));
+	}
+
+	private void checkUno(){
+		Optional<PlayerInterface> currentPlayerOptional = state.getCurrentPlayer();
+		if(currentPlayerOptional.isPresent()){
+			PlayerInterface currentPlayer = currentPlayerOptional.get();
+			// Check if player forgot to say UNO
+			if(currentPlayer.getHand().size() == 1 && !currentPlayer.isUno()){
+				currentPlayer.addCard(deck.drawCard());
+			}
+		}
 	}
 }
