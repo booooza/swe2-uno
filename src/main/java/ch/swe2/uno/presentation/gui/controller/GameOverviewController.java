@@ -10,10 +10,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.ToggleButton;
+import javafx.scene.control.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,6 +32,11 @@ public class GameOverviewController {
 	private Label message;
 	@FXML
 	private ToggleButton unoButton;
+	@FXML
+	private Button checkButton;
+	@FXML
+	private Button drawButton;
+
 	private ObservableList<CardInterface> observablePlayerData = FXCollections.observableArrayList();
 	private MainApp mainApp; // Reference to the main application.
 
@@ -125,11 +127,6 @@ public class GameOverviewController {
 		}
 	}
 
-	public void handleUnoButtonAction(ActionEvent event) {
-		logger.info("Uno button pressed");
-		updateViewFromState();
-	}
-
 	private void updateViewFromState() {
 		mainApp.getState().getPlayerByName(mainApp.getPlayerName()).ifPresent(p -> {
 			observablePlayerData.clear();
@@ -141,6 +138,9 @@ public class GameOverviewController {
 			if (p.getHand().size() > 1) {
 				unoButton.setSelected(false);
 			}
+			checkButton.setDisable(p.canDraw());
+			drawButton.setDisable(!p.canDraw());
+
 		});
 		topCard.setText(
 				mainApp.getState().getTopDiscardPileCard().getColor().toString() + " " +
