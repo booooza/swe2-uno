@@ -235,6 +235,10 @@ public class Game {
 			// Check if player forgot to say UNO
 			if(currentPlayer.getHand().size() == 1 && !currentPlayer.isUno()){
 				currentPlayer.addCard(deck.drawCard());
+				logger.info("{} forgot to say UNO and therefore drawn 1 penalty card", currentPlayer.getName());
+			} else if(currentPlayer.getHand().size() > 1 && currentPlayer.isUno()){
+				currentPlayer.addCard(deck.drawCard());
+				logger.info("{} said UNO but had more than 1 card and therefore drawn 1 penalty card", currentPlayer.getName());
 			}
 		}
 	}
