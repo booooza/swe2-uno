@@ -109,6 +109,19 @@ public class GameOverviewController {
         }
     }
 
+    public void handleCheckButtonAction(ActionEvent event){
+        logger.info("Check button pressed");
+        Client client = new Client();
+        try {
+            mainApp.setState(client.request(Request.Command.CHECK, mainApp.getPlayerName()));
+        } catch (Exception e) {
+            logger.warn("Exception: {}", e);
+            throw new IllegalArgumentException();
+        } finally {
+            updateViewFromState();
+        }
+    }
+
     public void handleUnoButtonAction(ActionEvent event) {
         logger.info("Uno button pressed");
         updateViewFromState();

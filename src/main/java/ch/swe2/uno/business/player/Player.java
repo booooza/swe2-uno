@@ -12,7 +12,7 @@ public class Player implements PlayerInterface, Serializable {
     private String name;
     private final List<CardInterface> hand = new ArrayList<>();
     private boolean currentTurn;
-    private boolean canEndTurn;
+    private boolean canDraw = true;
     private boolean uno;
 
     public Player(String name) {
@@ -43,12 +43,12 @@ public class Player implements PlayerInterface, Serializable {
         currentTurn = !currentTurn;
     }
 
-    public void setCanEndTurn(boolean canEndTurn) {
-        this.canEndTurn = canEndTurn;
+    public void setCanDraw(boolean canDraw) {
+        this.canDraw = canDraw;
     }
 
-    public boolean canEndTurn() {
-        return canEndTurn;
+    public boolean canDraw() {
+        return canDraw;
     }
 
     public void setUno(boolean uno) {

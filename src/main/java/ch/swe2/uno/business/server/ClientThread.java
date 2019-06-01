@@ -29,9 +29,10 @@ public class ClientThread implements Runnable {
             long time = System.currentTimeMillis();
             logger.info("Thread \"{}\" state {}", Thread.currentThread().getName(), Thread.currentThread().getState());
             Request request = (Request) in.readObject();
+            logger.info("Command {}", request.getCommand());
+
             switch (request.getCommand()) {
                 case START:
-                    logger.info("Command {}", request.getCommand());
                     game.addPlayer(request.getPlayerName());
                     game.addPlayer("Bot");
                     if (game.getState().getPlayers() == null) {
@@ -40,17 +41,18 @@ public class ClientThread implements Runnable {
                     }
                     break;
                 case PLAY:
-                    logger.info("Command {}", request.getCommand());
                     game.playCard(request.getPlayerName(), request.getCard());
                     out.writeObject(game.getState());
                     break;
+                case CHECK:
+                    game.check(request.getPlayerName());
+                    out.writeObject(game.getState());
+                    break;
                 case DRAW:
-                    logger.info("Command {}", request.getCommand());
                     game.drawCard(request.getPlayerName());
                     out.writeObject(game.getState());
                     break;
                 case GETSTATE:
-                    logger.info("Command {}", request.getCommand());
                     out.writeObject(game.getState());
                     break;
                 default:

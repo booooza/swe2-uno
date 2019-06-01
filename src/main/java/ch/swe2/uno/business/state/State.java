@@ -33,7 +33,8 @@ public class State implements Serializable {
     }
 
     public synchronized void toggleCurrentTurn() {
-        // 
+        //
+        players.stream().forEach(p -> p.setCanDraw(true));
         players.stream().forEach(PlayerInterface::toggleCurrentTurn);
     }
 

@@ -9,6 +9,7 @@ public class Request implements Serializable {
     private Command command;
     private String playerName;
     private CardInterface card;
+    private boolean uno;
 
     public Request(Command command) {
         this.command = command;
@@ -23,6 +24,13 @@ public class Request implements Serializable {
         this.command = command;
         this.playerName = playerName;
         this.card = card;
+    }
+
+    public Request(Command command, String playerName, CardInterface card, boolean uno) {
+        this.command = command;
+        this.playerName = playerName;
+        this.card = card;
+        this.uno = uno;
     }
 
     Command getCommand() {
@@ -40,10 +48,12 @@ public class Request implements Serializable {
     public enum Command {
         JOIN,
         START,
+        RESTART,
         QUIT,
         PLAY,
+        CHECK,
         DRAW,
         GETSTATE;
-    }
+	}
 
 }

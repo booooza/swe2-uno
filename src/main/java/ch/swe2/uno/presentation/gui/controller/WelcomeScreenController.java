@@ -72,6 +72,10 @@ public class WelcomeScreenController {
 		logger.info("Player who started game: " + playerName.getText());
 		Client client = new Client();
 		try {
+
+			//mainApp.setState(client.request(Request.Command.JOIN, playerName.getText()));
+			mainApp.setPlayerName(playerName.getText());
+
 			mainApp.setState(client.request(Request.Command.START, playerName.getText()));
 		} catch (Exception e) {
 			logger.warn("Exception: {}", e);
