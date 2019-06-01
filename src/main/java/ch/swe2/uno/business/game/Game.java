@@ -146,8 +146,6 @@ public class Game {
 
 			if (playerNames.contains("Bot") && playerName.equals("Bot")) {
 				botAction();
-				checkUno();
-				state.toggleCurrentTurn();
 			}
 		} else {
 			state.setMessage("Invalid turn");
@@ -171,22 +169,15 @@ public class Game {
 			} else {
 				throw new IllegalArgumentException("playerName");
 			}
-			if (!player.canDraw()) {
-				checkUno();
+			if (player.canDraw()) {
+				drawCard("Bot");
+				logger.info("Bot has drawn a card");
+			} else {
 				state.toggleCurrentTurn();
 				state.setMessage("Bot has already drawn a card, next player");
 				logger.info("Bot has already drawn a card, next player");
-			} else {
-				drawCard("Bot");
-				state.setMessage("Bot has drawn a card");
-				logger.info("Bot has drawn a card");
 			}
-
 		}
-
-		// If only one card is left in hand say uno
-		// Else draw card
-
 	}
 
 	public State getState() {
