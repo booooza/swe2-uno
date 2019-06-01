@@ -51,7 +51,7 @@
     -fx-font-family: "Helvetica";
 }
 
-.button {
+.button, .toggle-button {
     -fx-padding: 5 22 5 22;
     -fx-background-radius: 0;
     -fx-background-color: yellow;

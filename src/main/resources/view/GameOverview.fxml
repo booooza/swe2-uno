@@ -5,12 +5,13 @@
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.ToggleButton?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: red;" stylesheets="@Styles.css" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ch.swe2.uno.presentation.gui.controller.GameOverviewController">
+<AnchorPane prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: red;" stylesheets="@Styles.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ch.swe2.uno.presentation.gui.controller.GameOverviewController">
    <children>
       <ImageView fitHeight="70.0" fitWidth="102.0" layoutX="249.0" layoutY="16.0">
          <image>
@@ -57,14 +58,17 @@
                               <Font size="18.0" />
                            </font>
                         </Label>
-                        <Label fx:id="message" layoutX="19.0" layoutY="122.0" text="Welcome to UNO" textFill="WHITE">
+                        <Button layoutX="17.0" layoutY="182.0" mnemonicParsing="false" onAction="#handlePlayButtonAction" prefHeight="35.0" prefWidth="110.0" text="Play" />
+                        <Button layoutX="158.0" layoutY="182.0" mnemonicParsing="false" onAction="#handleDrawButtonAction" prefHeight="35.0" prefWidth="110.0" text="Draw" />
+                        <Button layoutX="161.0" layoutY="127.0" mnemonicParsing="false" onAction="#handleCheckButtonAction" prefHeight="35.0" prefWidth="110.0" text="Check" />
+                        <ToggleButton layoutX="17.0" layoutY="237.0" mnemonicParsing="false" onAction="#handleCheckButtonAction" prefHeight="35.0" prefWidth="253.0" text="Say UNO!" />
+                        <Label fx:id="message" layoutX="20.0" layoutY="84.0" text="Welcome to UNO" textFill="WHITE">
                            <font>
                               <Font name="System Bold" size="18.0" />
                            </font>
                         </Label>
                         <Button layoutX="17.0" layoutY="182.0" mnemonicParsing="false" onAction="#handlePlayButtonAction" prefHeight="35.0" prefWidth="110.0" text="Play" />
                         <Button layoutX="158.0" layoutY="182.0" mnemonicParsing="false" onAction="#handleDrawButtonAction" prefHeight="35.0" prefWidth="110.0" text="Draw" />
-                        <Button layoutX="160.0" layoutY="130.0" mnemonicParsing="false" onAction="#handleCheckButtonAction" prefHeight="35.0" prefWidth="110.0" text="Check" />
                         <Button layoutX="17.0" layoutY="233.0" mnemonicParsing="false" onAction="#handleUnoButtonAction" prefHeight="35.0" prefWidth="252.0" text="Say UNO!" />
                      </children>
                   </AnchorPane>
