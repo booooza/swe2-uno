@@ -42,6 +42,7 @@ public class Request implements Serializable {
     }
 
     public static enum Command {
+        JOIN,
         START,
         QUIT,
         PLAY,

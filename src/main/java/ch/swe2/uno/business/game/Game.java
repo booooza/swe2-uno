@@ -25,6 +25,7 @@ public class Game {
     private boolean isRunning;
     private List<String> playerNames = new ArrayList<>();
 
+
     public boolean isRunning() {
         return isRunning;
     }
@@ -128,6 +129,7 @@ public class Game {
             // TODO: handle play after drawing
             state.toggleCurrentTurn();
             // If its the players move let the bot play
+            // TODO check if last turn was invalid
             if (!playerName.equals("Bot")) {
                 botAction();
             }

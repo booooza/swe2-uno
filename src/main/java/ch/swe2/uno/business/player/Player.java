@@ -8,6 +8,7 @@ import java.util.List;
 
 public class Player implements PlayerInterface, Serializable {
     // Attributes:
+    private long id;
     private String name;
     private final List<CardInterface> hand = new ArrayList<>();
     private boolean currentTurn;
@@ -16,6 +17,10 @@ public class Player implements PlayerInterface, Serializable {
 
     public Player(String name) {
         this.name = name;
+    }
+
+    public long getId() {
+        return this.id;
     }
 
     public String getName() {

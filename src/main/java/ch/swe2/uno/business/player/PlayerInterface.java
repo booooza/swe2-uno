@@ -5,6 +5,7 @@ import ch.swe2.uno.business.card.CardInterface;
 import java.util.List;
 
 public interface PlayerInterface {
+    long getId();
     String getName();
     List<CardInterface> getHand();
     void setCurrentTurn(boolean currentTurn);
