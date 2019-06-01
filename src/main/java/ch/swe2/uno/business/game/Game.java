@@ -91,6 +91,7 @@ public class Game {
                     logger.info("Player {} has won the game", player.getName());
                 } else {
                     // Make new top card
+                    deck.addCardToDiscardPile(card);
                     state.setTopDiscardPileCard(card);
                     logger.info("Top card is {} / {}", card.getColor(), card.getNumber());
                     // Toggle current turn flags
