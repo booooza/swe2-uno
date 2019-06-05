@@ -32,42 +32,48 @@ public class Game {
 		return isRunning;
 	}
 
-	public synchronized void addPlayer(String playerName) {
-		if (!isRunning) {
-			playerNames.add(playerName);
-		}
+	public Game(){
+		initialize();
 	}
 
-	public synchronized State initialize() {
-		logger.info("Starting the game");
+	public synchronized State addPlayer(String playerName) {
+		if (!isRunning) {
+			playerNames.add(playerName);
+			List<PlayerInterface> players = playerNames.stream()
+					.map(Player::new)
+					.collect(Collectors.toList());
+			state.setPlayers(players);
+		}
+		return state;
+	}
 
-		if(playerNames.size() == 0){
+
+	public synchronized State initialize(){
+		logger.info("Starting the game");
+		state = new State(new ArrayList(), "Initial state");
+		return state;
+	}
+
+	public synchronized State start() {
+		if(state.getPlayers().size() == 0){
 			throw new IllegalStateException("no player joined the game");
 		}
 
-		if(playerNames.size() == 1){
+		if(state.getPlayers().size() == 1){
 			this.addPlayer("Bot");
 		}
 
 		if (!isRunning && playerNames.size() >= 2) {
-			// Create players
-			List<PlayerInterface> players = playerNames.stream()
-					.map(Player::new)
-					.collect(Collectors.toList());
-
-			// Create initial state
-			state = new State(players, "Initial state");
-
 			// Create deck & distribute cards
 			deck = new Deck();
 			deck.create();
-			deck.distribute(players);
+			deck.distribute(state.getPlayers());
 
 			// Choose first player (TODO: randomize)
-			players.get(0).setCurrentTurn(true);
+			state.getPlayers().get(0).setCurrentTurn(true);
 
 			// Write player info to state
-			state.setPlayers(players);
+			state.setPlayers(state.getPlayers());
 			state.setTopDiscardPileCard(deck.getTopCardOfDiscardPile());
 			isRunning = true;
 			state.setMessage("Game initialized");

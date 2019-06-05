@@ -33,11 +33,12 @@ public class ClientThread implements Runnable {
 
 			switch (request.getCommand()) {
 				case JOIN:
-					game.addPlayer(request.getPlayerName());
-					MultiThreadedServer.getInstance().connectClient(game);
+					out.writeObject(game.addPlayer(request.getPlayerName()));
+					//MultiThreadedServer.getInstance().connectClient(game);
+					break;
 				case START:
 					if (game.getState().getPlayers() == null) {
-						out.writeObject(game.initialize());
+						out.writeObject(game.start());
 						logger.info("Game initialized");
 					}
 					break;
