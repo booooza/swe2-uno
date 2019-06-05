@@ -41,6 +41,14 @@ public class Game {
 	public synchronized State initialize() {
 		logger.info("Starting the game");
 
+		if(playerNames.size() == 0){
+			throw new IllegalStateException("no player joined the game");
+		}
+
+		if(playerNames.size() == 1){
+			this.addPlayer("Bot");
+		}
+
 		if (!isRunning && playerNames.size() >= 2) {
 			// Create players
 			List<PlayerInterface> players = playerNames.stream()

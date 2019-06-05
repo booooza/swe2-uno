@@ -7,15 +7,28 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MultiThreadedServer implements Runnable {
     protected int serverPort;
-    protected ServerSocket serverSocket;
+    public ServerSocket serverSocket;
     protected boolean isStopped;
     protected Thread runningThread;
     protected Game game;
+    private List<Thread> clients = new ArrayList();
+
 
     private static final Logger logger = LoggerFactory.getLogger(MultiThreadedServer.class);
+
+    private static MultiThreadedServer theInstance;
+
+    public static MultiThreadedServer getInstance(){
+        if(theInstance == null) {
+            theInstance = new MultiThreadedServer(Server.SERVER_PORT, new Game());
+        }
+        return theInstance;
+    }
 
     public MultiThreadedServer(int port, Game game){
         this.serverPort = port;
@@ -27,6 +40,23 @@ public class MultiThreadedServer implements Runnable {
             this.runningThread = Thread.currentThread();
         }
         openServerSocket();
+
+        while (!MultiThreadedServer.getInstance().isStopped()) {
+            try {
+                new Thread(new ClientThread(MultiThreadedServer.getInstance().serverSocket.accept(), game)).start();
+                //clients.add(thread);
+            } catch (IOException e) {
+                if (MultiThreadedServer.getInstance().isStopped()) {
+                    logger.info("Server stopped...");
+                    return;
+                }
+                throw new RuntimeException(
+                        "Error accepting client connection", e);
+            }
+        }
+    }
+
+    public void connectClient(Game game){
         while(! isStopped()){
             Socket clientSocket;
             try {
@@ -44,11 +74,9 @@ public class MultiThreadedServer implements Runnable {
                             clientSocket, game)
             ).start();
         }
-        logger.info("Server stopped...");
     }
 
-
-    private synchronized boolean isStopped() {
+    public synchronized boolean isStopped() {
         return this.isStopped;
     }
 
