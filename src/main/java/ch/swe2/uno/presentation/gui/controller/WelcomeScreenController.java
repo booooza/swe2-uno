@@ -6,16 +6,31 @@ import ch.swe2.uno.business.server.Request;
 import ch.swe2.uno.presentation.gui.MainApp;
 import ch.swe2.uno.presentation.network.client.Client;
 import javafx.application.Platform;
+import javafx.beans.property.ReadOnlyIntegerWrapper;
+import javafx.beans.property.ReadOnlyLongWrapper;
+import javafx.beans.property.ReadOnlyObjectWrapper;
+import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import static java.lang.Math.toIntExact;
+
 public class WelcomeScreenController {
 	private static final Logger logger = LoggerFactory.getLogger(WelcomeScreenController.class);
+
+	@FXML
+	private TableView<PlayerInterface> playersTable;
+	@FXML
+	private TableColumn<PlayerInterface, Long> playerIDColumn;
+	@FXML
+	private TableColumn<PlayerInterface, String> playerNameColumn;
 	@FXML
 	private TextField playerName;
 	@FXML
@@ -37,6 +52,17 @@ public class WelcomeScreenController {
 	 */
 	@FXML
 	private void initialize() {
+		// Initialize the players table columns
+
+		playerNameColumn.setCellValueFactory(cellData ->
+				new ReadOnlyStringWrapper(
+						cellData.getValue().getName()
+				));
+		playerIDColumn.setCellValueFactory(cellData ->
+				new ReadOnlyObjectWrapper(
+						cellData.getValue().getId()
+				));
+
 		playerName.focusedProperty().addListener((ov, t, t1) -> Platform.runLater(() -> {
 			if (playerName.isFocused() && !playerName.getText().isEmpty()) {
 				playerName.selectAll();
@@ -64,23 +90,32 @@ public class WelcomeScreenController {
 			logger.warn("Exception: {}", e);
 			throw new IllegalArgumentException();
 		}
-		joinButton.setDisable(false);
-		joinButton.setText("Joined");
+		updateViewAfterJoin();
+		updateViewFromState();
 	}
 
 	public void handleStartButtonAction() {
 		logger.info("Player who started game: " + playerName.getText());
 		Client client = new Client();
 		try {
-
-			//mainApp.setState(client.request(Request.Command.JOIN, playerName.getText()));
 			mainApp.setPlayerName(playerName.getText());
-
 			mainApp.setState(client.request(Request.Command.START, playerName.getText()));
 		} catch (Exception e) {
 			logger.warn("Exception: {}", e);
 			throw new IllegalArgumentException();
 		}
 		mainApp.showGameOverview();
+	}
+
+	private void updateViewAfterJoin() {
+		joinButton.setDisable(false);
+		joinButton.setText("Joined");
+	}
+
+	private void updateViewFromState(){
+		observablePlayers.clear();
+		observablePlayers.addAll(mainApp.getState().getPlayers());
+
+		playersTable.setItems(observablePlayers);
 	}
 }
