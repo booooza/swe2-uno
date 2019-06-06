@@ -18,7 +18,7 @@ public class MultiThreadedServer implements Runnable {
 	protected boolean isStopped;
 	protected Thread runningThread;
 	protected Game game;
-	private List<ClientThread> clients = new ArrayList();
+	private List<Thread> clients = new ArrayList();
 
 	public MultiThreadedServer(int port, Game game) {
 		this.serverPort = port;
@@ -42,8 +42,9 @@ public class MultiThreadedServer implements Runnable {
 			try {
 				Socket cS = serverSocket.accept();
 				ClientThread cT = new ClientThread(cS, game);
-				clients.add(cT);
-				new Thread(cT).start();
+				Thread t = new Thread(cT);
+				clients.add(t);
+				t.start();
 			} catch (IOException e) {
 				if (isStopped()) {
 					logger.info("Server stopped...");

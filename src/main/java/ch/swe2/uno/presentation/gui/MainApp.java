@@ -4,6 +4,7 @@ import ch.swe2.uno.business.state.State;
 import ch.swe2.uno.presentation.gui.controller.EndScreenController;
 import ch.swe2.uno.presentation.gui.controller.GameOverviewController;
 import ch.swe2.uno.presentation.gui.controller.WelcomeScreenController;
+import ch.swe2.uno.presentation.network.client.Client;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -16,17 +17,22 @@ import java.io.IOException;
 
 public class MainApp extends Application {
 
+    private Client client;
     private Stage primaryStage;
     private BorderPane rootLayout;
     private State gameState;
     private String playerName;
     private static final Logger logger = LoggerFactory.getLogger(MainApp.class);
 
+    public static void main(String[] args) {
+        launch(args);
+    }
+
     /**
      * Constructor
      */
     public MainApp() {
-
+        client = new Client();
     }
 
     @Override
@@ -141,7 +147,7 @@ public class MainApp extends Application {
         return playerName;
     }
 
-    public static void main(String[] args) {
-        launch(args);
+    public Client getClient() {
+        return this.client;
     }
 }

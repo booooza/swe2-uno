@@ -25,11 +25,11 @@ public class Client {
             throw new IllegalArgumentException();
         }
         finally {
-            socket.close();
+            //socket.close();
         }
     }
 
-    public State request(Request.Command command, String playerName) throws Exception {
+    public State request(Request.Command command, String playerName) {
         try {
             socket = new Socket("localhost", 1234);
             ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
@@ -41,7 +41,7 @@ public class Client {
             throw new IllegalArgumentException();
         }
         finally {
-            socket.close();
+            //socket.close();
         }
     }
 
@@ -57,7 +57,7 @@ public class Client {
             throw new IllegalArgumentException();
         }
         finally {
-            socket.close();
+            // socket.close();
         }
     }
 }

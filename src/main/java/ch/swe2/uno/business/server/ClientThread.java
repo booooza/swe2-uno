@@ -37,7 +37,7 @@ public class ClientThread implements Runnable {
 					//MultiThreadedServer.getInstance().connectClient(game);
 					break;
 				case START:
-					if (game.getState().getPlayers() == null) {
+					if (game.getState().getPlayers() != null) {
 						out.writeObject(game.start());
 						logger.info("Game initialized");
 					}
