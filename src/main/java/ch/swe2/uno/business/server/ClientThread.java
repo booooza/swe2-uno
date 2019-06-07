@@ -6,65 +6,97 @@ import org.hildan.fxgson.FxGson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.HashMap;
+import java.util.UUID;
 
 public class ClientThread implements Runnable {
 	private static final Logger logger = LoggerFactory.getLogger(ClientThread.class);
+
 	private Socket socket;
 	private Gson fxGson = FxGson.create();
 	private Game game;
+	private ObjectInputStream inputStream = null;
+	private ObjectOutputStream outputStream = null;
+	// own thread
+	private Thread thread;
+	// check if thread is running
+	private volatile boolean isRunning = true;
+	// opcode
+	private HashMap<String, ClientThread> clientInfo = new HashMap<String, ClientThread>();
 
 	ClientThread(Socket socket, Game game) {
-		this.socket = socket;
-		this.game = game;
+		try {
+			this.socket = socket;
+			this.game = game;
+
+			this.clientInfo = MultiThreadedServer.getClientInfo();
+
+			logger.info("Thread \"{}\" state {}", Thread.currentThread().getName(), Thread.currentThread().getState());
+
+			inputStream = new ObjectInputStream(socket.getInputStream());
+			outputStream = new ObjectOutputStream(socket.getOutputStream());
+
+			thread = new Thread(this);
+			thread.start();
+		} catch (IOException e) {
+			logger.error("Error initializing ClientThread from Socket");
+		}
 	}
 
 	@Override
 	public void run() {
 		try {
-			ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
-			ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
 			long time = System.currentTimeMillis();
-			logger.info("Thread \"{}\" state {}", Thread.currentThread().getName(), Thread.currentThread().getState());
-			Request request = (Request) in.readObject();
-			logger.info("Command {}", request.getCommand());
+			while (isRunning) {
+				if (inputStream.available() != 0) {
+					continue;
+				}
+				Request request = (Request) inputStream.readObject();
+				logger.info("Command {}", request.getCommand());
 
-			switch (request.getCommand()) {
-				case JOIN:
-					out.writeObject(game.addPlayer(request.getPlayerName()));
-					//MultiThreadedServer.getInstance().connectClient(game);
-					break;
-				case START:
-					if (game.getState().getPlayers() != null) {
-						out.writeObject(game.start());
-						logger.info("Game initialized");
-					}
-					break;
-				case PLAY:
-					game.playCard(request.getPlayerName(), request.getCard(), request.getUno());
-					out.writeObject(game.getState());
-					break;
-				case CHECK:
-					game.check(request.getPlayerName());
-					out.writeObject(game.getState());
-					break;
-				case DRAW:
-					game.drawCard(request.getPlayerName());
-					out.writeObject(game.getState());
-					break;
-				case GETSTATE:
-					out.writeObject(game.getState());
-					break;
-				default:
-					logger.info("Unknown command {}", request.getCommand());
+				switch (request.getCommand()) {
+					case JOIN:
+						outputStream.writeObject(game.addPlayer(request.getPlayerName()));
+						clientInfo.put(String.format("%s-%s", request.getPlayerName(), UUID.randomUUID()), this);
+						//MultiThreadedServer.getInstance().connectClient(game);
+						break;
+					case START:
+						if (game.getState().getPlayers() != null) {
+							outputStream.writeObject(game.start());
+							logger.info("Game initialized");
+						}
+						break;
+					case PLAY:
+						game.playCard(request.getPlayerName(), request.getCard(), request.getUno());
+						outputStream.writeObject(game.getState());
+						break;
+					case CHECK:
+						game.check(request.getPlayerName());
+						outputStream.writeObject(game.getState());
+						break;
+					case DRAW:
+						game.drawCard(request.getPlayerName());
+						outputStream.writeObject(game.getState());
+						break;
+					case GETSTATE:
+						outputStream.writeObject(game.getState());
+						break;
+					default:
+						logger.info("Unknown command {}", request.getCommand());
+				}
+				logger.info("Request processed: {}", time);
 			}
-			out.close();
-			in.close();
-			logger.info("Request processed: {}", time);
-		} catch (Exception e) {
-			logger.warn("Socket Exception", e);
+
+			// close connections
+			outputStream.close();
+			inputStream.close();
+			socket.close();
+		} catch (Exception ex) {
+			logger.error(String.format("Error in executing client's request. Details %s", ex.getMessage()));
 		}
 	}
 }
