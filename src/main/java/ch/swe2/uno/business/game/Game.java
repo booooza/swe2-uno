@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class Game {
 	private static final Logger logger = LoggerFactory.getLogger(Game.class);
@@ -22,7 +23,6 @@ public class Game {
 	private Deck deck = new Deck();
 	private Gson fxGson = FxGson.create();
 	private boolean isRunning;
-	private List<String> playerNames = new ArrayList<>();
 
 	public Deck getDeck() {
 		return deck;
@@ -32,38 +32,33 @@ public class Game {
 		return isRunning;
 	}
 
-	public Game(){
+	public Game() {
 		initialize();
 	}
 
 	public synchronized State addPlayer(String playerName) {
 		if (!isRunning) {
-			playerNames.add(playerName);
-			List<PlayerInterface> players = playerNames.stream()
-					.map(Player::new)
-					.collect(Collectors.toList());
-			state.setPlayers(players);
+			state.addPlayer(playerName);
 		}
 		return state;
 	}
 
-
-	public synchronized State initialize(){
+	public synchronized State initialize() {
 		logger.info("Starting the game");
 		state = new State(new ArrayList(), "Initial state");
 		return state;
 	}
 
 	public synchronized State start() {
-		if(state.getPlayers().size() == 0){
+		if (state.getPlayers().size() == 0) {
 			throw new IllegalStateException("no player joined the game");
 		}
 
-		if(state.getPlayers().size() == 1){
+		if (state.getPlayers().size() == 1) {
 			this.addPlayer("Bot");
 		}
 
-		if (!isRunning && playerNames.size() >= 2) {
+		if (!isRunning && state.getPlayers().size() >= 2) {
 			// Create deck & distribute cards
 			deck = new Deck();
 			deck.create();
@@ -90,11 +85,12 @@ public class Game {
 		} else {
 			throw new IllegalArgumentException("playerName");
 		}
-		// Check if is the players turn and if the players hand contains the mentioned card
+		// Check if is the players turn and if the players hand contains the mentioned
+		// card
 		if (player.isCurrentTurn() && playersHandContainsExactCard(player, card)) {
 			// Check if card matches current top card
-			if (card.getColor().equals(state.getTopDiscardPileCard().getColor()) ||
-					card.getNumber() == state.getTopDiscardPileCard().getNumber()) {
+			if (card.getColor().equals(state.getTopDiscardPileCard().getColor())
+					|| card.getNumber() == state.getTopDiscardPileCard().getNumber()) {
 				// Remove from players hand
 				removeCardFromPlayersHand(player, card);
 				player.setUno(uno);
@@ -133,7 +129,7 @@ public class Game {
 		// Only Check and Play can trigger the next players turn
 
 		// If its the players move let the bot play
-		if (playerNames.contains("Bot") && !playerName.equals("Bot")) {
+		if (state.containsPlayer("Bot") && !playerName.equals("Bot")) {
 			checkUno();
 			state.toggleCurrentTurn();
 			botAction();
@@ -158,7 +154,7 @@ public class Game {
 			logger.info("Player {} drawed card", player.getName());
 			logger.info("Player {} has {} cards remaining in hand", player.getName(), player.getHand().size());
 
-			if (playerNames.contains("Bot") && playerName.equals("Bot")) {
+			if (state.containsPlayer("Bot") && playerName.equals("Bot")) {
 				botAction();
 			}
 		} else {
@@ -173,7 +169,8 @@ public class Game {
 		if (optionalMatchingCard.isPresent()) {
 			CardInterface matchingCard = optionalMatchingCard.get();
 			playCard("Bot", matchingCard, cardsLeftInPlayersHand("Bot") == 1);
-			state.setMessage("Bot has played card " + matchingCard.getColor().toString() + " " + matchingCard.getNumber());
+			state.setMessage(
+					"Bot has played card " + matchingCard.getColor().toString() + " " + matchingCard.getNumber());
 			logger.info("Bot has played card {} {}", matchingCard.getColor().toString(), matchingCard.getNumber());
 		} else {
 			PlayerInterface player;
@@ -200,11 +197,9 @@ public class Game {
 
 	private Optional<CardInterface> randomCardMatchingTopCard(String playerName) {
 		if (state.getPlayerByName(playerName).isPresent()) {
-			return state.getPlayerByName(playerName)
-					.get().getHand()
-					.stream()
-					.filter(card -> card.getColor().equals(state.getTopDiscardPileCard().getColor()) ||
-							card.getNumber() == state.getTopDiscardPileCard().getNumber())
+			return state.getPlayerByName(playerName).get().getHand().stream()
+					.filter(card -> card.getColor().equals(state.getTopDiscardPileCard().getColor())
+							|| card.getNumber() == state.getTopDiscardPileCard().getNumber())
 					.findAny();
 		} else {
 			throw new NullPointerException();
@@ -213,37 +208,35 @@ public class Game {
 
 	private int cardsLeftInPlayersHand(String playerName) {
 		if (state.getPlayerByName(playerName).isPresent()) {
-			return state.getPlayerByName(playerName)
-					.get().getHand().size();
+			return state.getPlayerByName(playerName).get().getHand().size();
 		} else {
 			throw new NullPointerException();
 		}
 	}
 
 	private boolean playersHandContainsExactCard(PlayerInterface player, CardInterface playedCard) {
-		return player.getHand().stream()
-				.anyMatch(card ->
-						(card.getColor().equals(playedCard.getColor()) && card.getNumber() == playedCard.getNumber()));
+		return player.getHand().stream().anyMatch(
+				card -> (card.getColor().equals(playedCard.getColor()) && card.getNumber() == playedCard.getNumber()));
 	}
 
 	private void removeCardFromPlayersHand(PlayerInterface player, CardInterface playedCard) {
-		player.getHand().stream()
-				.filter(card -> card.getColor().equals(playedCard.getColor()) && card.getNumber() == playedCard.getNumber())
-				.findFirst()
-				.ifPresent(card -> player.getHand().remove(card));
+		player.getHand().stream().filter(
+				card -> card.getColor().equals(playedCard.getColor()) && card.getNumber() == playedCard.getNumber())
+				.findFirst().ifPresent(card -> player.getHand().remove(card));
 	}
 
-	private void checkUno(){
+	private void checkUno() {
 		Optional<PlayerInterface> currentPlayerOptional = state.getCurrentPlayer();
-		if(currentPlayerOptional.isPresent()){
+		if (currentPlayerOptional.isPresent()) {
 			PlayerInterface currentPlayer = currentPlayerOptional.get();
 			// Check if player forgot to say UNO
-			if(currentPlayer.getHand().size() == 1 && !currentPlayer.isUno()){
+			if (currentPlayer.getHand().size() == 1 && !currentPlayer.isUno()) {
 				currentPlayer.addCard(deck.drawCard());
 				logger.info("{} forgot to say UNO and therefore drawn 1 penalty card", currentPlayer.getName());
-			} else if(currentPlayer.getHand().size() > 1 && currentPlayer.isUno()){
+			} else if (currentPlayer.getHand().size() > 1 && currentPlayer.isUno()) {
 				currentPlayer.addCard(deck.drawCard());
-				logger.info("{} said UNO but had more than 1 card and therefore drawn 1 penalty card", currentPlayer.getName());
+				logger.info("{} said UNO but had more than 1 card and therefore drawn 1 penalty card",
+						currentPlayer.getName());
 			}
 		}
 	}

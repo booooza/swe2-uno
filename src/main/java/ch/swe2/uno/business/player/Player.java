@@ -19,6 +19,11 @@ public class Player implements PlayerInterface, Serializable {
         this.name = name;
     }
 
+    public Player(String name, Long id) {
+        this.name = name;
+        this.id = id;
+    }
+
     public long getId() {
         return this.id;
     }

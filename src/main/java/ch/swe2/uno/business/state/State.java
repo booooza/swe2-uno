@@ -1,10 +1,12 @@
 package ch.swe2.uno.business.state;
 
 import ch.swe2.uno.business.card.CardInterface;
+import ch.swe2.uno.business.player.Player;
 import ch.swe2.uno.business.player.PlayerInterface;
 
 import java.io.Serializable;
 import java.util.Optional;
+import java.util.ArrayList;
 import java.util.List;
 
 public class State implements Serializable {
@@ -13,7 +15,8 @@ public class State implements Serializable {
     private String winner;
     private String message;
 
-    public State() {};
+    public State() {
+    };
 
     public State(List<PlayerInterface> players, String message) {
         this.players = players;
@@ -21,15 +24,11 @@ public class State implements Serializable {
     }
 
     public synchronized Optional<PlayerInterface> getPlayerByName(String name) {
-        return players.stream()
-                .filter(p -> name.equals(p.getName()))
-                .findFirst();
+        return players.stream().filter(p -> name.equals(p.getName())).findFirst();
     }
 
     public synchronized Optional<PlayerInterface> getCurrentPlayer() {
-        return players.stream()
-                .filter(PlayerInterface::isCurrentTurn)
-                .findFirst();
+        return players.stream().filter(PlayerInterface::isCurrentTurn).findFirst();
     }
 
     public synchronized void toggleCurrentTurn() {
@@ -39,6 +38,20 @@ public class State implements Serializable {
 
     public synchronized void setPlayers(List<PlayerInterface> players) {
         this.players = players;
+    }
+
+    public synchronized void addPlayer(String playerName) {
+        if (this.players == null) {
+            this.players = new ArrayList<PlayerInterface>();
+        }
+        this.players.add(new Player(playerName, Long.valueOf(this.players.size())));
+    }
+
+    public synchronized Boolean containsPlayer(String playerName){
+        if(this.players == null){
+            return this.players.stream().anyMatch(p -> p.getName().equals(playerName));
+        }
+        return false;
     }
 
     public synchronized List<PlayerInterface> getPlayers() {
