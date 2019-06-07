@@ -77,8 +77,9 @@ public class WelcomeScreenController {
 	public void handleJoinButtonAction() {
 		logger.info("Player Joined: " + playerName.getText());
 		try {
-			mainApp.setState(mainApp.getClient().request(Request.Command.JOIN, playerName.getText()));
+			mainApp.setState(mainApp.getClient().sendRequest(Request.Command.JOIN, playerName.getText()));
 			mainApp.setPlayerName(playerName.getText());
+			//TODO @Luca mainApp.getClient().listen
 		} catch (Exception e) {
 			logger.warn("Exception: {}", e);
 			throw new IllegalArgumentException();
@@ -91,7 +92,7 @@ public class WelcomeScreenController {
 		logger.info("Player who started game: " + playerName.getText());
 		try {
 			mainApp.setPlayerName(playerName.getText());
-			mainApp.setState(mainApp.getClient().request(Request.Command.START, playerName.getText()));
+			mainApp.setState(mainApp.getClient().sendRequest(Request.Command.START, playerName.getText()));
 		} catch (Exception e) {
 			logger.warn("Exception: {}", e);
 			throw new IllegalArgumentException();

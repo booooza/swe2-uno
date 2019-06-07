@@ -13,8 +13,8 @@ import java.net.Socket;
 import java.util.HashMap;
 import java.util.UUID;
 
-public class ClientThread implements Runnable {
-	private static final Logger logger = LoggerFactory.getLogger(ClientThread.class);
+public class ClientHandlerThread implements Runnable {
+	private static final Logger logger = LoggerFactory.getLogger(ClientHandlerThread.class);
 
 	private Socket socket;
 	private Gson fxGson = FxGson.create();
@@ -26,9 +26,9 @@ public class ClientThread implements Runnable {
 	// check if thread is running
 	private volatile boolean isRunning = true;
 	// opcode
-	private HashMap<String, ClientThread> clientInfo = new HashMap<String, ClientThread>();
+	private HashMap<String, ClientHandlerThread> clientInfo = new HashMap<String, ClientHandlerThread>();
 
-	ClientThread(Socket socket, Game game) {
+	ClientHandlerThread(Socket socket, Game game) {
 		try {
 			this.socket = socket;
 			this.game = game;
@@ -57,18 +57,26 @@ public class ClientThread implements Runnable {
 				}
 				Request request = (Request) inputStream.readObject();
 				logger.info("Command {}", request.getCommand());
-
+				if(request.getDirection() == Request.Direction.SERVER_TO_CLIENT){
+					break;
+				}
 				switch (request.getCommand()) {
 					case JOIN:
 						outputStream.writeObject(game.addPlayer(request.getPlayerName()));
 						clientInfo.put(String.format("%s-%s", request.getPlayerName(), UUID.randomUUID()), this);
-						//MultiThreadedServer.getInstance().connectClient(game);
+
+						for (ClientHandlerThread clientHandlerThread : clientInfo.values()) {
+							clientHandlerThread.outputStream.writeObject(new Request(Request.Command.JOINED, Request.Direction.SERVER_TO_CLIENT, request.getPlayerName()));
+						}
+
 						break;
 					case START:
 						if (game.getState().getPlayers() != null) {
 							outputStream.writeObject(game.start());
 							logger.info("Game initialized");
 						}
+						break;
+					case RESTART:
 						break;
 					case PLAY:
 						game.playCard(request.getPlayerName(), request.getCard(), request.getUno());
@@ -84,6 +92,8 @@ public class ClientThread implements Runnable {
 						break;
 					case GETSTATE:
 						outputStream.writeObject(game.getState());
+						break;
+					case QUIT:
 						break;
 					default:
 						logger.info("Unknown command {}", request.getCommand());

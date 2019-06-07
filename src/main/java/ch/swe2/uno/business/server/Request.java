@@ -7,37 +7,44 @@ import java.io.Serializable;
 
 public class Request implements Serializable {
     private Command command;
+    private Direction direction;
     private String playerName;
     private CardInterface card;
     private boolean uno;
 
-    public Request(Command command) {
+    public Request(Command command, Direction direction) {
         this.command = command;
+        this.direction = direction;
     }
 
-    public Request(Command command, String playerName) {
+    public Request(Command command, Direction direction, String playerName) {
         this.command = command;
+        this.direction = direction;
         this.playerName = playerName;
     }
 
-    public Request(Command command, String playerName, CardInterface card) {
+    public Request(Command command, Direction direction, String playerName, CardInterface card) {
         this.command = command;
+        this.direction = direction;
         this.playerName = playerName;
         this.card = card;
     }
 
-    public Request(Command command, String playerName, CardInterface card, boolean uno) {
+    public Request(Command command, Direction direction, String playerName, CardInterface card, boolean uno) {
         this.command = command;
+        this.direction = direction;
         this.playerName = playerName;
         this.card = card;
         this.uno = uno;
     }
 
-    Command getCommand() {
+    public Command getCommand() {
         return command;
     }
 
-    String getPlayerName() {
+    public Direction getDirection() { return direction; }
+
+    public String getPlayerName() {
         return playerName;
     }
 
@@ -49,12 +56,21 @@ public class Request implements Serializable {
         return card;
     }
 
+
+    public enum Direction{
+        SERVER_TO_CLIENT,
+        CLIENT_TO_SERVER
+    }
+
     public enum Command {
         JOIN,
+        JOINED,
         START,
+        STARTED,
         RESTART,
         QUIT,
         PLAY,
+        PLAYED,
         CHECK,
         DRAW,
         GETSTATE;

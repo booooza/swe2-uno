@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @Tag("integration")
 @DisplayName("Client Thread Integration Tests (server needs to run)")
-class ClientThreadTest {
+class ClientHandlerThreadTest {
 
     @Test
     @DisplayName("Test client thread START command")
@@ -27,7 +27,7 @@ class ClientThreadTest {
         ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
 
         // When
-        out.writeObject(new Request(Request.Command.START, "Marc"));
+        out.writeObject(new Request(Request.Command.START, Request.Direction.CLIENT_TO_SERVER, "Marc"));
 
         // Then
         assertEquals(State.class, in.readObject().getClass());
@@ -43,8 +43,8 @@ class ClientThreadTest {
         ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
 
         // When
-        out.writeObject(new Request(Request.Command.DRAW, "Marc"));
-        out.writeObject(new Request(Request.Command.QUIT));
+        out.writeObject(new Request(Request.Command.DRAW, Request.Direction.CLIENT_TO_SERVER, "Marc"));
+        out.writeObject(new Request(Request.Command.QUIT, Request.Direction.CLIENT_TO_SERVER));
 
         // Then
         assertEquals(State.class, in.readObject().getClass());
@@ -60,7 +60,7 @@ class ClientThreadTest {
 
         // When
 
-        out.writeObject(new Request(Request.Command.GETSTATE));
+        out.writeObject(new Request(Request.Command.GETSTATE, Request.Direction.CLIENT_TO_SERVER));
         State state = ((State) (in.readObject()));
 
         // Then

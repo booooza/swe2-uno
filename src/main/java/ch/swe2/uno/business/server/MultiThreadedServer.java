@@ -7,10 +7,8 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.List;
 
 public class MultiThreadedServer implements Runnable {
 	private static final Logger logger = LoggerFactory.getLogger(MultiThreadedServer.class);
@@ -21,7 +19,7 @@ public class MultiThreadedServer implements Runnable {
 	protected Thread runningThread;
 	protected Game game;
 	// Connection state info
-	private static LinkedHashMap<String, ClientThread> clientInfo = new LinkedHashMap<String, ClientThread>();
+	private static LinkedHashMap<String, ClientHandlerThread> clientInfo = new LinkedHashMap<String, ClientHandlerThread>();
 
 
 	public MultiThreadedServer(int port, Game game) {
@@ -45,7 +43,7 @@ public class MultiThreadedServer implements Runnable {
 		while (!isStopped()) {
 			try {
 				Socket cS = serverSocket.accept();
-				new ClientThread(cS, game);
+				new ClientHandlerThread(cS, game);
 			} catch (IOException e) {
 				if (isStopped()) {
 					logger.info("Server stopped...");
@@ -78,7 +76,7 @@ public class MultiThreadedServer implements Runnable {
 		}
 	}
 
-	public static HashMap<String, ClientThread> getClientInfo() {
+	public static HashMap<String, ClientHandlerThread> getClientInfo() {
 		return clientInfo;
 	}
 

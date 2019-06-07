@@ -85,7 +85,7 @@ public class GameOverviewController {
 			logger.info("Selected card {} {}", selectedCard.getColor(), selectedCard.getNumber());
 			Client client = new Client();
 			try {
-				mainApp.setState(client.request(Request.Command.PLAY, mainApp.getPlayerName(), selectedCard, unoButton.isSelected()));
+				mainApp.setState(client.sendRequest(Request.Command.PLAY, mainApp.getPlayerName(), selectedCard, unoButton.isSelected()));
 			} catch (Exception e) {
 				logger.warn("Exception: {}", e);
 				throw new IllegalArgumentException();
@@ -104,7 +104,7 @@ public class GameOverviewController {
 		logger.info("Draw button pressed");
 		Client client = new Client();
 		try {
-			mainApp.setState(client.request(Request.Command.DRAW, mainApp.getPlayerName()));
+			mainApp.setState(client.sendRequest(Request.Command.DRAW, mainApp.getPlayerName()));
 		} catch (Exception e) {
 			logger.warn("Exception: {}", e);
 			throw new IllegalArgumentException();
@@ -118,7 +118,7 @@ public class GameOverviewController {
 		logger.info("Check button pressed");
 		Client client = new Client();
 		try {
-			mainApp.setState(client.request(Request.Command.CHECK, mainApp.getPlayerName()));
+			mainApp.setState(client.sendRequest(Request.Command.CHECK, mainApp.getPlayerName()));
 		} catch (Exception e) {
 			logger.warn("Exception: {}", e);
 			throw new IllegalArgumentException();
