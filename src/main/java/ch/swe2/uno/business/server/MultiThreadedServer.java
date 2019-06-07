@@ -8,6 +8,8 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 public class MultiThreadedServer implements Runnable {
@@ -18,7 +20,9 @@ public class MultiThreadedServer implements Runnable {
 	protected boolean isStopped;
 	protected Thread runningThread;
 	protected Game game;
-	private List<Thread> clients = new ArrayList();
+	// Connection state info
+	private static LinkedHashMap<String, ClientThread> clientInfo = new LinkedHashMap<String, ClientThread>();
+
 
 	public MultiThreadedServer(int port, Game game) {
 		this.serverPort = port;
@@ -41,10 +45,7 @@ public class MultiThreadedServer implements Runnable {
 		while (!isStopped()) {
 			try {
 				Socket cS = serverSocket.accept();
-				ClientThread cT = new ClientThread(cS, game);
-				Thread t = new Thread(cT);
-				clients.add(t);
-				t.start();
+				new ClientThread(cS, game);
 			} catch (IOException e) {
 				if (isStopped()) {
 					logger.info("Server stopped...");
@@ -75,6 +76,10 @@ public class MultiThreadedServer implements Runnable {
 		} catch (IOException e) {
 			throw new RuntimeException("Cannot open port", e);
 		}
+	}
+
+	public static HashMap<String, ClientThread> getClientInfo() {
+		return clientInfo;
 	}
 
 }
