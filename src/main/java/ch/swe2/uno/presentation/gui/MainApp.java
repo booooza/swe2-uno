@@ -1,6 +1,9 @@
 package ch.swe2.uno.presentation.gui;
 
+import ch.swe2.uno.business.card.CardInterface;
+import ch.swe2.uno.business.card.UnoColor;
 import ch.swe2.uno.business.state.State;
+import ch.swe2.uno.presentation.gui.controller.ColorDialogController;
 import ch.swe2.uno.presentation.gui.controller.EndScreenController;
 import ch.swe2.uno.presentation.gui.controller.GameOverviewController;
 import ch.swe2.uno.presentation.gui.controller.WelcomeScreenController;
@@ -9,6 +12,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -101,8 +105,35 @@ public class MainApp extends Application {
     }
 
     /**
-     * Shows the end screen inside the root layout.
+     * Opens a dialog to choose color for the specified card.
      */
+    public UnoColor showColorDialog(CardInterface card) {
+        try {
+            // Load the fxml file and create a new stage for the popup dialog.
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(MainApp.class.getResource("/view/ColorDialog.fxml"));
+            AnchorPane page = loader.load();
+
+            // Create the dialog Stage.
+            Stage dialogStage = new Stage();
+            dialogStage.setTitle("Choose color");
+            dialogStage.initModality(Modality.WINDOW_MODAL);
+            dialogStage.initOwner(primaryStage);
+            Scene scene = new Scene(page);
+            dialogStage.setScene(scene);
+
+            // Show the dialog and wait until the user closes it
+            ColorDialogController controller = loader.getController();
+            controller.setDialogStage(dialogStage);
+            dialogStage.showAndWait();
+
+            return controller.getChosenColor();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return UnoColor.BLACK;
+        }
+    }
+
     public void showEndScreen() {
         try {
             // Load end screen.

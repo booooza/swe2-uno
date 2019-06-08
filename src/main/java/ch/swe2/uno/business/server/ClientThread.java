@@ -41,7 +41,7 @@ public class ClientThread implements Runnable {
                     }
                     break;
                 case PLAY:
-                    game.playCard(request.getPlayerName(), request.getCard(), request.getUno());
+                    game.playCard(request.getPlayerName(), request.getCard(), request.getUno(), request.getChosenColor());
                     out.writeObject(game.getState());
                     break;
                 case CHECK:

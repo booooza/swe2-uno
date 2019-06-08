@@ -31,7 +31,7 @@ class DeckTest {
         deck.create();
 
         // Then
-        assertEquals(75, deck.getDrawPileSize());
+        assertEquals(79, deck.getDrawPileSize());
     }
 
     @Test
@@ -49,20 +49,7 @@ class DeckTest {
         deck.distribute(players);
 
         // Then
-        assertEquals(61, deck.getDrawPileSize());
-    }
-
-    @Test
-    @DisplayName("Test get top card of discard pile")
-    void testGetTopCardOfDiscardPile() {
-        // Given
-        Deck deck = new Deck();
-
-        // When
-        CardInterface card = new NumberCard(CardType.NUMBERCARD, UnoColor.RED, 0);
-
-        // Then TODO: assert something
-        deck.getTopCardOfDiscardPile();
+        assertEquals(65, deck.getDrawPileSize());
     }
 
     @Test
@@ -76,7 +63,7 @@ class DeckTest {
         CardInterface drawnCard = deck.drawCard();
 
         // Then
-        assertEquals(74, deck.getDrawPileSize());
+        assertEquals(78, deck.getDrawPileSize());
     }
 
     @Test
@@ -88,11 +75,11 @@ class DeckTest {
         // When
         deck.create();
 
-        for (int i = 0; i < 76; i++) {
+        for (int i = 0; i < 80; i++) {
             deck.addCardToDiscardPile(deck.drawCard());
         }
 
-        assertEquals(74, deck.getDrawPileSize());
+        assertEquals(78, deck.getDrawPileSize());
         assertEquals(1, deck.getDiscardPileSize());
     }
 }

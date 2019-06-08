@@ -4,7 +4,8 @@ public enum UnoColor {
     RED("Red"),
     BLUE("Blue"),
     YELLOW("Yellow"),
-    GREEN("Green");
+    GREEN("Green"),
+    BLACK("Black");
 
     private String color;
 

@@ -1,6 +1,7 @@
 package ch.swe2.uno.presentation.network.client;
 
 import ch.swe2.uno.business.card.CardInterface;
+import ch.swe2.uno.business.card.UnoColor;
 import ch.swe2.uno.business.server.Request;
 import ch.swe2.uno.business.state.State;
 import org.slf4j.Logger;
@@ -51,6 +52,22 @@ public class Client {
             ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
             ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
             out.writeObject(new Request(command, playerName, card, uno));
+            return (State) in.readObject();
+        } catch (Exception e) {
+            logger.warn("Exception: {}", e);
+            throw new IllegalArgumentException();
+        }
+        finally {
+            socket.close();
+        }
+    }
+
+    public State request(Request.Command command, String playerName, CardInterface card, boolean uno, UnoColor unoColor) throws Exception {
+        try {
+            socket = new Socket("localhost", 1234);
+            ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
+            ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
+            out.writeObject(new Request(command, playerName, card, uno, unoColor));
             return (State) in.readObject();
         } catch (Exception e) {
             logger.warn("Exception: {}", e);

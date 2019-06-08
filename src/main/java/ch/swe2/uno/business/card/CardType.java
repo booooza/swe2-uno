@@ -4,6 +4,7 @@ public enum CardType {
     NUMBERCARD("Number"),
     SKIP("Skip"),
     REVERSE("Reverse"),
+    DRAWTWO("Draw 2"),
     WILD("Wild"),
     WILDDRAWFOUR("Wild Draw 4");
 

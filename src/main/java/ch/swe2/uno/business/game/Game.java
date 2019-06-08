@@ -1,6 +1,6 @@
 package ch.swe2.uno.business.game;
 
-import ch.swe2.uno.business.card.CardInterface;
+import ch.swe2.uno.business.card.*;
 import ch.swe2.uno.business.deck.Deck;
 import ch.swe2.uno.business.player.Player;
 import ch.swe2.uno.business.player.PlayerInterface;
@@ -68,7 +68,7 @@ public class Game {
 		return new State();
 	}
 
-	public synchronized State playCard(String playerName, CardInterface card, boolean uno) {
+	public synchronized State playCard(String playerName, CardInterface card, boolean uno, UnoColor chosenColor) {
 		PlayerInterface player;
 		Optional<PlayerInterface> optionalOfPlayer = state.getPlayerByName(playerName);
 		if (optionalOfPlayer.isPresent()) {
@@ -80,10 +80,17 @@ public class Game {
 		if (player.isCurrentTurn() && playersHandContainsExactCard(player, card)) {
 			// Check if card matches current top card
 			if (card.getColor().equals(state.getTopDiscardPileCard().getColor()) ||
-					card.getNumber() == state.getTopDiscardPileCard().getNumber()) {
+					card.getNumber() == state.getTopDiscardPileCard().getNumber() ||
+					card.getType().equals(CardType.WILD)
+			) {
 				// Remove from players hand
 				removeCardFromPlayersHand(player, card);
 				player.setUno(uno);
+
+				// If it's a wildcard change the color
+				if (card.getType().equals(CardType.WILD)) {
+					((ActionCard) card).chooseColor(chosenColor);
+				}
 
 				logger.info("Player {} played card {} / {}", player.getName(), card.getColor(), card.getNumber());
 				logger.info("Player {} has {} cards remaining in hand", player.getName(), player.getHand().size());
@@ -158,7 +165,7 @@ public class Game {
 		Optional<CardInterface> optionalMatchingCard = randomCardMatchingTopCard("Bot");
 		if (optionalMatchingCard.isPresent()) {
 			CardInterface matchingCard = optionalMatchingCard.get();
-			playCard("Bot", matchingCard, cardsLeftInPlayersHand("Bot") == 1);
+			playCard("Bot", matchingCard, cardsLeftInPlayersHand("Bot") == 1, UnoColor.RED);
 			state.setMessage("Bot has played card " + matchingCard.getColor().toString() + " " + matchingCard.getNumber());
 			logger.info("Bot has played card {} {}", matchingCard.getColor().toString(), matchingCard.getNumber());
 		} else {
@@ -174,7 +181,6 @@ public class Game {
 				logger.info("Bot has drawn a card");
 			} else {
 				state.toggleCurrentTurn();
-				state.setMessage("Bot has already drawn a card, next player");
 				logger.info("Bot has already drawn a card, next player");
 			}
 		}
