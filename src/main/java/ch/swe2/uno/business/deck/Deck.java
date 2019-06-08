@@ -5,13 +5,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+import ch.swe2.uno.business.card.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ch.swe2.uno.business.card.CardInterface;
-import ch.swe2.uno.business.card.CardType;
-import ch.swe2.uno.business.card.NumberCard;
-import ch.swe2.uno.business.card.UnoColor;
 import ch.swe2.uno.business.player.PlayerInterface;
 
 /**
@@ -33,16 +30,28 @@ public class Deck {
          */
         for (UnoColor unoColor: UnoColor.values()) {
             /*
+              For all regular colors
+             */
+            if (unoColor != UnoColor.BLACK) {
+                /*
               Create one number card with number: 0
              */
-            drawPile.add(new NumberCard(CardType.NUMBERCARD, unoColor, 0));
+                drawPile.add(new NumberCard(CardType.NUMBERCARD, unoColor, 0));
 
             /*
               Create two number cards with numbers: 1-9
              */
-            for (int i = 1; i <= 9; i++) {
-                drawPile.add(new NumberCard(CardType.NUMBERCARD, unoColor, i));
-                drawPile.add(new NumberCard(CardType.NUMBERCARD, unoColor, i));
+                for (int i = 1; i <= 9; i++) {
+                    drawPile.add(new NumberCard(CardType.NUMBERCARD, unoColor, i));
+                    drawPile.add(new NumberCard(CardType.NUMBERCARD, unoColor, i));
+                }
+            } else {
+                /*
+                  Create four wild draw cards
+                 */
+                for (int i = 1; i <= 4; i++) {
+                    drawPile.add(new ActionCard(CardType.WILD, UnoColor.BLACK, 88));
+                }
             }
         }
 
@@ -82,6 +91,7 @@ public class Deck {
             logger.info("Draw Pile is exhausted, reshuffling piles...");
             drawPile.addAll(discardPile);
             discardPile.clear();
+            drawPile.stream().filter(c -> c.getNumber() == 88).forEach(c -> ((ActionCard)c).reset());
             Collections.shuffle(drawPile);
         }
         logger.info("Drawing a card");

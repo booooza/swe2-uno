@@ -1,6 +1,9 @@
 package ch.swe2.uno.presentation.gui.controller;
 
+import ch.swe2.uno.business.card.ActionCard;
 import ch.swe2.uno.business.card.CardInterface;
+import ch.swe2.uno.business.card.CardType;
+import ch.swe2.uno.business.card.UnoColor;
 import ch.swe2.uno.business.server.Request;
 import ch.swe2.uno.presentation.gui.MainApp;
 import ch.swe2.uno.presentation.network.client.Client;
@@ -11,6 +14,9 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.paint.Color;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -66,6 +72,41 @@ public class GameOverviewController {
 				new ReadOnlyIntegerWrapper(
 						cellData.getValue().getNumber()
 				));
+
+		playerCardColorColumn.setCellFactory(column -> new TableCell<>() {
+			@Override
+			protected void updateItem(String item, boolean empty) {
+				super.updateItem(item, empty); //This is mandatory
+
+				if (item == null || empty) { //If the cell is empty
+					setText(null);
+					setStyle("");
+				} else { //If the cell is not empty
+
+					setText(item); //Put the String data in the cell
+
+					CardInterface card = getTableView().getItems().get(getIndex());
+
+					switch (card.getColor()) {
+						case BLACK:
+							setStyle("-fx-background-color: black");
+							break;
+						case BLUE:
+							setStyle("-fx-background-color: blue");
+							break;
+						case RED:
+							setStyle("-fx-background-color: red");
+							break;
+						case GREEN:
+							setStyle("-fx-background-color: green");
+							break;
+						case YELLOW:
+							setStyle("-fx-background-color: yellow; -fx-text-fill: black");
+							break;
+					}
+				}
+			}
+		});
 	}
 
 	/**
@@ -85,7 +126,17 @@ public class GameOverviewController {
 			logger.info("Selected card {} {}", selectedCard.getColor(), selectedCard.getNumber());
 			Client client = new Client();
 			try {
-				mainApp.setState(client.sendRequest(Request.Command.PLAY, mainApp.getPlayerName(), selectedCard, unoButton.isSelected()));
+				// If it's a wildcard ask for the chosen color and include in request
+				if (selectedCard.getType() == CardType.WILD) {
+					UnoColor chosenColor = mainApp.showColorDialog(selectedCard);
+					mainApp.setState(
+							client.sendRequest(Request.Command.PLAY, mainApp.getPlayerName(), selectedCard, unoButton.isSelected(), chosenColor)
+					);
+				} else {
+					mainApp.setState(
+							client.sendRequest(Request.Command.PLAY, mainApp.getPlayerName(), selectedCard, unoButton.isSelected())
+					);
+				}
 			} catch (Exception e) {
 				logger.warn("Exception: {}", e);
 				throw new IllegalArgumentException();

@@ -1,6 +1,7 @@
 package ch.swe2.uno.business.server;
 
 import ch.swe2.uno.business.card.CardInterface;
+import ch.swe2.uno.business.card.UnoColor;
 import ch.swe2.uno.business.state.State;
 
 import java.io.Serializable;
@@ -11,6 +12,7 @@ public class Request implements Serializable {
     private String playerName;
     private CardInterface card;
     private boolean uno;
+    private UnoColor chosenColor;
 
     public Request(Command command, Direction direction) {
         this.command = command;
@@ -38,6 +40,15 @@ public class Request implements Serializable {
         this.uno = uno;
     }
 
+    public Request(Command command, Direction direction, String playerName, CardInterface card, boolean uno, UnoColor chosenColor) {
+        this.command = command;
+        this.direction = direction;
+        this.playerName = playerName;
+        this.card = card;
+        this.uno = uno;
+        this.chosenColor = chosenColor;
+    }
+
     public Command getCommand() {
         return command;
     }
@@ -61,6 +72,8 @@ public class Request implements Serializable {
         SERVER_TO_CLIENT,
         CLIENT_TO_SERVER
     }
+
+    UnoColor getChosenColor() {return chosenColor; };
 
     public enum Command {
         SUBSCRIBE,

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="300.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ch.swe2.uno.presentation.gui.controller.ColorDialogController">
+   <children>
+      <Button fx:id="redButton" onAction="#handleRedButtonAction" mnemonicParsing="false" prefHeight="150.0" prefWidth="150.0" style="-fx-background-color: red;" />
+      <Button fx:id="blueButton" onAction="#handleBlueButtonAction" layoutX="150.0" mnemonicParsing="false" prefHeight="150.0" prefWidth="150.0" style="-fx-background-color: blue;" />
+      <Button fx:id="yellowButton" onAction="#handleYellowButtonAction" layoutY="150.0" mnemonicParsing="false" prefHeight="150.0" prefWidth="150.0" style="-fx-background-color: yellow;" />
+      <Button fx:id="greenButton" onAction="#handleGreenButtonAction" layoutX="150.0" layoutY="150.0" mnemonicParsing="false" prefHeight="150.0" prefWidth="150.0" style="-fx-background-color: green;" />
+      <ImageView fitHeight="89.0" fitWidth="127.0" layoutX="87.0" layoutY="106.0">
+         <image>
+            <Image url="@logo.png" />
+         </image>
+      </ImageView>
+   </children>
+</AnchorPane>

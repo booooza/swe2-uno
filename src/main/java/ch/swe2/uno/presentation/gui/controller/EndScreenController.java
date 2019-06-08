@@ -43,5 +43,6 @@ public class EndScreenController {
 
     public void handleExitButtonAction() {
         logger.info("Exit button pressed");
+        System.exit(0);
     }
 }

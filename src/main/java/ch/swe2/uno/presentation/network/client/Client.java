@@ -1,6 +1,7 @@
 package ch.swe2.uno.presentation.network.client;
 
 import ch.swe2.uno.business.card.CardInterface;
+import ch.swe2.uno.business.card.UnoColor;
 import ch.swe2.uno.business.server.Request;
 import ch.swe2.uno.business.state.State;
 import org.slf4j.Logger;
@@ -60,6 +61,18 @@ public class Client {
 	public State sendRequest(Request.Command command, String playerName, CardInterface card, boolean uno) throws Exception {
 		try {
 			clientThread.send(new Request(command, Request.Direction.CLIENT_TO_SERVER, playerName, card, uno));
+			return clientThread.readStateFromServer();
+		} catch (Exception e) {
+			logger.warn("Exception: {}", e);
+			throw new IllegalArgumentException();
+		} finally {
+			// socket.close();
+		}
+	}
+
+	public State sendRequest(Request.Command command, String playerName, CardInterface card, boolean uno, UnoColor chosenColor) throws Exception {
+		try {
+			clientThread.send(new Request(command, Request.Direction.CLIENT_TO_SERVER, playerName, card, uno, chosenColor));
 			return clientThread.readStateFromServer();
 		} catch (Exception e) {
 			logger.warn("Exception: {}", e);

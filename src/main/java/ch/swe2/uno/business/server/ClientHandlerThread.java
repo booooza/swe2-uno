@@ -78,7 +78,7 @@ public class ClientHandlerThread implements Runnable {
 					case RESTART:
 						break;
 					case PLAY:
-						game.playCard(request.getPlayerName(), request.getCard(), request.getUno());
+						game.playCard(request.getPlayerName(), request.getCard(), request.getUno(), request.getChosenColor());
 						outputStream.writeObject(game.getState());
 						break;
 					case CHECK:
