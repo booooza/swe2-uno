@@ -6,17 +6,28 @@ import ch.swe2.uno.business.state.State;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class Client {
 	private static final Logger logger = LoggerFactory.getLogger(Client.class);
+	protected ExecutorService threadPool =
+			Executors.newFixedThreadPool(2);
 	private ClientThread clientThread = null;
+	private ClientRequestListener clientRequestListener = null;
 	public Client() {
+		initializeSockets();
+	}
+
+	private void initializeSockets(){
 		try {
-			Socket socket = new Socket("localhost", 1234);
-			clientThread = new ClientThread(socket);
+			Socket stateSocket = new Socket("localhost", 1234);
+			Socket requestListenerSocket = new Socket("localhost", 1234);
+			clientThread = new ClientThread(stateSocket);
+			clientRequestListener = new ClientRequestListener(requestListenerSocket);
+			threadPool.execute(clientThread);
+			threadPool.execute(clientRequestListener);
 		} catch (Exception ex) {
 			logger.error(String.format("Error establishing connection to server. %s", ex.getMessage()));
 		}
@@ -24,7 +35,8 @@ public class Client {
 
 	public State sendRequest(Request.Command command) {
 		try {
-			return clientThread.send(new Request(command, Request.Direction.CLIENT_TO_SERVER));
+			clientThread.send(new Request(command, Request.Direction.CLIENT_TO_SERVER));
+			return clientThread.readStateFromServer();
 		} catch (Exception e) {
 			logger.warn("Exception: {}", e);
 			throw new IllegalArgumentException();
@@ -35,7 +47,8 @@ public class Client {
 
 	public State sendRequest(Request.Command command, String playerName) {
 		try {
-			return clientThread.send(new Request(command, Request.Direction.CLIENT_TO_SERVER, playerName));
+			clientThread.send(new Request(command, Request.Direction.CLIENT_TO_SERVER, playerName));
+			return clientThread.readStateFromServer();
 		} catch (Exception e) {
 			logger.warn("Exception: {}", e);
 			throw new IllegalArgumentException();
@@ -46,7 +59,8 @@ public class Client {
 
 	public State sendRequest(Request.Command command, String playerName, CardInterface card, boolean uno) throws Exception {
 		try {
-			return clientThread.send(new Request(command, Request.Direction.CLIENT_TO_SERVER, playerName, card, uno));
+			clientThread.send(new Request(command, Request.Direction.CLIENT_TO_SERVER, playerName, card, uno));
+			return clientThread.readStateFromServer();
 		} catch (Exception e) {
 			logger.warn("Exception: {}", e);
 			throw new IllegalArgumentException();

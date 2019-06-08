@@ -6,7 +6,6 @@ import org.hildan.fxgson.FxGson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
@@ -16,40 +15,37 @@ import java.util.UUID;
 public class ClientHandlerThread implements Runnable {
 	private static final Logger logger = LoggerFactory.getLogger(ClientHandlerThread.class);
 
-	private Socket socket;
 	private Gson fxGson = FxGson.create();
 	private Game game;
+
+	private Socket socket;
+
 	private ObjectInputStream inputStream = null;
 	private ObjectOutputStream outputStream = null;
-	// own thread
-	private Thread thread;
-	// check if thread is running
+
 	private volatile boolean isRunning = true;
-	// opcode
-	private HashMap<String, ClientHandlerThread> clientInfo = new HashMap<String, ClientHandlerThread>();
+
+	private HashMap<String, ClientHandlerThread> clientInfo;
+	private HashMap<String, ClientHandlerThread> clientListenerInfo;
 
 	ClientHandlerThread(Socket socket, Game game) {
-		try {
-			this.socket = socket;
-			this.game = game;
+		this.socket = socket;
+		this.game = game;
 
-			this.clientInfo = MultiThreadedServer.getClientInfo();
+		this.clientInfo = MultiThreadedServer.getClientInfo();
+		this.clientListenerInfo = MultiThreadedServer.getClientListenerInfo();
 
-			logger.info("Thread \"{}\" state {}", Thread.currentThread().getName(), Thread.currentThread().getState());
-
-			inputStream = new ObjectInputStream(socket.getInputStream());
-			outputStream = new ObjectOutputStream(socket.getOutputStream());
-
-			thread = new Thread(this);
-			thread.start();
-		} catch (IOException e) {
-			logger.error("Error initializing ClientThread from Socket");
-		}
+		logger.info("Object created on thread \"{}\" state {}", Thread.currentThread().getName(), Thread.currentThread().getState());
 	}
 
 	@Override
 	public void run() {
 		try {
+			logger.info("now running on thread \"{}\" state {}", Thread.currentThread().getName(), Thread.currentThread().getState());
+
+			inputStream = new ObjectInputStream(socket.getInputStream());
+			outputStream = new ObjectOutputStream(socket.getOutputStream());
+
 			long time = System.currentTimeMillis();
 			while (isRunning) {
 				if (inputStream.available() != 0) {
@@ -57,15 +53,18 @@ public class ClientHandlerThread implements Runnable {
 				}
 				Request request = (Request) inputStream.readObject();
 				logger.info("Command {}", request.getCommand());
-				if(request.getDirection() == Request.Direction.SERVER_TO_CLIENT){
+				if (request.getDirection() == Request.Direction.SERVER_TO_CLIENT) {
 					break;
 				}
 				switch (request.getCommand()) {
+					case SUBSCRIBE:
+						clientListenerInfo.put(String.format("%s-%s", request.getPlayerName(), UUID.randomUUID()), this);
+						break;
 					case JOIN:
 						outputStream.writeObject(game.addPlayer(request.getPlayerName()));
 						clientInfo.put(String.format("%s-%s", request.getPlayerName(), UUID.randomUUID()), this);
 
-						for (ClientHandlerThread clientHandlerThread : clientInfo.values()) {
+						for (ClientHandlerThread clientHandlerThread : clientListenerInfo.values()) {
 							clientHandlerThread.outputStream.writeObject(new Request(Request.Command.JOINED, Request.Direction.SERVER_TO_CLIENT, request.getPlayerName()));
 						}
 

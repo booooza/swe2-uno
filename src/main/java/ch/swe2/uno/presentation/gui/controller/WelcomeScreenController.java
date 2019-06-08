@@ -79,7 +79,6 @@ public class WelcomeScreenController {
 		try {
 			mainApp.setState(mainApp.getClient().sendRequest(Request.Command.JOIN, playerName.getText()));
 			mainApp.setPlayerName(playerName.getText());
-			//TODO @Luca mainApp.getClient().listen
 		} catch (Exception e) {
 			logger.warn("Exception: {}", e);
 			throw new IllegalArgumentException();

@@ -9,6 +9,8 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class MultiThreadedServer implements Runnable {
 	private static final Logger logger = LoggerFactory.getLogger(MultiThreadedServer.class);
@@ -17,10 +19,12 @@ public class MultiThreadedServer implements Runnable {
 	protected int serverPort;
 	protected boolean isStopped;
 	protected Thread runningThread;
+	protected ExecutorService threadPool =
+			Executors.newFixedThreadPool(10);
 	protected Game game;
 	// Connection state info
 	private static LinkedHashMap<String, ClientHandlerThread> clientInfo = new LinkedHashMap<String, ClientHandlerThread>();
-
+	private static LinkedHashMap<String, ClientHandlerThread> clientListenerInfo = new LinkedHashMap<String, ClientHandlerThread>();
 
 	public MultiThreadedServer(int port, Game game) {
 		this.serverPort = port;
@@ -43,7 +47,8 @@ public class MultiThreadedServer implements Runnable {
 		while (!isStopped()) {
 			try {
 				Socket cS = serverSocket.accept();
-				new ClientHandlerThread(cS, game);
+				this.threadPool.execute(new ClientHandlerThread(cS, game));
+				//new ClientHandlerThread(cS, game);
 			} catch (IOException e) {
 				if (isStopped()) {
 					logger.info("Server stopped...");
@@ -78,6 +83,10 @@ public class MultiThreadedServer implements Runnable {
 
 	public static HashMap<String, ClientHandlerThread> getClientInfo() {
 		return clientInfo;
+	}
+
+	public static HashMap<String, ClientHandlerThread> getClientListenerInfo() {
+		return clientListenerInfo;
 	}
 
 }

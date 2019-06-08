@@ -63,6 +63,7 @@ public class Request implements Serializable {
     }
 
     public enum Command {
+        SUBSCRIBE,
         JOIN,
         JOINED,
         START,

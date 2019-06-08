@@ -18,76 +18,58 @@ public class ClientThread implements Runnable {
 	private volatile ObjectInputStream inputStream = null;
 	private volatile ObjectOutputStream outputStream = null;
 
-	private Thread thread;
-	private volatile boolean isRunning = true;
-
 	ClientThread(Socket clientSocket) {
 		this.clientSocket = clientSocket;
-
 		try {
-			logger.info("Thread \"{}\" state {}", Thread.currentThread().getName(), Thread.currentThread().getState());
-			thread = new Thread(this);
-			thread.start();
-
-			// TODO @Luca always listen (Observe)!
+			logger.info("Object created on thread \"{}\" state {}", Thread.currentThread().getName(), Thread.currentThread().getState());
 		} catch (Exception e) {
 			logger.error("Error initializing ClientThread from Socket");
 		}
 	}
 
 	@Override
-	public void run() {
+	public synchronized void run() {
 		try {
+			logger.info("now running on thread \"{}\" state {}", Thread.currentThread().getName(), Thread.currentThread().getState());
+
 			outputStream = new ObjectOutputStream(clientSocket.getOutputStream());
 			inputStream = new ObjectInputStream(clientSocket.getInputStream());
-/*
-			long time = System.currentTimeMillis();
-			while (isRunning) {
-				if (inputStream.available() != 0) {
-					continue;
-				}
-				Request request = (Request) inputStream.readObject();
-				logger.info("Command {}", request.getCommand());
+		} catch (Exception ex) {
+			logger.error(String.format("Error in establishing client's connection to the server. Details %s", ex.getMessage()));
+		}
+	}
 
-				switch (request.getCommand()) {
-					case JOINED:
-						// notify main thread about joined player
-						String playerName = request.getPlayerName();
-
-						break;
-					case STARTED:
-						// notify main thread to move to next stage.
-
-						break;
-					case PLAYED:
-						break;
-					case QUIT:
-						break;
-					default:
-						logger.info("Unknown command {}", request.getCommand());
-				}
-				logger.info("Request processed: {}", time);
-			}
-
-			// close connections
+	public synchronized void terminate() {
+		try {
 			outputStream.close();
 			inputStream.close();
 			clientSocket.close();
- */
-		} catch (Exception ex) {
-			logger.error(String.format("Error in executing client's request. Details %s", ex.getMessage()));
+		} catch (IOException ioEx) {
+			logger.error(String.format("Error in terminating client's connection to the server. Details %s", ioEx.getMessage()));
+
 		}
 	}
 
-	public synchronized State send(Request request) {
+	public synchronized void send(Request request) {
 		try {
 			outputStream.writeObject(request);
-			return (State) inputStream.readObject();
 		} catch (IOException e) {
-			logger.error("Error sending request from client to server");
-		} catch (ClassNotFoundException cnfEx) {
-			logger.error("State not found, CastException");
+			logger.error(String.format("Error sending request from client to server. %s", e.getMessage()));
+		}
+	}
+
+	public synchronized State readStateFromServer() {
+		try {
+			Object inputObject = inputStream.readObject();
+			if (inputObject.getClass() == State.class) {
+				return (State) inputObject;
+			}
+		} catch (ClassNotFoundException cnfE) {
+			logger.error(String.format("Could not parse state from InputStream %s", cnfE.getMessage()));
+		} catch (IOException e) {
+			logger.error(String.format("Error sending request from client to server. %s", e.getMessage()));
 		}
 		return null;
 	}
+
 }
