@@ -3,6 +3,7 @@ package ch.swe2.uno.presentation.gui.controller;
 import ch.swe2.uno.business.card.CardInterface;
 import ch.swe2.uno.business.card.CardType;
 import ch.swe2.uno.business.card.UnoColor;
+import ch.swe2.uno.business.player.PlayerInterface;
 import ch.swe2.uno.business.server.Request;
 import ch.swe2.uno.business.state.State;
 import ch.swe2.uno.presentation.gui.MainApp;
@@ -38,6 +39,8 @@ public class GameOverviewController implements RequestEventHandler {
 	private Button checkButton;
 	@FXML
 	private Button drawButton;
+	@FXML
+	private Button playButton;
 
 	private ObservableList<CardInterface> observablePlayerData = FXCollections.observableArrayList();
 	private MainApp mainApp; // Reference to the main application.
@@ -180,6 +183,20 @@ public class GameOverviewController implements RequestEventHandler {
 	}
 
 	private void updateViewFromState() {
+		if (mainApp.getState().getCurrentPlayer().isPresent()) {
+			PlayerInterface currentPlayer = mainApp.getState().getCurrentPlayer().get();
+			if (currentPlayer.getName() == mainApp.getPlayerName()) {
+				// It my turn
+				this.drawButton.setDisable(false);
+				this.checkButton.setDisable(false);
+				this.playButton.setDisable(false);
+			} else {
+				this.drawButton.setDisable(true);
+				this.checkButton.setDisable(true);
+				this.playButton.setDisable(true);
+			}
+		}
+
 		mainApp.getState().getPlayerByName(mainApp.getPlayerName()).ifPresent(p -> {
 			observablePlayerData.clear();
 			observablePlayerData.addAll(p.getHand());
@@ -201,13 +218,16 @@ public class GameOverviewController implements RequestEventHandler {
 		logger.info("View updated");
 	}
 
-	@Override
-	public void playerJoined(State state) {
+	public synchronized void playerJoined(State state) {
 		// default empty
 	}
 
-	@Override
-	public void gameStarted(State state) {
+	public synchronized void gameStarted(State state) {
 		// default empty
+	}
+
+	public synchronized void played(State state) {
+		mainApp.setState(state);
+		updateViewFromState();
 	}
 }

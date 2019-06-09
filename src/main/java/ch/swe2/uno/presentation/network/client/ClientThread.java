@@ -46,7 +46,6 @@ public class ClientThread implements Runnable {
 			clientSocket.close();
 		} catch (IOException ioEx) {
 			logger.error(String.format("Error in terminating client's connection to the server. Details %s", ioEx.getMessage()));
-
 		}
 	}
 

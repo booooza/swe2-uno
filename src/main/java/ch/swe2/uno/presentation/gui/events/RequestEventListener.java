@@ -34,6 +34,10 @@ public class RequestEventListener implements EventListener {
 					}
 					break;
 				case PLAYED:
+					for (RequestEventHandler reqHandler : this.requestEventHandlers) {
+						Platform.runLater(() -> reqHandler.played(((Request) event).getState()));
+					}
+					break;
 				case QUIT:
 					break;
 				default:

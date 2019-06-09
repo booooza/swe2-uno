@@ -6,4 +6,6 @@ public interface RequestEventHandler {
 	void playerJoined(State state);
 
 	void gameStarted(State state);
+
+	void played(State state);
 }

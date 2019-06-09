@@ -148,15 +148,17 @@ public class WelcomeScreenController implements RequestEventHandler {
 		playersTable.setItems(observablePlayers);
 	}
 
-	@Override
 	public synchronized void playerJoined(State state) {
 		mainApp.setState(state);
 		updatePlayersTable();
 	}
 
-	@Override
 	public synchronized void gameStarted(State state) {
 		mainApp.setState(state);
 		mainApp.showGameOverview();
+	}
+
+	public synchronized void played(State state){
+		// default empty
 	}
 }

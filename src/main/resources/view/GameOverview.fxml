@@ -58,7 +58,7 @@
                               <Font size="18.0" />
                            </font>
                         </Label>
-                        <Button layoutX="17.0" layoutY="182.0" mnemonicParsing="false" onAction="#handlePlayButtonAction" prefHeight="35.0" prefWidth="110.0" text="Play" />
+                        <Button fx:id="playButton" layoutX="17.0" layoutY="182.0" mnemonicParsing="false" onAction="#handlePlayButtonAction" prefHeight="35.0" prefWidth="110.0" text="Play" />
                         <Button fx:id="drawButton" layoutX="158.0" layoutY="182.0" mnemonicParsing="false" onAction="#handleDrawButtonAction" prefHeight="35.0" prefWidth="110.0" text="Draw" />
                         <Button fx:id="checkButton" layoutX="161.0" layoutY="127.0" mnemonicParsing="false" onAction="#handleCheckButtonAction" prefHeight="35.0" prefWidth="110.0" text="Check" />
                         <ToggleButton fx:id="unoButton" layoutX="17.0" layoutY="237.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="253.0" text="Say UNO!" />
