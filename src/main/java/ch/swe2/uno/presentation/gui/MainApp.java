@@ -213,10 +213,10 @@ public class MainApp extends Application {
 		try {
 			// Load end screen.
 			FXMLLoader loader = new FXMLLoader();
-			if (gameState.getWinner().equals("Bot")) {
-				loader.setLocation(MainApp.class.getResource("/view/FailScreen.fxml"));
-			} else {
+			if (gameState.getWinner().equals(getPlayerName())) {
 				loader.setLocation(MainApp.class.getResource("/view/SuccessScreen.fxml"));
+			} else {
+				loader.setLocation(MainApp.class.getResource("/view/FailScreen.fxml"));
 			}
 			AnchorPane endScreen = loader.load();
 

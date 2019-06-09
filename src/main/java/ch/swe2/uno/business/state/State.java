@@ -75,6 +75,7 @@ public class State implements Serializable {
 			if (nextPlayer.isPresent()) {
 				getCurrentPlayer().get().toggleCurrentTurn();
 				nextPlayer.get().toggleCurrentTurn();
+				nextPlayer.get().setCanDraw(true);
 			}
 		}
 	}

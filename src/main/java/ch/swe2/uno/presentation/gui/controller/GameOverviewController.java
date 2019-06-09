@@ -144,11 +144,6 @@ public class GameOverviewController implements RequestEventHandler {
 			} catch (Exception e) {
 				logger.warn("Exception occurred while pressing play button", e);
 				throw new IllegalArgumentException();
-			} finally {
-				// If someone has won
-				if (mainApp.getState().getWinner() != null) {
-					mainApp.showEndScreen();
-				}
 			}
 		}
 	}
@@ -184,6 +179,7 @@ public class GameOverviewController implements RequestEventHandler {
 			observablePlayerData.addAll(p.getHand());
 			playerTable.setItems(observablePlayerData);
 		});
+
 		mainApp.getState().getCurrentPlayer().ifPresent(p -> {
 			currentTurn.setText(p.getName());
 			if (p.getHand().size() > 1) {
@@ -192,9 +188,11 @@ public class GameOverviewController implements RequestEventHandler {
 			checkButton.setDisable(p.canDraw());
 			drawButton.setDisable(!p.canDraw());
 		});
+
 		topCard.setText(
 				mainApp.getState().getTopDiscardPileCard().getColor().toString() + " " +
 						mainApp.getState().getTopDiscardPileCard().getNumber());
+
 		message.setText(mainApp.getState().getMessage());
 
 		if (mainApp.getState().getCurrentPlayer().isPresent()) {
@@ -220,6 +218,11 @@ public class GameOverviewController implements RequestEventHandler {
 
 	public synchronized void played(State state) {
 		mainApp.setState(state);
+		// If someone has won
+		if (mainApp.getState().getWinner() != null) {
+			mainApp.showEndScreen();
+		}
+
 		updateViewFromState();
 	}
 }
