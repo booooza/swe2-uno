@@ -4,9 +4,7 @@ import ch.swe2.uno.business.player.PlayerInterface;
 import ch.swe2.uno.business.server.Request;
 import ch.swe2.uno.business.state.State;
 import ch.swe2.uno.presentation.gui.MainApp;
-import ch.swe2.uno.presentation.gui.events.EventListener;
 import ch.swe2.uno.presentation.gui.events.RequestEventHandler;
-import ch.swe2.uno.presentation.gui.events.RequestEventListener;
 import ch.swe2.uno.presentation.network.client.Client;
 import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyObjectWrapper;
@@ -36,12 +34,14 @@ public class WelcomeScreenController implements RequestEventHandler {
 	private Button joinButton;
 	@FXML
 	private Button serverButton;
+	@FXML
+	private Button startButton;
 
 	private MainApp mainApp; // Reference to the main application.
 
 	private ObservableList<PlayerInterface> observablePlayers = FXCollections.observableArrayList();
 
-	private EventListener requestEventListener;
+	private Boolean joined = false;
 
 	/**
 	 * The constructor.
@@ -71,6 +71,7 @@ public class WelcomeScreenController implements RequestEventHandler {
 				playerName.selectAll();
 			}
 		}));
+		startButton.setDisable(true);
 		joinButton.setDisable(false);
 
 	}
@@ -91,7 +92,7 @@ public class WelcomeScreenController implements RequestEventHandler {
 	/**
 	 * Is called by the main application to give a reference back to itself.
 	 *
-	 * @param mainApp
+	 * @param mainApp MainApp
 	 */
 	public void setMainApp(MainApp mainApp) {
 		this.mainApp = mainApp;
@@ -109,21 +110,20 @@ public class WelcomeScreenController implements RequestEventHandler {
 			serverButton.setDisable(true);
 			serverButton.setText("Server Started...");
 		} catch (Exception ex) {
-
+			logger.error("Error starting server", ex);
 		}
 	}
 
 	public void handleJoinButtonAction() {
 		logger.info("Player Joined: " + playerName.getText());
+		joined = true;
 		try {
 			mainApp.setState(mainApp.getClient().sendRequest(Request.Command.JOIN, playerName.getText()));
 			mainApp.setPlayerName(playerName.getText());
 		} catch (Exception e) {
-			logger.warn("Exception: {}", e);
+			logger.warn("Error while joining", e);
 			throw new IllegalArgumentException();
 		}
-		updateViewAfterJoin();
-		updatePlayersTable();
 	}
 
 	public void handleStartButtonAction() {
@@ -132,14 +132,18 @@ public class WelcomeScreenController implements RequestEventHandler {
 			mainApp.setPlayerName(playerName.getText());
 			mainApp.getClient().sendRequest(Request.Command.START, playerName.getText());
 		} catch (Exception e) {
-			logger.warn("Exception: {}", e);
+			logger.warn("Error while starting", e);
 			throw new IllegalArgumentException();
 		}
+
 	}
 
 	private void updateViewAfterJoin() {
-		joinButton.setDisable(true);
-		joinButton.setText("Joined");
+		if (joined) {
+			joinButton.setDisable(true);
+			joinButton.setText("Joined");
+			startButton.setDisable(false);
+		}
 	}
 
 	private void updatePlayersTable() {
@@ -150,6 +154,7 @@ public class WelcomeScreenController implements RequestEventHandler {
 
 	public synchronized void playerJoined(State state) {
 		mainApp.setState(state);
+		updateViewAfterJoin();
 		updatePlayersTable();
 	}
 
@@ -158,7 +163,7 @@ public class WelcomeScreenController implements RequestEventHandler {
 		mainApp.showGameOverview();
 	}
 
-	public synchronized void played(State state){
+	public synchronized void played(State state) {
 		// default empty
 	}
 }
