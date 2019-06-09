@@ -103,7 +103,7 @@ public class WelcomeScreenController implements RequestEventHandler {
 	public void handleServerButtonAction() {
 		try {
 			mainApp.startServer();
-
+			// TODO @Luca this needs to be a callback, server runs on new thread!
 			if (mainApp.getClient() == null) {
 				mainApp.initClient();
 			}
