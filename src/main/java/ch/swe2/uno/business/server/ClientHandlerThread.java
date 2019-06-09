@@ -1,6 +1,5 @@
 package ch.swe2.uno.business.server;
 
-import ch.swe2.uno.business.game.Game;
 import com.google.gson.Gson;
 import org.hildan.fxgson.FxGson;
 import org.slf4j.Logger;
@@ -13,10 +12,9 @@ import java.util.HashMap;
 import java.util.UUID;
 
 public class ClientHandlerThread implements Runnable {
-	private static final Logger logger = LoggerFactory.getLogger(ClientHandlerThread.class);
+	private static Logger logger = LoggerFactory.getLogger(ClientHandlerThread.class);
 
 	private Gson fxGson = FxGson.create();
-	private Game game;
 
 	private Socket socket;
 
@@ -28,9 +26,8 @@ public class ClientHandlerThread implements Runnable {
 	private HashMap<String, ClientHandlerThread> clientInfo;
 	private HashMap<String, ClientHandlerThread> clientListenerInfo;
 
-	ClientHandlerThread(Socket socket, Game game) {
+	ClientHandlerThread(Socket socket) {
 		this.socket = socket;
-		this.game = game;
 
 		this.clientInfo = MultiThreadedServer.getClientInfo();
 		this.clientListenerInfo = MultiThreadedServer.getClientListenerInfo();
@@ -61,36 +58,49 @@ public class ClientHandlerThread implements Runnable {
 						clientListenerInfo.put(String.format("%s-%s", request.getPlayerName(), UUID.randomUUID()), this);
 						break;
 					case JOIN:
-						outputStream.writeObject(game.addPlayer(request.getPlayerName()));
+						outputStream.reset();
+						outputStream.writeObject(MultiThreadedServer.getGame().addPlayer(request.getPlayerName()));
 						clientInfo.put(String.format("%s-%s", request.getPlayerName(), UUID.randomUUID()), this);
 
 						for (ClientHandlerThread clientHandlerThread : clientListenerInfo.values()) {
-							clientHandlerThread.outputStream.writeObject(new Request(Request.Command.JOINED, Request.Direction.SERVER_TO_CLIENT, request.getPlayerName()));
+							clientHandlerThread.outputStream.reset();
+							clientHandlerThread.outputStream.writeObject(new Request(Request.Command.JOINED, Request.Direction.SERVER_TO_CLIENT, MultiThreadedServer.getGame().getState()));
 						}
 
 						break;
 					case START:
-						if (game.getState().getPlayers() != null) {
-							outputStream.writeObject(game.start());
+						if (MultiThreadedServer.getGame().getState().getPlayers() != null) {
+							outputStream.reset();
+							outputStream.writeObject(MultiThreadedServer.getGame().start());
 							logger.info("Game initialized");
 						}
+
+						for (ClientHandlerThread clientHandlerThread : clientListenerInfo.values()) {
+							clientHandlerThread.outputStream.reset();
+							clientHandlerThread.outputStream.writeObject(new Request(Request.Command.STARTED, Request.Direction.SERVER_TO_CLIENT, MultiThreadedServer.getGame().getState()));
+						}
+
 						break;
 					case RESTART:
 						break;
 					case PLAY:
-						game.playCard(request.getPlayerName(), request.getCard(), request.getUno(), request.getChosenColor());
-						outputStream.writeObject(game.getState());
+						MultiThreadedServer.getGame().playCard(request.getPlayerName(), request.getCard(), request.getUno(), request.getChosenColor());
+						outputStream.reset();
+						outputStream.writeObject(MultiThreadedServer.getGame().getState());
 						break;
 					case CHECK:
-						game.check(request.getPlayerName());
-						outputStream.writeObject(game.getState());
+						MultiThreadedServer.getGame().check(request.getPlayerName());
+						outputStream.reset();
+						outputStream.writeObject(MultiThreadedServer.getGame().getState());
 						break;
 					case DRAW:
-						game.drawCard(request.getPlayerName());
-						outputStream.writeObject(game.getState());
+						MultiThreadedServer.getGame().drawCard(request.getPlayerName());
+						outputStream.reset();
+						outputStream.writeObject(MultiThreadedServer.getGame().getState());
 						break;
 					case GETSTATE:
-						outputStream.writeObject(game.getState());
+						outputStream.reset();
+						outputStream.writeObject(MultiThreadedServer.getGame().getState());
 						break;
 					case QUIT:
 						break;

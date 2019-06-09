@@ -1,6 +1,7 @@
 package ch.swe2.uno.presentation.network.client;
 
 import ch.swe2.uno.business.server.Request;
+import ch.swe2.uno.presentation.gui.events.EventListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -11,8 +12,8 @@ import java.net.Socket;
 
 import static ch.swe2.uno.business.server.Request.Command.SUBSCRIBE;
 
-public class ClientRequestListener implements Runnable {
-	private static final Logger logger = LoggerFactory.getLogger(ClientRequestListener.class);
+public class ClientRequestListenerThread implements Runnable {
+	private static Logger logger = LoggerFactory.getLogger(ClientRequestListenerThread.class);
 
 	private final Socket clientRequestListenerSocket;
 
@@ -21,7 +22,9 @@ public class ClientRequestListener implements Runnable {
 
 	private volatile boolean isRunning = true;
 
-	ClientRequestListener(Socket clientRequestListenerSocket) {
+	private volatile EventListener eventListener;
+
+	ClientRequestListenerThread(Socket clientRequestListenerSocket) {
 		this.clientRequestListenerSocket = clientRequestListenerSocket;
 
 		try {
@@ -29,6 +32,10 @@ public class ClientRequestListener implements Runnable {
 		} catch (Exception e) {
 			logger.error("Error initializing ClientThread from Socket");
 		}
+	}
+
+	public void setEventListener(EventListener eventListener) {
+		this.eventListener = eventListener;
 	}
 
 	@Override
@@ -48,44 +55,39 @@ public class ClientRequestListener implements Runnable {
 				Request request = readRequestFromServer();
 				if (request != null) {
 					logger.info("Command {}", request.getCommand());
-					switch (request.getCommand()) {
-						case JOINED:
-							// notify main thread about joined player
-							String playerName = request.getPlayerName();
-
-							break;
-						case STARTED:
-							// notify main thread to move to next stage.
-
-							break;
-						case PLAYED:
-							break;
-						case QUIT:
-							break;
-						default:
-							logger.info("Unknown command {}", request.getCommand());
-					}
+					this.eventListener.update(request);
 				}
 				logger.info("Request processed: {}", time);
 			}
-			// close connections
-			outputStream.close();
-			inputStream.close();
-			clientRequestListenerSocket.close();
+			terminate();
 		} catch (Exception ex) {
 			logger.error(String.format("Error in executing client's request. Details %s", ex.getMessage()));
+			terminate();
 		}
 	}
 
+	public synchronized void terminate() {
+		try {
+			outputStream.close();
+			inputStream.close();
+			clientRequestListenerSocket.close();
+		} catch (IOException ioEx) {
+			logger.error(String.format("Error in terminating client's connection to the server. Details %s", ioEx.getMessage()));
+
+		}
+	}
+
+
 	private void sendListenerConnectedMessage() {
 		try {
+			outputStream.reset();
 			outputStream.writeObject(new Request(SUBSCRIBE, Request.Direction.CLIENT_TO_SERVER));
 		} catch (IOException ioEx) {
 			logger.error(String.format("Error in executing client's request. Details %s", ioEx.getMessage()));
 		}
 	}
 
-	private Request readRequestFromServer() {
+	private synchronized Request readRequestFromServer() {
 		try {
 			Object inputObject = inputStream.readObject();
 			if (inputObject.getClass() == Request.class) {

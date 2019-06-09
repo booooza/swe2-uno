@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
 import java.io.InputStream;
 
 public class EndScreenController {
-    private static final Logger logger = LoggerFactory.getLogger(WelcomeScreenController.class);
+    private static Logger logger = LoggerFactory.getLogger(WelcomeScreenController.class);
     private MainApp mainApp; // Reference to the main application.
 
 

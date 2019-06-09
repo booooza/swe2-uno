@@ -18,8 +18,8 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class Game {
-	private static final Logger logger = LoggerFactory.getLogger(Game.class);
-	private State state;
+	private static Logger logger = LoggerFactory.getLogger(Game.class);
+	private volatile State state;
 	private Deck deck = new Deck();
 	private Gson fxGson = FxGson.create();
 	private boolean isRunning;
@@ -196,7 +196,7 @@ public class Game {
 		}
 	}
 
-	public State getState() {
+	public synchronized State getState() {
 		return Objects.requireNonNullElseGet(state, State::new);
 	}
 

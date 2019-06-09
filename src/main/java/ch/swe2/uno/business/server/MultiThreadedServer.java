@@ -13,22 +13,25 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class MultiThreadedServer implements Runnable {
-	private static final Logger logger = LoggerFactory.getLogger(MultiThreadedServer.class);
+	private static Logger logger = LoggerFactory.getLogger(MultiThreadedServer.class);
 	private static MultiThreadedServer theInstance;
-	public ServerSocket serverSocket;
-	protected int serverPort;
-	protected boolean isStopped;
-	protected Thread runningThread;
-	protected ExecutorService threadPool =
-			Executors.newFixedThreadPool(10);
-	protected Game game;
+	private volatile static Game game;
 	// Connection state info
 	private static LinkedHashMap<String, ClientHandlerThread> clientInfo = new LinkedHashMap<String, ClientHandlerThread>();
 	private static LinkedHashMap<String, ClientHandlerThread> clientListenerInfo = new LinkedHashMap<String, ClientHandlerThread>();
-
+	private ServerSocket serverSocket;
+	private int serverPort;
+	private boolean isStopped;
+	private Thread runningThread;
+	private ExecutorService threadPool =
+			Executors.newFixedThreadPool(10);
 	public MultiThreadedServer(int port, Game game) {
 		this.serverPort = port;
 		this.game = game;
+	}
+
+	public synchronized static Game getGame() {
+		return game;
 	}
 
 	public static MultiThreadedServer getInstance() {
@@ -36,6 +39,14 @@ public class MultiThreadedServer implements Runnable {
 			theInstance = new MultiThreadedServer(Server.SERVER_PORT, new Game());
 		}
 		return theInstance;
+	}
+
+	public static HashMap<String, ClientHandlerThread> getClientInfo() {
+		return clientInfo;
+	}
+
+	public static HashMap<String, ClientHandlerThread> getClientListenerInfo() {
+		return clientListenerInfo;
 	}
 
 	public void run() {
@@ -47,7 +58,7 @@ public class MultiThreadedServer implements Runnable {
 		while (!isStopped()) {
 			try {
 				Socket cS = serverSocket.accept();
-				this.threadPool.execute(new ClientHandlerThread(cS, game));
+				this.threadPool.execute(new ClientHandlerThread(cS));
 				//new ClientHandlerThread(cS, game);
 			} catch (IOException e) {
 				if (isStopped()) {
@@ -79,14 +90,6 @@ public class MultiThreadedServer implements Runnable {
 		} catch (IOException e) {
 			throw new RuntimeException("Cannot open port", e);
 		}
-	}
-
-	public static HashMap<String, ClientHandlerThread> getClientInfo() {
-		return clientInfo;
-	}
-
-	public static HashMap<String, ClientHandlerThread> getClientListenerInfo() {
-		return clientListenerInfo;
 	}
 
 }

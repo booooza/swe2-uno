@@ -11,8 +11,7 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 
 public class ClientThread implements Runnable {
-	private static final Logger logger = LoggerFactory.getLogger(ClientThread.class);
-
+	private static Logger logger = LoggerFactory.getLogger(ClientThread.class);
 	private final Socket clientSocket;
 
 	private volatile ObjectInputStream inputStream = null;
@@ -36,6 +35,7 @@ public class ClientThread implements Runnable {
 			inputStream = new ObjectInputStream(clientSocket.getInputStream());
 		} catch (Exception ex) {
 			logger.error(String.format("Error in establishing client's connection to the server. Details %s", ex.getMessage()));
+			terminate();
 		}
 	}
 
@@ -50,7 +50,7 @@ public class ClientThread implements Runnable {
 		}
 	}
 
-	public synchronized void send(Request request) {
+	synchronized void send(Request request) {
 		try {
 			outputStream.writeObject(request);
 		} catch (IOException e) {
@@ -58,7 +58,7 @@ public class ClientThread implements Runnable {
 		}
 	}
 
-	public synchronized State readStateFromServer() {
+	synchronized State readStateFromServer() {
 		try {
 			Object inputObject = inputStream.readObject();
 			if (inputObject.getClass() == State.class) {

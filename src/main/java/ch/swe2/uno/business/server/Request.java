@@ -13,6 +13,7 @@ public class Request implements Serializable {
     private CardInterface card;
     private boolean uno;
     private UnoColor chosenColor;
+    private State state;
 
     public Request(Command command, Direction direction) {
         this.command = command;
@@ -23,6 +24,12 @@ public class Request implements Serializable {
         this.command = command;
         this.direction = direction;
         this.playerName = playerName;
+    }
+
+    public Request(Command command, Direction direction, State state) {
+        this.command = command;
+        this.direction = direction;
+        this.state = state;
     }
 
     public Request(Command command, Direction direction, String playerName, CardInterface card) {
@@ -59,6 +66,10 @@ public class Request implements Serializable {
         return playerName;
     }
 
+    public State getState() {
+        return state;
+    }
+
     boolean getUno() {
         return uno;
     }
@@ -66,7 +77,6 @@ public class Request implements Serializable {
     public CardInterface getCard () {
         return card;
     }
-
 
     public enum Direction{
         SERVER_TO_CLIENT,

@@ -2,7 +2,11 @@ package ch.swe2.uno.presentation.gui.controller;
 
 import ch.swe2.uno.business.player.PlayerInterface;
 import ch.swe2.uno.business.server.Request;
+import ch.swe2.uno.business.state.State;
 import ch.swe2.uno.presentation.gui.MainApp;
+import ch.swe2.uno.presentation.gui.events.EventListener;
+import ch.swe2.uno.presentation.gui.events.RequestEventHandler;
+import ch.swe2.uno.presentation.gui.events.RequestEventListener;
 import ch.swe2.uno.presentation.network.client.Client;
 import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyObjectWrapper;
@@ -17,8 +21,8 @@ import javafx.scene.control.TextField;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class WelcomeScreenController {
-	private static final Logger logger = LoggerFactory.getLogger(WelcomeScreenController.class);
+public class WelcomeScreenController implements RequestEventHandler {
+	private static Logger logger = LoggerFactory.getLogger(WelcomeScreenController.class);
 
 	@FXML
 	private TableView<PlayerInterface> playersTable;
@@ -30,9 +34,14 @@ public class WelcomeScreenController {
 	private TextField playerName;
 	@FXML
 	private Button joinButton;
+	@FXML
+	private Button serverButton;
+
 	private MainApp mainApp; // Reference to the main application.
 
 	private ObservableList<PlayerInterface> observablePlayers = FXCollections.observableArrayList();
+
+	private EventListener requestEventListener;
 
 	/**
 	 * The constructor.
@@ -63,6 +72,20 @@ public class WelcomeScreenController {
 			}
 		}));
 		joinButton.setDisable(false);
+
+	}
+
+
+	private void initAfterMainApp() {
+		// If Server is running --> initClient
+		mainApp.addRequestEventListener(this);
+
+		if (Client.hostAvailabilityCheck()) {
+			mainApp.initClient();
+
+			serverButton.setDisable(true);
+			serverButton.setText("Server Started...");
+		}
 	}
 
 	/**
@@ -72,6 +95,22 @@ public class WelcomeScreenController {
 	 */
 	public void setMainApp(MainApp mainApp) {
 		this.mainApp = mainApp;
+		initAfterMainApp();
+	}
+
+
+	public void handleServerButtonAction() {
+		try {
+			mainApp.startServer();
+
+			if (mainApp.getClient() == null) {
+				mainApp.initClient();
+			}
+			serverButton.setDisable(true);
+			serverButton.setText("Server Started...");
+		} catch (Exception ex) {
+
+		}
 	}
 
 	public void handleJoinButtonAction() {
@@ -91,12 +130,11 @@ public class WelcomeScreenController {
 		logger.info("Player who started game: " + playerName.getText());
 		try {
 			mainApp.setPlayerName(playerName.getText());
-			mainApp.setState(mainApp.getClient().sendRequest(Request.Command.START, playerName.getText()));
+			mainApp.getClient().sendRequest(Request.Command.START, playerName.getText());
 		} catch (Exception e) {
 			logger.warn("Exception: {}", e);
 			throw new IllegalArgumentException();
 		}
-		mainApp.showGameOverview();
 	}
 
 	private void updateViewAfterJoin() {
@@ -108,5 +146,17 @@ public class WelcomeScreenController {
 		observablePlayers.clear();
 		observablePlayers.addAll(mainApp.getState().getPlayers());
 		playersTable.setItems(observablePlayers);
+	}
+
+	@Override
+	public synchronized void playerJoined(State state) {
+		mainApp.setState(state);
+		updatePlayersTable();
+	}
+
+	@Override
+	public synchronized void gameStarted(State state) {
+		mainApp.setState(state);
+		mainApp.showGameOverview();
 	}
 }

@@ -1,27 +1,23 @@
 package ch.swe2.uno.presentation.gui.controller;
 
-import ch.swe2.uno.business.card.ActionCard;
 import ch.swe2.uno.business.card.CardInterface;
 import ch.swe2.uno.business.card.CardType;
 import ch.swe2.uno.business.card.UnoColor;
 import ch.swe2.uno.business.server.Request;
+import ch.swe2.uno.business.state.State;
 import ch.swe2.uno.presentation.gui.MainApp;
-import ch.swe2.uno.presentation.network.client.Client;
+import ch.swe2.uno.presentation.gui.events.RequestEventHandler;
 import javafx.beans.property.ReadOnlyIntegerWrapper;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.paint.Color;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class GameOverviewController {
-	private static final Logger logger = LoggerFactory.getLogger(WelcomeScreenController.class);
+public class GameOverviewController implements RequestEventHandler {
+	private static Logger logger = LoggerFactory.getLogger(WelcomeScreenController.class);
 	@FXML
 	private TableView<CardInterface> playerTable;
 	@FXML
@@ -112,11 +108,18 @@ public class GameOverviewController {
 	/**
 	 * Is called by the main application to give a reference back to itself.
 	 *
-	 * @param mainApp
+	 * @param mainApp provide Main Application
 	 */
 	public void setMainApp(MainApp mainApp) {
 		this.mainApp = mainApp;
+		initAfterMainApp();
 		updateViewFromState();
+	}
+
+	private void initAfterMainApp() {
+		if (mainApp.getClient() != null) {
+			mainApp.addRequestEventListener(this);
+		}
 	}
 
 	public void handlePlayButtonAction() {
@@ -124,21 +127,21 @@ public class GameOverviewController {
 		CardInterface selectedCard = playerTable.getSelectionModel().getSelectedItem();
 		if (selectedCard != null) {
 			logger.info("Selected card {} {}", selectedCard.getColor(), selectedCard.getNumber());
-			Client client = new Client();
+			//Client client = new Client();
 			try {
 				// If it's a wildcard ask for the chosen color and include in request
 				if (selectedCard.getType() == CardType.WILD) {
-					UnoColor chosenColor = mainApp.showColorDialog(selectedCard);
+					UnoColor chosenColor = mainApp.showColorDialog();
 					mainApp.setState(
-							client.sendRequest(Request.Command.PLAY, mainApp.getPlayerName(), selectedCard, unoButton.isSelected(), chosenColor)
+							mainApp.getClient().sendRequest(Request.Command.PLAY, mainApp.getPlayerName(), selectedCard, unoButton.isSelected(), chosenColor)
 					);
 				} else {
 					mainApp.setState(
-							client.sendRequest(Request.Command.PLAY, mainApp.getPlayerName(), selectedCard, unoButton.isSelected())
+							mainApp.getClient().sendRequest(Request.Command.PLAY, mainApp.getPlayerName(), selectedCard, unoButton.isSelected())
 					);
 				}
 			} catch (Exception e) {
-				logger.warn("Exception: {}", e);
+				logger.warn("Exception occurred while pressing play button", e);
 				throw new IllegalArgumentException();
 			} finally {
 				// If someone has won
@@ -151,27 +154,25 @@ public class GameOverviewController {
 		}
 	}
 
-	public void handleDrawButtonAction(ActionEvent event) {
+	public void handleDrawButtonAction() {
 		logger.info("Draw button pressed");
-		Client client = new Client();
 		try {
-			mainApp.setState(client.sendRequest(Request.Command.DRAW, mainApp.getPlayerName()));
+			mainApp.setState(mainApp.getClient().sendRequest(Request.Command.DRAW, mainApp.getPlayerName()));
 		} catch (Exception e) {
-			logger.warn("Exception: {}", e);
+			logger.warn("Exception occurred while pressing play button", e);
 			throw new IllegalArgumentException();
 		} finally {
 			updateViewFromState();
 		}
 	}
 
-	public void handleCheckButtonAction(ActionEvent event) {
+	public void handleCheckButtonAction() {
 		// TODO Should only be called if player.canDraw() returns false!
 		logger.info("Check button pressed");
-		Client client = new Client();
 		try {
-			mainApp.setState(client.sendRequest(Request.Command.CHECK, mainApp.getPlayerName()));
+			mainApp.setState(mainApp.getClient().sendRequest(Request.Command.CHECK, mainApp.getPlayerName()));
 		} catch (Exception e) {
-			logger.warn("Exception: {}", e);
+			logger.warn("Exception occurred while pressing play button", e);
 			throw new IllegalArgumentException();
 		} finally {
 			updateViewFromState();
@@ -198,5 +199,15 @@ public class GameOverviewController {
 						mainApp.getState().getTopDiscardPileCard().getNumber());
 		message.setText(mainApp.getState().getMessage());
 		logger.info("View updated");
+	}
+
+	@Override
+	public void playerJoined(State state) {
+		// default empty
+	}
+
+	@Override
+	public void gameStarted(State state) {
+		// default empty
 	}
 }
