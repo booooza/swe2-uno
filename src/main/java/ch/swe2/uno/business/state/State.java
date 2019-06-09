@@ -32,6 +32,7 @@ public class State implements Serializable {
 	}
 
 	public synchronized void toggleCurrentTurn() {
+		// TODO @Luca implement rotation logic
 		players.forEach(p -> p.setCanDraw(true));
 		players.forEach(PlayerInterface::toggleCurrentTurn);
 	}

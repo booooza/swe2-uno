@@ -130,9 +130,7 @@ public class GameOverviewController implements RequestEventHandler {
 		CardInterface selectedCard = playerTable.getSelectionModel().getSelectedItem();
 		if (selectedCard != null) {
 			logger.info("Selected card {} {}", selectedCard.getColor(), selectedCard.getNumber());
-			//Client client = new Client();
 			try {
-				// If it's a wildcard ask for the chosen color and include in request
 				if (selectedCard.getType() == CardType.WILD) {
 					UnoColor chosenColor = mainApp.showColorDialog();
 					mainApp.setState(
@@ -150,8 +148,6 @@ public class GameOverviewController implements RequestEventHandler {
 				// If someone has won
 				if (mainApp.getState().getWinner() != null) {
 					mainApp.showEndScreen();
-				} else {
-					updateViewFromState();
 				}
 			}
 		}
@@ -183,20 +179,6 @@ public class GameOverviewController implements RequestEventHandler {
 	}
 
 	private void updateViewFromState() {
-		if (mainApp.getState().getCurrentPlayer().isPresent()) {
-			PlayerInterface currentPlayer = mainApp.getState().getCurrentPlayer().get();
-			if (currentPlayer.getName() == mainApp.getPlayerName()) {
-				// It my turn
-				this.drawButton.setDisable(false);
-				this.checkButton.setDisable(false);
-				this.playButton.setDisable(false);
-			} else {
-				this.drawButton.setDisable(true);
-				this.checkButton.setDisable(true);
-				this.playButton.setDisable(true);
-			}
-		}
-
 		mainApp.getState().getPlayerByName(mainApp.getPlayerName()).ifPresent(p -> {
 			observablePlayerData.clear();
 			observablePlayerData.addAll(p.getHand());
@@ -209,12 +191,22 @@ public class GameOverviewController implements RequestEventHandler {
 			}
 			checkButton.setDisable(p.canDraw());
 			drawButton.setDisable(!p.canDraw());
-
 		});
 		topCard.setText(
 				mainApp.getState().getTopDiscardPileCard().getColor().toString() + " " +
 						mainApp.getState().getTopDiscardPileCard().getNumber());
 		message.setText(mainApp.getState().getMessage());
+
+		if (mainApp.getState().getCurrentPlayer().isPresent()) {
+			PlayerInterface currentPlayer = mainApp.getState().getCurrentPlayer().get();
+			if (currentPlayer.getName().equals(mainApp.getPlayerName())) {
+				// It my turn
+				this.playButton.setDisable(false);
+			} else {
+				this.playButton.setDisable(true);
+				this.drawButton.setDisable(true);
+			}
+		}
 		logger.info("View updated");
 	}
 

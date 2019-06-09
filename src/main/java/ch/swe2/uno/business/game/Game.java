@@ -1,8 +1,10 @@
 package ch.swe2.uno.business.game;
 
-import ch.swe2.uno.business.card.*;
+import ch.swe2.uno.business.card.ActionCard;
+import ch.swe2.uno.business.card.CardInterface;
+import ch.swe2.uno.business.card.CardType;
+import ch.swe2.uno.business.card.UnoColor;
 import ch.swe2.uno.business.deck.Deck;
-import ch.swe2.uno.business.player.Player;
 import ch.swe2.uno.business.player.PlayerInterface;
 import ch.swe2.uno.business.state.State;
 import com.google.gson.Gson;
@@ -11,11 +13,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 public class Game {
 	private static Logger logger = LoggerFactory.getLogger(Game.class);
@@ -24,16 +23,16 @@ public class Game {
 	private Gson fxGson = FxGson.create();
 	private boolean isRunning;
 
+	public Game() {
+		initialize();
+	}
+
 	public Deck getDeck() {
 		return deck;
 	}
 
 	public boolean isRunning() {
 		return isRunning;
-	}
-
-	public Game() {
-		initialize();
 	}
 
 	public synchronized State addPlayer(String playerName) {
@@ -118,7 +117,7 @@ public class Game {
 					checkUno();
 					state.toggleCurrentTurn();
 					// If its the players move let the bot play
-					if (!playerName.equals("Bot")) {
+					if (state.containsPlayer("Bot") && !playerName.equals("Bot")) {
 						botAction();
 					}
 				}
@@ -133,7 +132,7 @@ public class Game {
 
 	public synchronized State check(String playerName) {
 		// Only Check and Play can trigger the next players turn
-
+		state.toggleCurrentTurn();
 		// If its the players move let the bot play
 		if (state.containsPlayer("Bot") && !playerName.equals("Bot")) {
 			checkUno();

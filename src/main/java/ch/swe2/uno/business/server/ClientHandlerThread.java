@@ -87,11 +87,21 @@ public class ClientHandlerThread implements Runnable {
 						MultiThreadedServer.getGame().playCard(request.getPlayerName(), request.getCard(), request.getUno(), request.getChosenColor());
 						outputStream.reset();
 						outputStream.writeObject(MultiThreadedServer.getGame().getState());
+
+						for (ClientHandlerThread clientHandlerThread : clientListenerInfo.values()) {
+							clientHandlerThread.outputStream.reset();
+							clientHandlerThread.outputStream.writeObject(new Request(Request.Command.PLAYED, Request.Direction.SERVER_TO_CLIENT, MultiThreadedServer.getGame().getState()));
+						}
 						break;
 					case CHECK:
 						MultiThreadedServer.getGame().check(request.getPlayerName());
 						outputStream.reset();
 						outputStream.writeObject(MultiThreadedServer.getGame().getState());
+
+						for (ClientHandlerThread clientHandlerThread : clientListenerInfo.values()) {
+							clientHandlerThread.outputStream.reset();
+							clientHandlerThread.outputStream.writeObject(new Request(Request.Command.PLAYED, Request.Direction.SERVER_TO_CLIENT, MultiThreadedServer.getGame().getState()));
+						}
 						break;
 					case DRAW:
 						MultiThreadedServer.getGame().drawCard(request.getPlayerName());
