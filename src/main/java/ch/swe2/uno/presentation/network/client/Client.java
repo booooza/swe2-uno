@@ -15,12 +15,14 @@ import java.util.concurrent.ExecutorService;
 
 public class Client {
 	private static int SERVER_PORT = 1234;
+	private static String SERVER_ADDRESS = "localhost";
 	private static Logger logger = LoggerFactory.getLogger(Client.class);
 	private volatile ClientThread clientThread = null;
 	private volatile ClientRequestListenerThread clientRequestListenerThread = null;
 
 	public Client(ExecutorService threadPool) {
 		Client.SERVER_PORT = AppPropsReader.readIntValueFromAppPropsBy("SERVER_PORT");
+		Client.SERVER_ADDRESS = AppPropsReader.readStringValueFromAppPropsBy("SERVER_ADDRESS");
 		initializeSockets(threadPool);
 	}
 
@@ -35,8 +37,8 @@ public class Client {
 
 	private void initializeSockets(ExecutorService threadPool) {
 		try {
-			Socket stateSocket = new Socket("localhost", Client.SERVER_PORT);
-			Socket requestListenerSocket = new Socket("localhost", Client.SERVER_PORT);
+			Socket stateSocket = new Socket(Client.SERVER_ADDRESS, Client.SERVER_PORT);
+			Socket requestListenerSocket = new Socket(Client.SERVER_ADDRESS, Client.SERVER_PORT);
 			clientThread = new ClientThread(stateSocket);
 			clientRequestListenerThread = new ClientRequestListenerThread(requestListenerSocket);
 			threadPool.execute(clientThread);
