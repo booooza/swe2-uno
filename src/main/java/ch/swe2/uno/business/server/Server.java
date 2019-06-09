@@ -6,15 +6,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class Server {
-	public static int SERVER_PORT = 1234;
+	static int SERVER_PORT = 1234;
 	protected static Game game;
 	private static Logger logger = LoggerFactory.getLogger(Server.class);
 
 	public static void main(String[] args) {
 		Server.SERVER_PORT = AppPropsReader.readIntValueFromAppPropsBy("SERVER_PORT");
+
 		new Thread(MultiThreadedServer.getInstance()).start();
 		logger.info("Server started...");
 	}
-
-
 }

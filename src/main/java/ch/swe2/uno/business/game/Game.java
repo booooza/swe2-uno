@@ -15,23 +15,20 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class Game {
 	private static Logger logger = LoggerFactory.getLogger(Game.class);
 	private volatile State state;
 	private Deck deck = new Deck();
-	private Gson fxGson = FxGson.create();
+	private Gson ignored = FxGson.create();
 	private boolean isRunning;
 
 	public Game() {
 		initialize();
 	}
 
-	public Deck getDeck() {
-		return deck;
-	}
-
-	public boolean isRunning() {
+	boolean isRunning() {
 		return isRunning;
 	}
 
@@ -42,7 +39,7 @@ public class Game {
 		return state;
 	}
 
-	public synchronized State initialize() {
+	synchronized State initialize() {
 		logger.info("Starting the game");
 		state = new State(new ArrayList(), "Initial state");
 		return state;
@@ -63,8 +60,8 @@ public class Game {
 			deck.create();
 			deck.distribute(state.getPlayers());
 
-			// Choose first player (TODO: randomize)
-			state.getPlayers().get(0).setCurrentTurn(true);
+			int randNumber = ThreadLocalRandom.current().nextInt(0, state.getPlayers().size() - 1);
+			state.getPlayers().get(randNumber).setCurrentTurn(true);
 
 			// Write player info to state
 			state.setPlayers(state.getPlayers());
@@ -76,7 +73,7 @@ public class Game {
 		return new State();
 	}
 
-	public synchronized State playCard(String playerName, CardInterface card, boolean uno, UnoColor chosenColor) {
+	public synchronized void playCard(String playerName, CardInterface card, boolean uno, UnoColor chosenColor) {
 		PlayerInterface player;
 		Optional<PlayerInterface> optionalOfPlayer = state.getPlayerByName(playerName);
 		if (optionalOfPlayer.isPresent()) {
@@ -127,10 +124,9 @@ public class Game {
 		} else {
 			state.setMessage("Invalid turn");
 		}
-		return state;
 	}
 
-	public synchronized State check(String playerName) {
+	public synchronized void check(String playerName) {
 		// Only Check and Play can trigger the next players turn
 		state.toggleCurrentTurn();
 		// If its the players move let the bot play
@@ -139,10 +135,9 @@ public class Game {
 			state.toggleCurrentTurn();
 			botAction();
 		}
-		return state;
 	}
 
-	public synchronized State drawCard(String playerName) {
+	public synchronized void drawCard(String playerName) {
 		PlayerInterface player;
 		Optional<PlayerInterface> optionalOfPlayer = state.getPlayerByName(playerName);
 
@@ -165,10 +160,9 @@ public class Game {
 		} else {
 			state.setMessage("Invalid turn");
 		}
-		return state;
 	}
 
-	public void botAction() {
+	private void botAction() {
 		// If hand matches topcard play first match
 		Optional<CardInterface> optionalMatchingCard = randomCardMatchingTopCard("Bot");
 		if (optionalMatchingCard.isPresent()) {
@@ -243,5 +237,10 @@ public class Game {
 						currentPlayer.getName());
 			}
 		}
+	}
+
+	public enum PlayDirection {
+		BOTTOM_UP,
+		TOP_DOWN
 	}
 }

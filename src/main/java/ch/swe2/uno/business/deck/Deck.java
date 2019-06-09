@@ -23,30 +23,20 @@ public class Deck {
 	 * Generate deck of cards based on game rules
 	 */
 	public void create() {
-        /*
-          Iterate through every color
-         */
+		// Iterate through every color
 		for (UnoColor unoColor : UnoColor.values()) {
-            /*
-              For all regular colors
-             */
+			// For all regular colors
 			if (unoColor != UnoColor.BLACK) {
-                /*
-              Create one number card with number: 0
-             */
+				// Create one number card with number: 0
 				drawPile.add(new NumberCard(CardType.NUMBERCARD, unoColor, 0));
 
-            /*
-              Create two number cards with numbers: 1-9
-             */
+				// Create two number cards with numbers: 1-9
 				for (int i = 1; i <= 9; i++) {
 					drawPile.add(new NumberCard(CardType.NUMBERCARD, unoColor, i));
 					drawPile.add(new NumberCard(CardType.NUMBERCARD, unoColor, i));
 				}
 			} else {
-                /*
-                  Create four wild draw cards
-                 */
+				// Create four wild draw cards
 				for (int i = 1; i <= 4; i++) {
 					drawPile.add(new ActionCard(CardType.WILD, UnoColor.BLACK, 88));
 				}
@@ -66,13 +56,9 @@ public class Deck {
 	 * @param players ArrayList<IPlayer>
 	 */
 	public void distribute(List<PlayerInterface> players) {
-        /*
-          Iterate through every player
-         */
+		// Iterate through every player
 		for (PlayerInterface player : players) {
-            /*
-              Move 7 cards to hand of player
-             */
+			// Move 7 cards to hand of player
 			drawPile.subList(0, 7).forEach(player::addCard);
 			drawPile.subList(0, 7).clear();
 			logger.info("Distributed {} cards to {}", player.getHand().size(), player.getName());
@@ -102,11 +88,11 @@ public class Deck {
 		topCard = card;
 	}
 
-	public int getDrawPileSize() {
+	int getDrawPileSize() {
 		return drawPile.size();
 	}
 
-	public int getDiscardPileSize() {
+	int getDiscardPileSize() {
 		return discardPile.size();
 	}
 }

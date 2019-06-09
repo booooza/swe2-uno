@@ -1,6 +1,7 @@
 package ch.swe2.uno.business.state;
 
 import ch.swe2.uno.business.card.CardInterface;
+import ch.swe2.uno.business.game.Game;
 import ch.swe2.uno.business.player.Player;
 import ch.swe2.uno.business.player.PlayerInterface;
 
@@ -12,15 +13,18 @@ import java.util.Optional;
 public class State implements Serializable {
 	private List<PlayerInterface> players;
 	private CardInterface topDiscardPileCard;
+	private Game.PlayDirection playDirection;
 	private String winner;
 	private String message;
 
 	public State() {
+		this.playDirection = Game.PlayDirection.TOP_DOWN;
 	}
 
 	public State(List<PlayerInterface> players, String message) {
 		this.players = players;
 		this.message = message;
+		this.playDirection = Game.PlayDirection.TOP_DOWN;
 	}
 
 	public synchronized Optional<PlayerInterface> getPlayerByName(String name) {
@@ -31,10 +35,48 @@ public class State implements Serializable {
 		return players.stream().filter(PlayerInterface::isCurrentTurn).findFirst();
 	}
 
+	private synchronized Optional<PlayerInterface> getNextPlayer() {
+		if (this.playDirection == Game.PlayDirection.TOP_DOWN) {
+			return getNextPlayer(getCurrentPlayer().get());
+		} else if (this.playDirection == Game.PlayDirection.BOTTOM_UP) {
+			return getPreviousPlayer(getCurrentPlayer().get());
+		}
+		return Optional.empty();
+	}
+
+	private Optional<PlayerInterface> getNextPlayer(PlayerInterface currentPlayer) {
+		int idx = players.indexOf(currentPlayer);
+		if (idx < 0) {
+			return Optional.empty();
+		}
+		if (idx + 1 == players.size()) {
+			return Optional.of(players.get(0));
+		}
+		return Optional.of(players.get(idx + 1));
+	}
+
+	private Optional<PlayerInterface> getPreviousPlayer(PlayerInterface currentPlayer) {
+		int idx = players.indexOf(currentPlayer);
+		if (idx <= 0) {
+			return Optional.empty();
+		}
+		if (idx == 0) {
+			return Optional.of(players.get(players.size() - 1));
+		}
+		return Optional.of(players.get(idx - 1));
+	}
+
 	public synchronized void toggleCurrentTurn() {
-		// TODO @Luca implement rotation logic
-		players.forEach(p -> p.setCanDraw(true));
-		players.forEach(PlayerInterface::toggleCurrentTurn);
+		if (players.size() == 2) {
+			players.forEach(p -> p.setCanDraw(true));
+			players.forEach(PlayerInterface::toggleCurrentTurn);
+		} else {
+			Optional<PlayerInterface> nextPlayer = getNextPlayer();
+			if (nextPlayer.isPresent()) {
+				getCurrentPlayer().get().toggleCurrentTurn();
+				nextPlayer.get().toggleCurrentTurn();
+			}
+		}
 	}
 
 	public synchronized void addPlayer(String playerName) {

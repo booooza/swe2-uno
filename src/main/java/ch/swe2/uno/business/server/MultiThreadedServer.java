@@ -25,8 +25,8 @@ public class MultiThreadedServer implements Runnable {
 	private Thread runningThread;
 	private ExecutorService threadPool =
 			Executors.newFixedThreadPool(10);
-	public MultiThreadedServer(int port, Game game) {
-		this.serverPort = port;
+	public MultiThreadedServer(Game game) {
+		this.serverPort = Server.SERVER_PORT;
 		this.game = game;
 	}
 
@@ -36,7 +36,7 @@ public class MultiThreadedServer implements Runnable {
 
 	public static MultiThreadedServer getInstance() {
 		if (theInstance == null) {
-			theInstance = new MultiThreadedServer(Server.SERVER_PORT, new Game());
+			theInstance = new MultiThreadedServer(new Game());
 		}
 		return theInstance;
 	}
