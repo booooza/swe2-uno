@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import com.jfoenix.controls.JFXButton?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
-<AnchorPane prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: red;" stylesheets="@Styles.css"
-            xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="ch.swe2.uno.presentation.gui.controller.WelcomeScreenController">
+<StackPane fx:id="root" xmlns:fx="http://javafx.com/fxml/1"
+           xmlns="http://javafx.com/javafx/2.2">
     <children>
         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="400.0" prefWidth="600.0">
             <children>
                 <TextField fx:id="playerName" layoutX="14.0" layoutY="176.0" prefHeight="37.0" prefWidth="241.0"
                            text="Player Name"/>
                 <Button fx:id="joinButton" layoutX="14.0" layoutY="244.0" mnemonicParsing="false"
-                        onAction="#handleJoinButtonAction" prefHeight="35.0" prefWidth="115.0" text="Join"/>
+                        prefHeight="35.0" prefWidth="115.0" text="Join"/>
                 <Label layoutX="75.0" layoutY="137.0" text="Enter your name:" textFill="WHITE">
                     <font>
                         <Font name="Helvetica" size="18.0"/>
@@ -22,11 +22,11 @@
                 </Label>
                 <ImageView fitHeight="70.0" fitWidth="97.0" layoutX="14.0" layoutY="14.0">
                     <image>
-                        <Image url="@logo.png"/>
+                        <Image url="@../../images/logo.png"/>
                     </image>
                 </ImageView>
-                <Button fx:id="startButton" layoutX="145.0" layoutY="244.0" mnemonicParsing="false"
-                        onAction="#handleStartButtonAction" prefHeight="35.0" prefWidth="115.0" text="Start"/>
+                <JFXButton fx:id="startButton" layoutX="145.0" layoutY="244.0" mnemonicParsing="false"
+                           styleClass="uno-button" prefHeight="35.0" prefWidth="115.0" text="Start"/>
 
 
                 <Label layoutX="396.0" layoutY="137.0" text="Current Players:" textFill="WHITE">
@@ -45,9 +45,9 @@
                         <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
                     </columnResizePolicy>
                 </TableView>
-                <Button fx:id="serverButton" layoutX="432.0" layoutY="32.0" mnemonicParsing="false"
-                        onAction="#handleServerButtonAction" prefHeight="35.0" prefWidth="133.0" text="Start Server"/>
+                <JFXButton fx:id="serverButton" layoutX="432.0" layoutY="32.0" mnemonicParsing="false"
+                           styleClass="jfx-button" prefHeight="35.0" prefWidth="133.0" text="Start Server"/>
             </children>
         </AnchorPane>
     </children>
-</AnchorPane>
+</StackPane>

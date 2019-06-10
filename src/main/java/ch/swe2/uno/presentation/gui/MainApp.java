@@ -1,160 +1,87 @@
 package ch.swe2.uno.presentation.gui;
 
 import ch.swe2.uno.business.card.UnoColor;
-import ch.swe2.uno.business.state.State;
 import ch.swe2.uno.presentation.gui.controller.ColorDialogController;
 import ch.swe2.uno.presentation.gui.controller.EndScreenController;
 import ch.swe2.uno.presentation.gui.controller.GameOverviewController;
-import ch.swe2.uno.presentation.gui.controller.WelcomeScreenController;
-import ch.swe2.uno.presentation.gui.events.EventListener;
-import ch.swe2.uno.presentation.gui.events.RequestEventHandler;
-import ch.swe2.uno.presentation.gui.events.RequestEventListener;
-import ch.swe2.uno.presentation.network.client.Client;
-import ch.swe2.uno.utils.CustomClassLoader;
+import ch.swe2.uno.presentation.gui.controller.MainController;
+import com.jfoenix.assets.JFoenixResources;
+import com.jfoenix.controls.JFXDecorator;
+import com.jfoenix.svg.SVGGlyph;
+import com.jfoenix.svg.SVGGlyphLoader;
+import io.datafx.controller.flow.Flow;
+import io.datafx.controller.flow.container.DefaultFlowContainer;
+import io.datafx.controller.flow.context.FXMLViewFlowContext;
+import io.datafx.controller.flow.context.ViewFlowContext;
 import javafx.application.Application;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.BorderPane;
 import javafx.stage.Modality;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.lang.reflect.Method;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 public class MainApp extends Application {
-
-
 	private static Logger logger = LoggerFactory.getLogger(MainApp.class);
-	private ExecutorService threadPool =
-			Executors.newFixedThreadPool(10);
-	private EventListener eventListener = new RequestEventListener();
-	private Client client;
-	private Stage primaryStage;
-	private BorderPane rootLayout;
-	private State gameState;
-	private String playerName;
 
-	/**
-	 * Constructor
-	 */
-	public MainApp() {
-	}
+	private Stage primaryStage;
+
+	@FXMLViewFlowContext
+	private ViewFlowContext flowContext;
 
 	public static void main(String[] args) {
-		launch(args);
-	}
-
-	public State getState() {
-		return gameState;
-	}
-
-	public void setState(State state) {
-		this.gameState = state;
-	}
-
-	public String getPlayerName() {
-		return playerName;
-	}
-
-	public void setPlayerName(String playerName) {
-		this.playerName = playerName;
-	}
-
-	public Client getClient() {
-		return this.client;
+		launch(MainApp.class, args);
 	}
 
 	@Override
-	public void start(Stage primaryStage) {
-		this.primaryStage = primaryStage;
-		this.primaryStage.setTitle("UNO Game");
-
-		initRootLayout();
-		showWelcomeScreen();
-	}
-
-	public void initClient() {
-		client = new Client(this.threadPool);
-		client.setEventHandler(this.eventListener);
-	}
-
-	public void addRequestEventListener(RequestEventHandler requestEventHandler) {
-		this.eventListener.addEventHandler(requestEventHandler);
-	}
-
-
-	/**
-	 * Initializes the root layout.
-	 */
-	private void initRootLayout() {
-		try {
-			// Load root layout from fxml file.
-			FXMLLoader loader = new FXMLLoader();
-			loader.setLocation(MainApp.class.getResource("/view/RootLayout.fxml"));
-			rootLayout = loader.load();
-
-			// Show the scene containing the root layout.
-			Scene scene = new Scene(rootLayout);
-			primaryStage.setScene(scene);
-			primaryStage.show();
-		} catch (IOException e) {
-			logger.warn(String.format("Exception: %s", e.getMessage()));
-		}
-	}
-
-	/**
-	 * Start new Server
-	 */
-	public void startServer() {
-		String classToStart = "ch.swe2.uno.business.server.Server";
-		String[] args = new String[]{};
-
-		// start a new thread
-		Thread serverThread = new Thread(() -> {
+	public void start(Stage stage) throws Exception {
+		new Thread(() -> {
 			try {
-				// create the custom class loader
-				//ClassLoader cl = new MainApp.CustomClassLoader();
-				CustomClassLoader cl = new CustomClassLoader(this.getClass().getClassLoader(), c -> System.out.println(c.getName()));
-				// load the class
-				Class<?> clazz = cl.loadClass(classToStart, true);
-
-				// get the main method
-				Method main = clazz.getMethod("main", args.getClass());
-
-				// and invoke it
-				main.invoke(null, (Object) args);
-
-			} catch (Exception e) {
-				e.printStackTrace();
+				SVGGlyphLoader.loadGlyphsFont(MainApp.class.getResourceAsStream("/fonts/icomoon.svg"),
+						"icomoon.svg");
+			} catch (IOException ioExc) {
+				ioExc.printStackTrace();
 			}
-		});
-		threadPool.execute(serverThread);
-	}
+		}).start();
 
-	/**
-	 * Shows the welcome screen inside the root layout.
-	 */
-	private void showWelcomeScreen() {
+		Flow flow = new Flow(MainController.class);
+		DefaultFlowContainer container = new DefaultFlowContainer();
+		flowContext = new ViewFlowContext();
+		flowContext.register("Stage", stage);
+		flow.createHandler(flowContext).start(container);
+
+		JFXDecorator decorator = new JFXDecorator(stage, container.getView());
+		decorator.setCustomMaximize(true);
+		decorator.setGraphic(new SVGGlyph(""));
+
+		double width = 800;
+		double height = 600;
 		try {
-			// Load welcome screen.
-			FXMLLoader loader = new FXMLLoader();
-			loader.setLocation(MainApp.class.getResource("/view/WelcomeScreen.fxml"));
-			AnchorPane welcomeScreen = loader.load();
-
-			// Set welcome screen into the center of root layout.
-			rootLayout.setCenter(welcomeScreen);
-
-			// Give the controller access to the main app.
-			WelcomeScreenController controller = loader.getController();
-			controller.setMainApp(this);
-		} catch (IOException e) {
-			logger.warn(String.format("Exception: %s", e.getMessage()));
+			Rectangle2D bounds = Screen.getScreens().get(0).getBounds();
+			width = bounds.getWidth() / 2.5;
+			height = bounds.getHeight() / 1.35;
+		} catch (Exception e) {
 		}
+
+		Scene scene = new Scene(decorator, width, height);
+		final ObservableList<String> stylesheets = scene.getStylesheets();
+		stylesheets.addAll(JFoenixResources.load("css/jfoenix-fonts.css").toExternalForm(),
+				JFoenixResources.load("css/jfoenix-design.css").toExternalForm(),
+				MainApp.class.getResource("/css/uno-main.css").toExternalForm());
+
+		this.primaryStage = stage;
+
+		stage.setTitle("UNO Game");
+		stage.getIcons().add(new Image(MainApp.class.getResourceAsStream("/images/logo.png")));
+		stage.setScene(scene);
+		stage.show();
 	}
 
 	/**
@@ -164,11 +91,11 @@ public class MainApp extends Application {
 		try {
 			// Load game overview.
 			FXMLLoader loader = new FXMLLoader();
-			loader.setLocation(MainApp.class.getResource("/view/GameOverview.fxml"));
+			loader.setLocation(MainApp.class.getResource("/fxml/views/GameOverview.fxml"));
 			AnchorPane gameOverview = loader.load();
 
 			// Set game overview into the center of root layout.
-			rootLayout.setCenter(gameOverview);
+			//rootLayout.setCenter(gameOverview);
 
 			// Give the controller access to the main app.
 			GameOverviewController controller = loader.getController();
@@ -184,9 +111,9 @@ public class MainApp extends Application {
 	 */
 	public UnoColor showColorDialog() {
 		try {
-			// Load the fxml file and create a new stage for the popup dialog.
+			// Load the ch.swe2.uno.presentation.fxml file and create a new stage for the popup dialog.
 			FXMLLoader loader = new FXMLLoader();
-			loader.setLocation(MainApp.class.getResource("/view/ColorDialog.fxml"));
+			loader.setLocation(MainApp.class.getResource("/fxml/views/ColorDialog.fxml"));
 			AnchorPane page = loader.load();
 
 			// Create the dialog Stage.
@@ -213,15 +140,11 @@ public class MainApp extends Application {
 		try {
 			// Load end screen.
 			FXMLLoader loader = new FXMLLoader();
-			if (gameState.getWinner().equals(getPlayerName())) {
-				loader.setLocation(MainApp.class.getResource("/view/SuccessScreen.fxml"));
-			} else {
-				loader.setLocation(MainApp.class.getResource("/view/FailScreen.fxml"));
-			}
+
 			AnchorPane endScreen = loader.load();
 
 			// Set welcome screen into the center of root layout.
-			rootLayout.setCenter(endScreen);
+			//rootLayout.setCenter(endScreen);
 
 			// Give the controller access to the main app.
 			EndScreenController controller = loader.getController();

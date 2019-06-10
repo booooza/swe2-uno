@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: red;" stylesheets="@Styles.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ch.swe2.uno.presentation.gui.controller.EndScreenController">
+<AnchorPane prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: red;" stylesheets="@../../css/uno-main.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ch.swe2.uno.presentation.gui.controller.EndScreenController">
    <children>
       <Button layoutX="248.0" layoutY="330.0" mnemonicParsing="false" onAction="#handleExitButtonAction" prefHeight="35.0" prefWidth="110.0" text="Exit" />
       <Label fx:id="message" layoutX="211.0" layoutY="54.0" text="Congrats, you have won the game!" textFill="WHITE">
@@ -17,7 +17,7 @@
       </Label>
       <ImageView fx:id="endScreenImage" layoutX="223.0" layoutY="120.0">
          <image>
-            <Image url="@success.png"></Image>
+            <Image url="@../../images/success.png"></Image>
          </image>
       </ImageView>
    </children>

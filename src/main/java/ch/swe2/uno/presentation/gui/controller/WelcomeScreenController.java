@@ -6,6 +6,8 @@ import ch.swe2.uno.business.state.State;
 import ch.swe2.uno.presentation.gui.MainApp;
 import ch.swe2.uno.presentation.gui.events.RequestEventHandler;
 import ch.swe2.uno.presentation.network.client.Client;
+import ch.swe2.uno.presentation.services.UnoService;
+import io.datafx.controller.ViewController;
 import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.ReadOnlyStringWrapper;
@@ -19,7 +21,11 @@ import javafx.scene.control.TextField;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class WelcomeScreenController implements RequestEventHandler {
+import javax.annotation.PostConstruct;
+import javax.inject.Inject;
+
+@ViewController(value = "/fxml/views/WelcomeScreen.fxml", title = "Welcome Screen")
+public final class WelcomeScreenController implements RequestEventHandler {
 	private static Logger logger = LoggerFactory.getLogger(WelcomeScreenController.class);
 
 	@FXML
@@ -37,25 +43,17 @@ public class WelcomeScreenController implements RequestEventHandler {
 	@FXML
 	private Button startButton;
 
+	@Inject
+	private UnoService unoService;
+
 	private MainApp mainApp; // Reference to the main application.
 
 	private ObservableList<PlayerInterface> observablePlayers = FXCollections.observableArrayList();
 
 	private Boolean joined = false;
 
-	/**
-	 * The constructor.
-	 * The constructor is called before the initialize() method.
-	 */
-	public WelcomeScreenController() {
-	}
-
-	/**
-	 * Initializes the controller class. This method is automatically called
-	 * after the fxml file has been loaded.
-	 */
-	@FXML
-	private void initialize() {
+	@PostConstruct
+	public void init() {
 		// Initialize controls
 		playerNameColumn.setCellValueFactory(cellData ->
 				new ReadOnlyStringWrapper(
@@ -71,41 +69,34 @@ public class WelcomeScreenController implements RequestEventHandler {
 				playerName.selectAll();
 			}
 		}));
+
+		startButton.setOnAction(action -> handleStartButtonAction());
+		joinButton.setOnAction(action -> handleJoinButtonAction());
+		serverButton.setOnAction(action -> handleServerButtonAction());
+
 		startButton.setDisable(true);
 		joinButton.setDisable(false);
-
 	}
 
 
 	private void initAfterMainApp() {
 		// If Server is running --> initClient
-		mainApp.addRequestEventListener(this);
+		unoService.addRequestEventListener(this);
 
 		if (Client.hostAvailabilityCheck()) {
-			mainApp.initClient();
+			unoService.initClient();
 
 			serverButton.setDisable(true);
 			serverButton.setText("Server Started...");
 		}
 	}
 
-	/**
-	 * Is called by the main application to give a reference back to itself.
-	 *
-	 * @param mainApp MainApp
-	 */
-	public void setMainApp(MainApp mainApp) {
-		this.mainApp = mainApp;
-		initAfterMainApp();
-	}
-
-
-	public void handleServerButtonAction() {
+	private void handleServerButtonAction() {
 		try {
-			mainApp.startServer();
+			unoService.startServer();
 			// TODO @Luca this needs to be a callback, server runs on new thread!
-			if (mainApp.getClient() == null) {
-				mainApp.initClient();
+			if (unoService.getClient() == null) {
+				unoService.initClient();
 			}
 			serverButton.setDisable(true);
 			serverButton.setText("Server Started...");
@@ -114,23 +105,23 @@ public class WelcomeScreenController implements RequestEventHandler {
 		}
 	}
 
-	public void handleJoinButtonAction() {
+	private void handleJoinButtonAction() {
 		logger.info("Player Joined: " + playerName.getText());
 		joined = true;
 		try {
-			mainApp.setState(mainApp.getClient().sendRequest(Request.Command.JOIN, playerName.getText()));
-			mainApp.setPlayerName(playerName.getText());
+			unoService.setState(unoService.getClient().sendRequest(Request.Command.JOIN, playerName.getText()));
+			unoService.setPlayerName(playerName.getText());
 		} catch (Exception e) {
 			logger.warn("Error while joining", e);
 			throw new IllegalArgumentException();
 		}
 	}
 
-	public void handleStartButtonAction() {
+	private void handleStartButtonAction() {
 		logger.info("Player who started game: " + playerName.getText());
 		try {
-			mainApp.setPlayerName(playerName.getText());
-			mainApp.getClient().sendRequest(Request.Command.START, playerName.getText());
+			unoService.setPlayerName(playerName.getText());
+			unoService.getClient().sendRequest(Request.Command.START, playerName.getText());
 		} catch (Exception e) {
 			logger.warn("Error while starting", e);
 			throw new IllegalArgumentException();
@@ -148,18 +139,18 @@ public class WelcomeScreenController implements RequestEventHandler {
 
 	private void updatePlayersTable() {
 		observablePlayers.clear();
-		observablePlayers.addAll(mainApp.getState().getPlayers());
+		observablePlayers.addAll(unoService.getState().getPlayers());
 		playersTable.setItems(observablePlayers);
 	}
 
 	public synchronized void playerJoined(State state) {
-		mainApp.setState(state);
+		unoService.setState(state);
 		updateViewAfterJoin();
 		updatePlayersTable();
 	}
 
 	public synchronized void gameStarted(State state) {
-		mainApp.setState(state);
+		unoService.setState(state);
 		mainApp.showGameOverview();
 	}
 

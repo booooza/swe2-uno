@@ -8,6 +8,8 @@ import ch.swe2.uno.business.server.Request;
 import ch.swe2.uno.business.state.State;
 import ch.swe2.uno.presentation.gui.MainApp;
 import ch.swe2.uno.presentation.gui.events.RequestEventHandler;
+import ch.swe2.uno.presentation.services.UnoService;
+import io.datafx.controller.ViewController;
 import javafx.beans.property.ReadOnlyIntegerWrapper;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.collections.FXCollections;
@@ -17,6 +19,10 @@ import javafx.scene.control.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.inject.Inject;
+import java.util.function.Function;
+
+@ViewController(value = "/fxml/views/GameOverview.fxml", title = "Game Overview")
 public class GameOverviewController implements RequestEventHandler {
 	private static Logger logger = LoggerFactory.getLogger(WelcomeScreenController.class);
 	@FXML
@@ -43,18 +49,15 @@ public class GameOverviewController implements RequestEventHandler {
 	private Button playButton;
 
 	private ObservableList<CardInterface> observablePlayerData = FXCollections.observableArrayList();
+
+	@Inject
+	private UnoService unoService;
+
 	private MainApp mainApp; // Reference to the main application.
 
 	/**
-	 * The constructor.
-	 * The constructor is called before the initialize() method.
-	 */
-	public GameOverviewController() {
-	}
-
-	/**
 	 * Initializes the controller class. This method is automatically called
-	 * after the fxml file has been loaded.
+	 * after the ch.swe2.uno.presentation.fxml file has been loaded.
 	 */
 	@FXML
 	private void initialize() {
@@ -120,8 +123,8 @@ public class GameOverviewController implements RequestEventHandler {
 	}
 
 	private void initAfterMainApp() {
-		if (mainApp.getClient() != null) {
-			mainApp.addRequestEventListener(this);
+		if (unoService.getClient() != null) {
+			unoService.addRequestEventListener(this);
 		}
 	}
 
@@ -133,12 +136,12 @@ public class GameOverviewController implements RequestEventHandler {
 			try {
 				if (selectedCard.getType() == CardType.WILD) {
 					UnoColor chosenColor = mainApp.showColorDialog();
-					mainApp.setState(
-							mainApp.getClient().sendRequest(Request.Command.PLAY, mainApp.getPlayerName(), selectedCard, unoButton.isSelected(), chosenColor)
+					unoService.setState(
+							unoService.getClient().sendRequest(Request.Command.PLAY, unoService.getPlayerName(), selectedCard, unoButton.isSelected(), chosenColor)
 					);
 				} else {
-					mainApp.setState(
-							mainApp.getClient().sendRequest(Request.Command.PLAY, mainApp.getPlayerName(), selectedCard, unoButton.isSelected())
+					unoService.setState(
+							unoService.getClient().sendRequest(Request.Command.PLAY, unoService.getPlayerName(), selectedCard, unoButton.isSelected())
 					);
 				}
 			} catch (Exception e) {
@@ -151,7 +154,7 @@ public class GameOverviewController implements RequestEventHandler {
 	public void handleDrawButtonAction() {
 		logger.info("Draw button pressed");
 		try {
-			mainApp.setState(mainApp.getClient().sendRequest(Request.Command.DRAW, mainApp.getPlayerName()));
+			unoService.setState(unoService.getClient().sendRequest(Request.Command.DRAW, unoService.getPlayerName()));
 		} catch (Exception e) {
 			logger.warn("Exception occurred while pressing play button", e);
 			throw new IllegalArgumentException();
@@ -164,7 +167,7 @@ public class GameOverviewController implements RequestEventHandler {
 		// TODO Should only be called if player.canDraw() returns false!
 		logger.info("Check button pressed");
 		try {
-			mainApp.setState(mainApp.getClient().sendRequest(Request.Command.CHECK, mainApp.getPlayerName()));
+			unoService.setState(unoService.getClient().sendRequest(Request.Command.CHECK, unoService.getPlayerName()));
 		} catch (Exception e) {
 			logger.warn("Exception occurred while pressing play button", e);
 			throw new IllegalArgumentException();
@@ -174,13 +177,13 @@ public class GameOverviewController implements RequestEventHandler {
 	}
 
 	private void updateViewFromState() {
-		mainApp.getState().getPlayerByName(mainApp.getPlayerName()).ifPresent(p -> {
+		unoService.getState().getPlayerByName(unoService.getPlayerName()).ifPresent(p -> {
 			observablePlayerData.clear();
 			observablePlayerData.addAll(p.getHand());
 			playerTable.setItems(observablePlayerData);
 		});
 
-		mainApp.getState().getCurrentPlayer().ifPresent(p -> {
+		unoService.getState().getCurrentPlayer().ifPresent(p -> {
 			currentTurn.setText(p.getName());
 			if (p.getHand().size() > 1) {
 				unoButton.setSelected(false);
@@ -190,14 +193,14 @@ public class GameOverviewController implements RequestEventHandler {
 		});
 
 		topCard.setText(
-				mainApp.getState().getTopDiscardPileCard().getColor().toString() + " " +
-						mainApp.getState().getTopDiscardPileCard().getNumber());
+				unoService.getState().getTopDiscardPileCard().getColor().toString() + " " +
+						unoService.getState().getTopDiscardPileCard().getNumber());
 
-		message.setText(mainApp.getState().getMessage());
+		message.setText(unoService.getState().getMessage());
 
-		if (mainApp.getState().getCurrentPlayer().isPresent()) {
-			PlayerInterface currentPlayer = mainApp.getState().getCurrentPlayer().get();
-			if (currentPlayer.getName().equals(mainApp.getPlayerName())) {
+		if (unoService.getState().getCurrentPlayer().isPresent()) {
+			PlayerInterface currentPlayer = unoService.getState().getCurrentPlayer().get();
+			if (currentPlayer.getName().equals(unoService.getPlayerName())) {
 				// It my turn
 				this.playButton.setDisable(false);
 			} else {
@@ -217,9 +220,9 @@ public class GameOverviewController implements RequestEventHandler {
 	}
 
 	public synchronized void played(State state) {
-		mainApp.setState(state);
+		unoService.setState(state);
 		// If someone has won
-		if (mainApp.getState().getWinner() != null) {
+		if (unoService.getState().getWinner() != null) {
 			mainApp.showEndScreen();
 		}
 

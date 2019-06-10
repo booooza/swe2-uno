@@ -24,7 +24,7 @@ public class ColorDialogController {
 
 	/**
 	 * Initializes the controller class. This method is automatically called
-	 * after the fxml file has been loaded.
+	 * after the ch.swe2.uno.presentation.fxml file has been loaded.
 	 */
 	@FXML
 	private void initialize() {
