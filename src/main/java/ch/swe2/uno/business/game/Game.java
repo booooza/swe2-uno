@@ -132,7 +132,6 @@ public class Game {
 		// If its the players move let the bot play
 		if (state.containsPlayer("Bot") && !playerName.equals("Bot")) {
 			checkUno();
-			state.toggleCurrentTurn();
 			botAction();
 		}
 	}
