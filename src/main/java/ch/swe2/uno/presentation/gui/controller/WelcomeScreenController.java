@@ -5,6 +5,7 @@ import ch.swe2.uno.business.server.Request;
 import ch.swe2.uno.business.state.State;
 import ch.swe2.uno.presentation.gui.events.RequestEventHandler;
 import ch.swe2.uno.presentation.network.client.Client;
+import ch.swe2.uno.presentation.services.BaseService;
 import ch.swe2.uno.presentation.services.NavigationService;
 import ch.swe2.uno.presentation.services.UnoService;
 import io.datafx.controller.ViewController;
@@ -44,10 +45,7 @@ public final class WelcomeScreenController implements RequestEventHandler {
 	private Button startButton;
 
 	@Inject
-	private UnoService unoService;
-
-	@Inject
-	private NavigationService navigationService;
+	private BaseService baseService;
 
 	private ObservableList<PlayerInterface> observablePlayers = FXCollections.observableArrayList();
 
@@ -72,15 +70,15 @@ public final class WelcomeScreenController implements RequestEventHandler {
 		startButton.setDisable(true);
 		joinButton.setDisable(false);
 
-		if (unoService != null) {
-			unoService.addRequestEventListener(this);
+		if (baseService.getUnoService() != null) {
+			baseService.getUnoService().addRequestEventListener(this);
 		}
 		checkIfServerIsAvailable();
 	}
 
 	private void checkIfServerIsAvailable() {
 		if (Client.hostAvailabilityCheck()) {
-			unoService.initClient();
+			baseService.getUnoService().initClient();
 			serverButton.setDisable(true);
 			serverButton.setText("Server Started...");
 		}
@@ -88,9 +86,9 @@ public final class WelcomeScreenController implements RequestEventHandler {
 
 	private void startServer() {
 		if (Client.hostAvailabilityCheck() == false) {
-			unoService.startServer();
+			baseService.getUnoService().startServer();
 			Platform.runLater(() -> {
-				unoService.initClient();
+				baseService.getUnoService().initClient();
 				serverButton.setDisable(true);
 				serverButton.setText("Server Started...");
 			});
@@ -109,8 +107,8 @@ public final class WelcomeScreenController implements RequestEventHandler {
 		logger.info("Player Joined: " + playerName.getText());
 		joined = true;
 		try {
-			unoService.setState(unoService.getClient().sendRequest(Request.Command.JOIN, playerName.getText()));
-			unoService.setPlayerName(playerName.getText());
+			baseService.getUnoService().setState(baseService.getUnoService().getClient().sendRequest(Request.Command.JOIN, playerName.getText()));
+			baseService.getUnoService().setPlayerName(playerName.getText());
 		} catch (Exception e) {
 			logger.warn("Error while joining", e);
 			throw new IllegalArgumentException();
@@ -120,8 +118,8 @@ public final class WelcomeScreenController implements RequestEventHandler {
 	private void handleStartButtonAction() {
 		logger.info("Player who started game: " + playerName.getText());
 		try {
-			unoService.setPlayerName(playerName.getText());
-			unoService.getClient().sendRequest(Request.Command.START, playerName.getText());
+			baseService.getUnoService().setPlayerName(playerName.getText());
+			baseService.getUnoService().getClient().sendRequest(Request.Command.START, playerName.getText());
 		} catch (Exception e) {
 			logger.warn("Error while starting", e);
 			throw new IllegalArgumentException();
@@ -139,20 +137,20 @@ public final class WelcomeScreenController implements RequestEventHandler {
 
 	private void updatePlayersTable() {
 		observablePlayers.clear();
-		observablePlayers.addAll(unoService.getState().getPlayers());
+		observablePlayers.addAll(baseService.getUnoService().getState().getPlayers());
 		playersTable.setItems(observablePlayers);
 	}
 
 	public synchronized void playerJoined(State state) {
-		unoService.setState(state);
+		baseService.getUnoService().setState(state);
 		updateViewAfterJoin();
 		updatePlayersTable();
 	}
 
 	public synchronized void gameStarted(State state) {
 		Platform.runLater(() -> {
-			unoService.setState(state);
-			navigationService.handleNavigation("GameOverview");
+			baseService.getUnoService().setState(state);
+			baseService.getNavigationService().handleNavigation("GameOverview");
 		});
 	}
 

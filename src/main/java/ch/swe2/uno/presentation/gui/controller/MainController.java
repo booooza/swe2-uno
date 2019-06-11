@@ -1,6 +1,7 @@
 package ch.swe2.uno.presentation.gui.controller;
 
 import ch.swe2.uno.presentation.gui.datafx.ExtendedAnimatedFlowContainer;
+import ch.swe2.uno.presentation.services.BaseService;
 import ch.swe2.uno.presentation.services.NavigationService;
 import io.datafx.controller.ViewController;
 import io.datafx.controller.flow.Flow;
@@ -28,6 +29,12 @@ public final class MainController {
 	@FXMLViewFlowContext
 	private ViewFlowContext context;
 
+	private static ViewFlowContext staContext;
+
+	public static ViewFlowContext getMainControllerViewFlowContext() {
+		return staContext;
+	}
+
 	@FXML
 	private StackPane root;
 
@@ -35,17 +42,16 @@ public final class MainController {
 	private FlowActionHandler actionHandler;
 
 	@Inject
-	private NavigationService navigationService;
+	private BaseService baseService;
 
 	@PostConstruct
 	public void init() {
 		context = new ViewFlowContext();
-		Flow innerFlow = new Flow(MainController.class);
+		Flow innerFlow = new Flow(WelcomeScreenController.class);
 		final FlowHandler flowHandler = innerFlow.createHandler(context);
 		context.register("ContentFlowHandler", flowHandler);
 		context.register("ContentFlow", innerFlow);
-
-		navigationService.initNavigationService(context);
+		MainController.staContext = context;
 		try {
 			final Duration containerAnimationDuration = Duration.millis(320);
 			root.getChildren()
@@ -54,6 +60,6 @@ public final class MainController {
 		} catch (FlowException flowEx) {
 			logger.error(String.format("Exception: %s", flowEx.getMessage()), flowEx);
 		}
-		navigationService.handleNavigation("WelcomeScreen");
+		baseService.initNavigationService();
 	}
 }

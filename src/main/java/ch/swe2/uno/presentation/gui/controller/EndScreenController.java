@@ -1,6 +1,7 @@
 package ch.swe2.uno.presentation.gui.controller;
 
 import ch.swe2.uno.presentation.gui.MainApp;
+import ch.swe2.uno.presentation.services.BaseService;
 import ch.swe2.uno.presentation.services.UnoService;
 import io.datafx.controller.ViewController;
 import javafx.fxml.FXML;
@@ -16,11 +17,11 @@ public class EndScreenController {
 	private MainApp mainApp; // Reference to the main application.
 
 	@Inject
-	private UnoService unoService;
+	private BaseService baseService;
 
 	/**
-	 * Initializes the controller class. This method is automatically called
-	 * after the ch.swe2.uno.presentation.fxml file has been loaded.
+	 * Initializes the controller class. This method is automatically called after
+	 * the ch.swe2.uno.presentation.fxml file has been loaded.
 	 */
 	@FXML
 	private void initialize() {
@@ -31,10 +32,10 @@ public class EndScreenController {
 	public void init() {
 		// Show Image a or image B
 
-		if (unoService.getState().getWinner().equals(unoService.getPlayerName())) {
-			//loader.setLocation(MainApp.class.getResource("/fxml/views/SuccessScreen.fxml"));
+		if (baseService.getUnoService().getState().getWinner().equals(baseService.getUnoService().getPlayerName())) {
+			// loader.setLocation(MainApp.class.getResource("/fxml/views/SuccessScreen.fxml"));
 		} else {
-			//loader.setLocation(MainApp.class.getResource("/fxml/views/FailScreen.fxml"));
+			// loader.setLocation(MainApp.class.getResource("/fxml/views/FailScreen.fxml"));
 		}
 	}
 

@@ -1,16 +1,10 @@
 package ch.swe2.uno.presentation.gui;
 
-import ch.swe2.uno.business.card.UnoColor;
-import ch.swe2.uno.presentation.gui.controller.ColorDialogController;
-import ch.swe2.uno.presentation.gui.controller.EndScreenController;
-import ch.swe2.uno.presentation.gui.controller.GameOverviewController;
 import ch.swe2.uno.presentation.gui.controller.MainController;
-import ch.swe2.uno.presentation.services.NavigationService;
 
 import com.jfoenix.assets.JFoenixResources;
 import com.jfoenix.controls.JFXDecorator;
 import com.jfoenix.svg.SVGGlyph;
-import com.jfoenix.svg.SVGGlyphLoader;
 import io.datafx.controller.flow.Flow;
 import io.datafx.controller.flow.container.DefaultFlowContainer;
 import io.datafx.controller.flow.context.FXMLViewFlowContext;
@@ -41,14 +35,13 @@ public class MainApp extends Application {
 
 	@Override
 	public void start(Stage stage) throws Exception {
-		//Flow flow = new Flow(MainController.class);
+		Flow flow = new Flow(MainController.class);
 		DefaultFlowContainer container = new DefaultFlowContainer();
-		//flowContext = new ViewFlowContext();
-		//flowContext.register("Stage", stage);
-		//flow.createHandler(flowContext).start(container);
+		flowContext = new ViewFlowContext();
+		flowContext.register("Stage", stage);
+		flow.createHandler(flowContext).start(container);
 
 		JFXDecorator decorator = new JFXDecorator(stage, container.getView());
-		// decorator.setCustomMaximize(false);
 		decorator.setGraphic(new SVGGlyph(""));
 
 		double width = 800;
@@ -72,7 +65,6 @@ public class MainApp extends Application {
 		stage.getIcons().add(new Image(MainApp.class.getResourceAsStream("/images/logo.png")));
 		stage.setScene(scene);
 		stage.show();
-
 	}
 
 	public static Stage getPrimaryStage() {

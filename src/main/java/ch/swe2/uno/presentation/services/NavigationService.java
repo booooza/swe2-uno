@@ -10,6 +10,7 @@ import ch.swe2.uno.presentation.gui.MainApp;
 import ch.swe2.uno.presentation.gui.controller.ColorDialogController;
 import ch.swe2.uno.presentation.gui.controller.EndScreenController;
 import ch.swe2.uno.presentation.gui.controller.GameOverviewController;
+import ch.swe2.uno.presentation.gui.controller.MainController;
 import ch.swe2.uno.presentation.gui.controller.WelcomeScreenController;
 import io.datafx.controller.flow.Flow;
 import io.datafx.controller.flow.FlowException;
@@ -24,30 +25,41 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-@ApplicationScoped
 public class NavigationService {
     private static Logger logger = LoggerFactory.getLogger(NavigationService.class);
 
-    @FXMLViewFlowContext
-    private ViewFlowContext context;
+    private static NavigationService theInstance;
+
+    public static NavigationService getInstance() {
+        if (theInstance == null) {
+            theInstance = new NavigationService();
+        }
+        return theInstance;
+    }
 
     public NavigationService() {
         logger.info("Navigation Service constructed");
     }
 
-    public void initNavigationService(ViewFlowContext context) {
-        FlowHandler flowHandler = (FlowHandler) context.getRegisteredObject("ContentFlowHandler");
-        Flow contentFlow = (Flow) context.getRegisteredObject("ContentFlow");
+    public void initNavigationService() {
+        logger.info(String.format("initNavigationService {}", MainController.getMainControllerViewFlowContext()));
+
+        FlowHandler flowHandler = (FlowHandler) MainController.getMainControllerViewFlowContext()
+                .getRegisteredObject("ContentFlowHandler");
+        Flow contentFlow = (Flow) MainController.getMainControllerViewFlowContext().getRegisteredObject("ContentFlow");
         this.bindNodeToController("WelcomeScreen", WelcomeScreenController.class, contentFlow, flowHandler);
         this.bindNodeToController("GameOverview", GameOverviewController.class, contentFlow, flowHandler);
         this.bindNodeToController("EndScreen", EndScreenController.class, contentFlow, flowHandler);
+
+        logger.info(String.format("Nodes bound {}", MainController.getMainControllerViewFlowContext()));
     }
 
     public void handleNavigation(String navTarget) {
         try {
             logger.info(String.format("Navigation Service handleNavigation to %s", navTarget));
-            if (context != null) {
-                FlowHandler flowHandler = (FlowHandler) context.getRegisteredObject("ContentFlowHandler");
+            if (MainController.getMainControllerViewFlowContext() != null) {
+                FlowHandler flowHandler = (FlowHandler) MainController.getMainControllerViewFlowContext()
+                        .getRegisteredObject("ContentFlowHandler");
                 flowHandler.handle(navTarget);
             } else {
                 logger.info(

@@ -7,6 +7,7 @@ import ch.swe2.uno.business.player.PlayerInterface;
 import ch.swe2.uno.business.server.Request;
 import ch.swe2.uno.business.state.State;
 import ch.swe2.uno.presentation.gui.events.RequestEventHandler;
+import ch.swe2.uno.presentation.services.BaseService;
 import ch.swe2.uno.presentation.services.NavigationService;
 import ch.swe2.uno.presentation.services.UnoService;
 import io.datafx.controller.ViewController;
@@ -52,10 +53,7 @@ public final class GameOverviewController implements RequestEventHandler {
 	private ObservableList<CardInterface> observablePlayerData = FXCollections.observableArrayList();
 
 	@Inject
-	private UnoService unoService;
-
-	@Inject
-	private NavigationService navigationService;
+	private BaseService baseService;
 
 	/**
 	 * Initializes the controller class. This method is automatically called after
@@ -108,8 +106,8 @@ public final class GameOverviewController implements RequestEventHandler {
 		});
 		logger.info("in init before unoservice");
 
-		if (unoService != null) {
-			unoService.addRequestEventListener(this);
+		if (baseService.getUnoService() != null) {
+			baseService.getUnoService().addRequestEventListener(this);
 			updateViewFromState();
 		}
 		logger.info("in init after unoservice");
@@ -122,12 +120,15 @@ public final class GameOverviewController implements RequestEventHandler {
 			logger.info("Selected card {} {}", selectedCard.getColor(), selectedCard.getNumber());
 			try {
 				if (selectedCard.getType() == CardType.WILD) {
-					UnoColor chosenColor = navigationService.showColorDialog();
-					unoService.setState(unoService.getClient().sendRequest(Request.Command.PLAY,
-							unoService.getPlayerName(), selectedCard, unoButton.isSelected(), chosenColor));
+					UnoColor chosenColor = baseService.getNavigationService().showColorDialog();
+					baseService.getUnoService()
+							.setState(baseService.getUnoService().getClient().sendRequest(Request.Command.PLAY,
+									baseService.getUnoService().getPlayerName(), selectedCard, unoButton.isSelected(),
+									chosenColor));
 				} else {
-					unoService.setState(unoService.getClient().sendRequest(Request.Command.PLAY,
-							unoService.getPlayerName(), selectedCard, unoButton.isSelected()));
+					baseService.getUnoService()
+							.setState(baseService.getUnoService().getClient().sendRequest(Request.Command.PLAY,
+									baseService.getUnoService().getPlayerName(), selectedCard, unoButton.isSelected()));
 				}
 			} catch (Exception e) {
 				logger.warn("Exception occurred while pressing play button", e);
@@ -139,7 +140,8 @@ public final class GameOverviewController implements RequestEventHandler {
 	public void handleDrawButtonAction() {
 		logger.info("Draw button pressed");
 		try {
-			unoService.setState(unoService.getClient().sendRequest(Request.Command.DRAW, unoService.getPlayerName()));
+			baseService.getUnoService().setState(baseService.getUnoService().getClient()
+					.sendRequest(Request.Command.DRAW, baseService.getUnoService().getPlayerName()));
 		} catch (Exception e) {
 			logger.warn("Exception occurred while pressing play button", e);
 			throw new IllegalArgumentException();
@@ -152,7 +154,8 @@ public final class GameOverviewController implements RequestEventHandler {
 		// TODO Should only be called if player.canDraw() returns false!
 		logger.info("Check button pressed");
 		try {
-			unoService.setState(unoService.getClient().sendRequest(Request.Command.CHECK, unoService.getPlayerName()));
+			baseService.getUnoService().setState(baseService.getUnoService().getClient()
+					.sendRequest(Request.Command.CHECK, baseService.getUnoService().getPlayerName()));
 		} catch (Exception e) {
 			logger.warn("Exception occurred while pressing play button", e);
 			throw new IllegalArgumentException();
@@ -163,13 +166,14 @@ public final class GameOverviewController implements RequestEventHandler {
 
 	private void updateViewFromState() {
 		logger.info("in updateViewFromState");
-		unoService.getState().getPlayerByName(unoService.getPlayerName()).ifPresent(p -> {
-			observablePlayerData.clear();
-			observablePlayerData.addAll(p.getHand());
-			playerTable.setItems(observablePlayerData);
-		});
+		baseService.getUnoService().getState().getPlayerByName(baseService.getUnoService().getPlayerName())
+				.ifPresent(p -> {
+					observablePlayerData.clear();
+					observablePlayerData.addAll(p.getHand());
+					playerTable.setItems(observablePlayerData);
+				});
 
-		unoService.getState().getCurrentPlayer().ifPresent(p -> {
+		baseService.getUnoService().getState().getCurrentPlayer().ifPresent(p -> {
 			currentTurn.setText(p.getName());
 			if (p.getHand().size() > 1) {
 				unoButton.setSelected(false);
@@ -178,14 +182,14 @@ public final class GameOverviewController implements RequestEventHandler {
 			drawButton.setDisable(!p.canDraw());
 		});
 
-		topCard.setText(unoService.getState().getTopDiscardPileCard().getColor().toString() + " "
-				+ unoService.getState().getTopDiscardPileCard().getNumber());
+		topCard.setText(baseService.getUnoService().getState().getTopDiscardPileCard().getColor().toString() + " "
+				+ baseService.getUnoService().getState().getTopDiscardPileCard().getNumber());
 
-		message.setText(unoService.getState().getMessage());
+		message.setText(baseService.getUnoService().getState().getMessage());
 
-		if (unoService.getState().getCurrentPlayer().isPresent()) {
-			PlayerInterface currentPlayer = unoService.getState().getCurrentPlayer().get();
-			if (currentPlayer.getName().equals(unoService.getPlayerName())) {
+		if (baseService.getUnoService().getState().getCurrentPlayer().isPresent()) {
+			PlayerInterface currentPlayer = baseService.getUnoService().getState().getCurrentPlayer().get();
+			if (currentPlayer.getName().equals(baseService.getUnoService().getPlayerName())) {
 				// It my turn
 				this.playButton.setDisable(false);
 			} else {
@@ -205,10 +209,10 @@ public final class GameOverviewController implements RequestEventHandler {
 	}
 
 	public synchronized void played(State state) {
-		unoService.setState(state);
+		baseService.getUnoService().setState(state);
 		// If someone has won
-		if (unoService.getState().getWinner() != null) {
-			navigationService.handleNavigation("EndScreen");
+		if (baseService.getUnoService().getState().getWinner() != null) {
+			baseService.getNavigationService().handleNavigation("EndScreen");
 		}
 
 		updateViewFromState();
