@@ -3,9 +3,9 @@ package ch.swe2.uno.presentation.gui.controller;
 import ch.swe2.uno.business.player.PlayerInterface;
 import ch.swe2.uno.business.server.Request;
 import ch.swe2.uno.business.state.State;
-import ch.swe2.uno.presentation.gui.MainApp;
 import ch.swe2.uno.presentation.gui.events.RequestEventHandler;
 import ch.swe2.uno.presentation.network.client.Client;
+import ch.swe2.uno.presentation.services.NavigationService;
 import ch.swe2.uno.presentation.services.UnoService;
 import io.datafx.controller.ViewController;
 import javafx.application.Platform;
@@ -46,7 +46,8 @@ public final class WelcomeScreenController implements RequestEventHandler {
 	@Inject
 	private UnoService unoService;
 
-	private MainApp mainApp; // Reference to the main application.
+	@Inject
+	private NavigationService navigationService;
 
 	private ObservableList<PlayerInterface> observablePlayers = FXCollections.observableArrayList();
 
@@ -55,14 +56,8 @@ public final class WelcomeScreenController implements RequestEventHandler {
 	@PostConstruct
 	public void init() {
 		// Initialize controls
-		playerNameColumn.setCellValueFactory(cellData ->
-				new ReadOnlyStringWrapper(
-						cellData.getValue().getName()
-				));
-		playerIDColumn.setCellValueFactory(cellData ->
-				new ReadOnlyObjectWrapper(
-						cellData.getValue().getId()
-				));
+		playerNameColumn.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getName()));
+		playerIDColumn.setCellValueFactory(cellData -> new ReadOnlyObjectWrapper(cellData.getValue().getId()));
 
 		playerName.focusedProperty().addListener((ov, t, t1) -> Platform.runLater(() -> {
 			if (playerName.isFocused() && !playerName.getText().isEmpty()) {
@@ -76,30 +71,35 @@ public final class WelcomeScreenController implements RequestEventHandler {
 
 		startButton.setDisable(true);
 		joinButton.setDisable(false);
+
+		if (unoService != null) {
+			unoService.addRequestEventListener(this);
+		}
+		checkIfServerIsAvailable();
 	}
 
-
-	private void initAfterMainApp() {
-		// If Server is running --> initClient
-		unoService.addRequestEventListener(this);
-
+	private void checkIfServerIsAvailable() {
 		if (Client.hostAvailabilityCheck()) {
 			unoService.initClient();
-
 			serverButton.setDisable(true);
 			serverButton.setText("Server Started...");
 		}
 	}
 
+	private void startServer() {
+		if (Client.hostAvailabilityCheck() == false) {
+			unoService.startServer();
+			Platform.runLater(() -> {
+				unoService.initClient();
+				serverButton.setDisable(true);
+				serverButton.setText("Server Started...");
+			});
+		}
+	}
+
 	private void handleServerButtonAction() {
 		try {
-			unoService.startServer();
-			// TODO @Luca this needs to be a callback, server runs on new thread!
-			if (unoService.getClient() == null) {
-				unoService.initClient();
-			}
-			serverButton.setDisable(true);
-			serverButton.setText("Server Started...");
+			startServer();
 		} catch (Exception ex) {
 			logger.error("Error starting server", ex);
 		}
@@ -150,8 +150,10 @@ public final class WelcomeScreenController implements RequestEventHandler {
 	}
 
 	public synchronized void gameStarted(State state) {
-		unoService.setState(state);
-		mainApp.showGameOverview();
+		Platform.runLater(() -> {
+			unoService.setState(state);
+			navigationService.handleNavigation("GameOverview");
+		});
 	}
 
 	public synchronized void played(State state) {

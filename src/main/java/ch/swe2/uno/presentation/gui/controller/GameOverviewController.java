@@ -6,8 +6,8 @@ import ch.swe2.uno.business.card.UnoColor;
 import ch.swe2.uno.business.player.PlayerInterface;
 import ch.swe2.uno.business.server.Request;
 import ch.swe2.uno.business.state.State;
-import ch.swe2.uno.presentation.gui.MainApp;
 import ch.swe2.uno.presentation.gui.events.RequestEventHandler;
+import ch.swe2.uno.presentation.services.NavigationService;
 import ch.swe2.uno.presentation.services.UnoService;
 import io.datafx.controller.ViewController;
 import javafx.beans.property.ReadOnlyIntegerWrapper;
@@ -19,12 +19,13 @@ import javafx.scene.control.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.PostConstruct;
 import javax.inject.Inject;
-import java.util.function.Function;
 
 @ViewController(value = "/fxml/views/GameOverview.fxml", title = "Game Overview")
-public class GameOverviewController implements RequestEventHandler {
-	private static Logger logger = LoggerFactory.getLogger(WelcomeScreenController.class);
+public final class GameOverviewController implements RequestEventHandler {
+	private static Logger logger = LoggerFactory.getLogger(GameOverviewController.class);
+
 	@FXML
 	private TableView<CardInterface> playerTable;
 	@FXML
@@ -53,79 +54,65 @@ public class GameOverviewController implements RequestEventHandler {
 	@Inject
 	private UnoService unoService;
 
-	private MainApp mainApp; // Reference to the main application.
+	@Inject
+	private NavigationService navigationService;
 
 	/**
-	 * Initializes the controller class. This method is automatically called
-	 * after the ch.swe2.uno.presentation.fxml file has been loaded.
+	 * Initializes the controller class. This method is automatically called after
+	 * the ch.swe2.uno.presentation.fxml file has been loaded.
 	 */
-	@FXML
-	private void initialize() {
+	@PostConstruct
+	public void init() {
+		logger.info("in init start");
 		// Initialize the player table columns
-		playerCardTypeColumn.setCellValueFactory(cellData ->
-				new ReadOnlyStringWrapper(
-						cellData.getValue().getType().toString()
-				));
-		playerCardColorColumn.setCellValueFactory(cellData ->
-				new ReadOnlyStringWrapper(
-						cellData.getValue().getColor().toString()
-				));
-		playerCardNumberColumn.setCellValueFactory(cellData ->
-				new ReadOnlyIntegerWrapper(
-						cellData.getValue().getNumber()
-				));
+		playerCardTypeColumn
+				.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getType().toString()));
+		playerCardColorColumn
+				.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getColor().toString()));
+		playerCardNumberColumn
+				.setCellValueFactory(cellData -> new ReadOnlyIntegerWrapper(cellData.getValue().getNumber()));
 
 		playerCardColorColumn.setCellFactory(column -> new TableCell<>() {
 			@Override
 			protected void updateItem(String item, boolean empty) {
-				super.updateItem(item, empty); //This is mandatory
+				super.updateItem(item, empty); // This is mandatory
 
-				if (item == null || empty) { //If the cell is empty
+				if (item == null || empty) { // If the cell is empty
 					setText(null);
 					setStyle("");
-				} else { //If the cell is not empty
+				} else { // If the cell is not empty
 
-					setText(item); //Put the String data in the cell
+					setText(item); // Put the String data in the cell
 
 					CardInterface card = getTableView().getItems().get(getIndex());
 
 					switch (card.getColor()) {
-						case BLACK:
-							setStyle("-fx-background-color: black");
-							break;
-						case BLUE:
-							setStyle("-fx-background-color: blue");
-							break;
-						case RED:
-							setStyle("-fx-background-color: red");
-							break;
-						case GREEN:
-							setStyle("-fx-background-color: green");
-							break;
-						case YELLOW:
-							setStyle("-fx-background-color: yellow; -fx-text-fill: black");
-							break;
+					case BLACK:
+						setStyle("-fx-background-color: black");
+						break;
+					case BLUE:
+						setStyle("-fx-background-color: blue");
+						break;
+					case RED:
+						setStyle("-fx-background-color: red");
+						break;
+					case GREEN:
+						setStyle("-fx-background-color: green");
+						break;
+					case YELLOW:
+						setStyle("-fx-background-color: yellow; -fx-text-fill: black");
+						break;
 					}
 				}
 			}
 		});
-	}
+		logger.info("in init before unoservice");
 
-	/**
-	 * Is called by the main application to give a reference back to itself.
-	 *
-	 * @param mainApp provide Main Application
-	 */
-	public void setMainApp(MainApp mainApp) {
-		this.mainApp = mainApp;
-		initAfterMainApp();
-		updateViewFromState();
-	}
-
-	private void initAfterMainApp() {
-		if (unoService.getClient() != null) {
+		if (unoService != null) {
 			unoService.addRequestEventListener(this);
+			updateViewFromState();
 		}
+		logger.info("in init after unoservice");
 	}
 
 	public void handlePlayButtonAction() {
@@ -135,14 +122,12 @@ public class GameOverviewController implements RequestEventHandler {
 			logger.info("Selected card {} {}", selectedCard.getColor(), selectedCard.getNumber());
 			try {
 				if (selectedCard.getType() == CardType.WILD) {
-					UnoColor chosenColor = mainApp.showColorDialog();
-					unoService.setState(
-							unoService.getClient().sendRequest(Request.Command.PLAY, unoService.getPlayerName(), selectedCard, unoButton.isSelected(), chosenColor)
-					);
+					UnoColor chosenColor = navigationService.showColorDialog();
+					unoService.setState(unoService.getClient().sendRequest(Request.Command.PLAY,
+							unoService.getPlayerName(), selectedCard, unoButton.isSelected(), chosenColor));
 				} else {
-					unoService.setState(
-							unoService.getClient().sendRequest(Request.Command.PLAY, unoService.getPlayerName(), selectedCard, unoButton.isSelected())
-					);
+					unoService.setState(unoService.getClient().sendRequest(Request.Command.PLAY,
+							unoService.getPlayerName(), selectedCard, unoButton.isSelected()));
 				}
 			} catch (Exception e) {
 				logger.warn("Exception occurred while pressing play button", e);
@@ -177,6 +162,7 @@ public class GameOverviewController implements RequestEventHandler {
 	}
 
 	private void updateViewFromState() {
+		logger.info("in updateViewFromState");
 		unoService.getState().getPlayerByName(unoService.getPlayerName()).ifPresent(p -> {
 			observablePlayerData.clear();
 			observablePlayerData.addAll(p.getHand());
@@ -192,9 +178,8 @@ public class GameOverviewController implements RequestEventHandler {
 			drawButton.setDisable(!p.canDraw());
 		});
 
-		topCard.setText(
-				unoService.getState().getTopDiscardPileCard().getColor().toString() + " " +
-						unoService.getState().getTopDiscardPileCard().getNumber());
+		topCard.setText(unoService.getState().getTopDiscardPileCard().getColor().toString() + " "
+				+ unoService.getState().getTopDiscardPileCard().getNumber());
 
 		message.setText(unoService.getState().getMessage());
 
@@ -223,7 +208,7 @@ public class GameOverviewController implements RequestEventHandler {
 		unoService.setState(state);
 		// If someone has won
 		if (unoService.getState().getWinner() != null) {
-			mainApp.showEndScreen();
+			navigationService.handleNavigation("EndScreen");
 		}
 
 		updateViewFromState();

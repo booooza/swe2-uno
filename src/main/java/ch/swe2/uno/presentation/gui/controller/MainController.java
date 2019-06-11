@@ -1,6 +1,7 @@
 package ch.swe2.uno.presentation.gui.controller;
 
 import ch.swe2.uno.presentation.gui.datafx.ExtendedAnimatedFlowContainer;
+import ch.swe2.uno.presentation.services.NavigationService;
 import io.datafx.controller.ViewController;
 import io.datafx.controller.flow.Flow;
 import io.datafx.controller.flow.FlowException;
@@ -9,7 +10,6 @@ import io.datafx.controller.flow.context.ActionHandler;
 import io.datafx.controller.flow.context.FXMLViewFlowContext;
 import io.datafx.controller.flow.context.FlowActionHandler;
 import io.datafx.controller.flow.context.ViewFlowContext;
-import io.datafx.controller.util.VetoException;
 import javafx.fxml.FXML;
 import javafx.scene.layout.StackPane;
 import javafx.util.Duration;
@@ -17,6 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.PostConstruct;
+import javax.inject.Inject;
 
 import static io.datafx.controller.flow.container.ContainerAnimations.SWIPE_LEFT;
 
@@ -33,39 +34,26 @@ public final class MainController {
 	@ActionHandler
 	private FlowActionHandler actionHandler;
 
+	@Inject
+	private NavigationService navigationService;
+
 	@PostConstruct
 	public void init() {
 		context = new ViewFlowContext();
-		Flow innerFlow = new Flow(WelcomeScreenController.class);
-
+		Flow innerFlow = new Flow(MainController.class);
 		final FlowHandler flowHandler = innerFlow.createHandler(context);
 		context.register("ContentFlowHandler", flowHandler);
 		context.register("ContentFlow", innerFlow);
-		showWelcomeScreen();
-	}
 
-	/**
-	 * Shows the welcome screen inside the root layout.
-	 */
-	public void showWelcomeScreen() {
+		navigationService.initNavigationService(context);
 		try {
-			FlowHandler flowHandler = (FlowHandler) context.getRegisteredObject("ContentFlowHandler");
-			Flow contentFlow = (Flow) context.getRegisteredObject("ContentFlow");
 			final Duration containerAnimationDuration = Duration.millis(320);
-			root.getChildren().add(flowHandler.start(new ExtendedAnimatedFlowContainer(containerAnimationDuration, SWIPE_LEFT)));
+			root.getChildren()
+					.add(flowHandler.start(new ExtendedAnimatedFlowContainer(containerAnimationDuration, SWIPE_LEFT)));
 			context.register("ContentPane", root.getChildren().get(0));
-
-			this.bindNodeToController("WelcomeScreen", WelcomeScreenController.class, contentFlow, flowHandler);
-
-			flowHandler.handle("WelcomeScreen");
 		} catch (FlowException flowEx) {
 			logger.error(String.format("Exception: %s", flowEx.getMessage()), flowEx);
-		} catch (VetoException vetoEx) {
-			logger.error(String.format("Exception: %s", vetoEx.getMessage()), vetoEx);
 		}
-	}
-
-	private void bindNodeToController(String node, Class<?> controllerClass, Flow flow, FlowHandler flowHandler) {
-		flow.withGlobalLink(node, controllerClass);
+		navigationService.handleNavigation("WelcomeScreen");
 	}
 }

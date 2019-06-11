@@ -1,0 +1,97 @@
+package ch.swe2.uno.presentation.services;
+
+import java.io.IOException;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import ch.swe2.uno.business.card.UnoColor;
+import ch.swe2.uno.presentation.gui.MainApp;
+import ch.swe2.uno.presentation.gui.controller.ColorDialogController;
+import ch.swe2.uno.presentation.gui.controller.EndScreenController;
+import ch.swe2.uno.presentation.gui.controller.GameOverviewController;
+import ch.swe2.uno.presentation.gui.controller.WelcomeScreenController;
+import io.datafx.controller.flow.Flow;
+import io.datafx.controller.flow.FlowException;
+import io.datafx.controller.flow.FlowHandler;
+import io.datafx.controller.flow.context.FXMLViewFlowContext;
+import io.datafx.controller.flow.context.ViewFlowContext;
+import io.datafx.controller.injection.scopes.ApplicationScoped;
+import io.datafx.controller.util.VetoException;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.scene.layout.AnchorPane;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+
+@ApplicationScoped
+public class NavigationService {
+    private static Logger logger = LoggerFactory.getLogger(NavigationService.class);
+
+    @FXMLViewFlowContext
+    private ViewFlowContext context;
+
+    public NavigationService() {
+        logger.info("Navigation Service constructed");
+    }
+
+    public void initNavigationService(ViewFlowContext context) {
+        FlowHandler flowHandler = (FlowHandler) context.getRegisteredObject("ContentFlowHandler");
+        Flow contentFlow = (Flow) context.getRegisteredObject("ContentFlow");
+        this.bindNodeToController("WelcomeScreen", WelcomeScreenController.class, contentFlow, flowHandler);
+        this.bindNodeToController("GameOverview", GameOverviewController.class, contentFlow, flowHandler);
+        this.bindNodeToController("EndScreen", EndScreenController.class, contentFlow, flowHandler);
+    }
+
+    public void handleNavigation(String navTarget) {
+        try {
+            logger.info(String.format("Navigation Service handleNavigation to %s", navTarget));
+            if (context != null) {
+                FlowHandler flowHandler = (FlowHandler) context.getRegisteredObject("ContentFlowHandler");
+                flowHandler.handle(navTarget);
+            } else {
+                logger.info(
+                        String.format("Navigation Service handleNavigation context is null navTarget: %s", navTarget));
+            }
+        } catch (VetoException ex) {
+            logger.error(String.format("Error navigation to %s", navTarget), ex);
+        } catch (FlowException ex) {
+            logger.error(String.format("Error navigation to %s", navTarget), ex);
+        }
+    }
+
+    /**
+     * Opens a dialog to choose color for the specified card.
+     */
+    public UnoColor showColorDialog() {
+        try {
+            // Load the ch.swe2.uno.presentation.fxml file and create a new stage for the
+            // popup dialog.
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(NavigationService.class.getResource("/fxml/views/ColorDialog.fxml"));
+            AnchorPane page = loader.load();
+
+            // Create the dialog Stage.
+            Stage dialogStage = new Stage();
+            dialogStage.setTitle("Choose color");
+            dialogStage.initModality(Modality.WINDOW_MODAL);
+            dialogStage.initOwner(MainApp.getPrimaryStage());
+            Scene scene = new Scene(page);
+            dialogStage.setScene(scene);
+
+            // Show the dialog and wait until the user closes it
+            ColorDialogController controller = loader.getController();
+            controller.setDialogStage(dialogStage);
+            dialogStage.showAndWait();
+
+            return controller.getChosenColor();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return UnoColor.BLACK;
+        }
+    }
+
+    private void bindNodeToController(String node, Class<?> controllerClass, Flow flow, FlowHandler flowHandler) {
+        flow.withGlobalLink(node, controllerClass);
+    }
+}
