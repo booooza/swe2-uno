@@ -151,10 +151,11 @@ public class Game {
 		if (player.isCurrentTurn() && player.canDraw()) {
 			player.addCard(deck.drawCard());
 			player.setCanDraw(false);
-			logger.info("Player {} drawed card", player.getName());
+			
 			logger.info("Player {} has {} cards remaining in hand", player.getName(), player.getHand().size());
 
 			if (state.containsPlayer("Bot") && playerName.equals("Bot")) {
+				state.setMessage("Player Bot drawed card");
 				botAction();
 			}
 		} else {
