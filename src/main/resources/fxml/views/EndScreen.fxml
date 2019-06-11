@@ -1,8 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.layout.AnchorPane?>
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            prefHeight="400.0" prefWidth="600.0">
+<StackPane fx:id="root" 
+    xmlns:fx="http://javafx.com/fxml/1" 
+    xmlns="http://javafx.com/javafx/2.2">
+    <children>
+        <Button layoutX="248.0" layoutY="330.0" mnemonicParsing="false" onAction="#handleExitButtonAction" prefHeight="35.0" prefWidth="110.0" text="Exit" />
+        <Label fx:id="message" layoutX="211.0" layoutY="54.0" text="EndMessage" textFill="WHITE">
+            <font>
+                <Font name="Helvetica" size="18.0" />
+            </font>
+        </Label>
+        <ImageView fx:id="imgView" layoutX="223.0" layoutY="120.0">
+
+        </ImageView>
+    </children>
 
 </AnchorPane>
