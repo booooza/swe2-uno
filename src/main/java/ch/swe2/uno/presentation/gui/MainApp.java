@@ -42,6 +42,7 @@ public class MainApp extends Application {
 		flow.createHandler(flowContext).start(container);
 
 		JFXDecorator decorator = new JFXDecorator(stage, container.getView());
+		decorator.setCustomMaximize(true);
 		decorator.setGraphic(new SVGGlyph(""));
 
 		double width = 800;

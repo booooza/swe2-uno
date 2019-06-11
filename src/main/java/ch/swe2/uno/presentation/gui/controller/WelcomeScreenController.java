@@ -157,4 +157,8 @@ public final class WelcomeScreenController implements RequestEventHandler {
 	public synchronized void played(State state) {
 		// default empty
 	}
+
+	public synchronized void finished(State state) {
+		// default empty
+	}
 }

@@ -8,4 +8,6 @@ public interface RequestEventHandler {
 	void gameStarted(State state);
 
 	void played(State state);
+
+	void finished(State state);
 }

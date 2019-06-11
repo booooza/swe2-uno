@@ -8,8 +8,6 @@ import ch.swe2.uno.business.server.Request;
 import ch.swe2.uno.business.state.State;
 import ch.swe2.uno.presentation.gui.events.RequestEventHandler;
 import ch.swe2.uno.presentation.services.BaseService;
-import ch.swe2.uno.presentation.services.NavigationService;
-import ch.swe2.uno.presentation.services.UnoService;
 import io.datafx.controller.ViewController;
 import javafx.beans.property.ReadOnlyIntegerWrapper;
 import javafx.beans.property.ReadOnlyStringWrapper;
@@ -85,21 +83,21 @@ public final class GameOverviewController implements RequestEventHandler {
 					CardInterface card = getTableView().getItems().get(getIndex());
 
 					switch (card.getColor()) {
-					case BLACK:
-						setStyle("-fx-background-color: black");
-						break;
-					case BLUE:
-						setStyle("-fx-background-color: blue");
-						break;
-					case RED:
-						setStyle("-fx-background-color: red");
-						break;
-					case GREEN:
-						setStyle("-fx-background-color: green");
-						break;
-					case YELLOW:
-						setStyle("-fx-background-color: yellow; -fx-text-fill: black");
-						break;
+						case BLACK:
+							setStyle("-fx-background-color: black");
+							break;
+						case BLUE:
+							setStyle("-fx-background-color: blue");
+							break;
+						case RED:
+							setStyle("-fx-background-color: red");
+							break;
+						case GREEN:
+							setStyle("-fx-background-color: green");
+							break;
+						case YELLOW:
+							setStyle("-fx-background-color: yellow; -fx-text-fill: black");
+							break;
 					}
 				}
 			}
@@ -210,11 +208,11 @@ public final class GameOverviewController implements RequestEventHandler {
 
 	public synchronized void played(State state) {
 		baseService.getUnoService().setState(state);
-		// If someone has won
-		if (baseService.getUnoService().getState().getWinner() != null) {
-			baseService.getNavigationService().handleNavigation("EndScreen");
-		}
-
 		updateViewFromState();
+	}
+
+	public synchronized void finished(State state) {
+		baseService.getUnoService().setState(state);
+		baseService.getNavigationService().handleNavigation("EndScreen");
 	}
 }

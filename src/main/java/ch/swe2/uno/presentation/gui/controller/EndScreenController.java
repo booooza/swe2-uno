@@ -1,28 +1,33 @@
 package ch.swe2.uno.presentation.gui.controller;
 
-import ch.swe2.uno.presentation.gui.MainApp;
+import ch.swe2.uno.business.state.State;
+import ch.swe2.uno.presentation.gui.events.RequestEventHandler;
 import ch.swe2.uno.presentation.services.BaseService;
-import ch.swe2.uno.presentation.services.UnoService;
 import io.datafx.controller.ViewController;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
-@ViewController(value = "/fxml/views/EndScreen.ch.swe2.uno.presentation.fxml", title = "Game Overview")
-public class EndScreenController {
+@ViewController(value = "/fxml/views/EndScreen.fxml", title = "Game Overview")
+public class EndScreenController implements RequestEventHandler {
 	private static Logger logger = LoggerFactory.getLogger(WelcomeScreenController.class);
 
+	@FXML
+	private Button endButton;
 
-    @FXML
+	@FXML
+	private Button restartButton;
+
+	@FXML
 	private ImageView imgView;
-	
+
 	@FXML
 	private Label message;
 
@@ -31,7 +36,8 @@ public class EndScreenController {
 
 	@PostConstruct
 	public void init() {
-		// Show Image a or image B
+		endButton.setOnAction(action -> handleExitButtonAction());
+		restartButton.setOnAction(action -> handleRestartButtonAction());
 
 		if (baseService.getUnoService().getState().getWinner().equals(baseService.getUnoService().getPlayerName())) {
 			message.setText("Congrats, you have won the game!");
@@ -42,9 +48,31 @@ public class EndScreenController {
 		}
 	}
 
-	
-	public void handleExitButtonAction() {
+
+	private void handleExitButtonAction() {
 		logger.info("Exit button pressed");
+		baseService.getUnoService().stopService();
 		System.exit(0);
+	}
+
+	private void handleRestartButtonAction() {
+		logger.info("Restart button pressed");
+		baseService.getNavigationService().handleNavigation("Main");
+	}
+
+	public synchronized void playerJoined(State state) {
+		// default empty
+	}
+
+	public synchronized void gameStarted(State state) {
+		// default empty
+	}
+
+	public synchronized void played(State state) {
+		// default empty
+	}
+
+	public synchronized void finished(State state) {
+		// default empty
 	}
 }
