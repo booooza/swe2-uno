@@ -6,32 +6,34 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
-<StackPane fx:id="root" xmlns:fx="http://javafx.com/fxml/1"
-           xmlns="http://javafx.com/javafx/2.2">
+<StackPane fx:id="root" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1">
     <children>
-        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="400.0" prefWidth="600.0">
+        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="400.0" prefWidth="600.0"
+                    style="-fx-background-color: red;">
             <children>
-                <TextField fx:id="playerName" layoutX="14.0" layoutY="176.0" prefHeight="37.0" prefWidth="241.0"
-                           text="Player Name"/>
-                <Button fx:id="joinButton" layoutX="14.0" layoutY="244.0" mnemonicParsing="false"
-                        prefHeight="35.0" prefWidth="115.0" text="Join"/>
-                <Label layoutX="75.0" layoutY="137.0" text="Enter your name:" textFill="WHITE">
-                    <font>
-                        <Font name="Helvetica" size="18.0"/>
-                    </font>
-                </Label>
                 <ImageView fitHeight="70.0" fitWidth="97.0" layoutX="14.0" layoutY="14.0">
                     <image>
                         <Image url="@../../images/logo.png"/>
                     </image>
                 </ImageView>
-                <JFXButton fx:id="startButton" layoutX="145.0" layoutY="244.0" mnemonicParsing="false"
-                           styleClass="uno-button" prefHeight="35.0" prefWidth="115.0" text="Start"/>
+                <JFXButton fx:id="serverButton" buttonType="RAISED" layoutX="472.0" layoutY="14.0"
+                           mnemonicParsing="false" prefHeight="35.0" prefWidth="115.0" text="Start Server"/>
 
-
-                <Label layoutX="396.0" layoutY="137.0" text="Current Players:" textFill="WHITE">
+                <Label layoutX="59.0" layoutY="127.0" text="Enter your name:" textFill="WHITE">
                     <font>
-                        <Font name="Helvetica" size="18.0"/>
+                        <Font size="24.0"/>
+                    </font>
+                </Label>
+                <TextField fx:id="playerName" layoutX="14.0" layoutY="176.0" prefHeight="39.0" prefWidth="270.0"
+                           text="Player Name"/>
+                <JFXButton fx:id="joinButton" buttonType="RAISED" layoutX="14.0" layoutY="244.0" mnemonicParsing="false"
+                           prefHeight="35.0" prefWidth="115.0" text="Join"/>
+                <JFXButton fx:id="startButton" buttonType="RAISED" layoutX="169.0" layoutY="244.0"
+                           mnemonicParsing="false" prefHeight="35.0" prefWidth="115.0" text="Start"/>
+
+                <Label layoutX="368.0" layoutY="127.0" text="Current Players:" textFill="WHITE">
+                    <font>
+                        <Font size="24.0"/>
                     </font>
                 </Label>
                 <TableView fx:id="playersTable" layoutX="316.0" layoutY="175.0" prefHeight="151.0" prefWidth="156.0"
@@ -45,8 +47,7 @@
                         <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
                     </columnResizePolicy>
                 </TableView>
-                <JFXButton fx:id="serverButton" layoutX="432.0" layoutY="32.0" mnemonicParsing="false"
-                           styleClass="jfx-button" prefHeight="35.0" prefWidth="133.0" text="Start Server"/>
+
             </children>
         </AnchorPane>
     </children>

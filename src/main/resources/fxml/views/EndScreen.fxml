@@ -1,26 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Button?>
+<?import com.jfoenix.controls.JFXButton?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.text.Font?>
-<StackPane fx:id="root"
-           xmlns:fx="http://javafx.com/fxml/1"
-           xmlns="http://javafx.com/javafx/2.2">
+<StackPane fx:id="root" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1">
     <children>
-        <Button layoutX="211.0" layoutY="330.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="110.0"
-                fx:id="endButton"
-                text="Exit"/>
-        <Button layoutX="248.0" layoutY="330.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="110.0"
-                fx:id="restartButton"
-                text="Restart"/>
-        <Label fx:id="message" layoutX="211.0" layoutY="54.0" text="EndMessage" textFill="WHITE">
-            <font>
-                <Font name="Helvetica" size="18.0"/>
-            </font>
-        </Label>
-        <ImageView fx:id="imgView" layoutX="223.0" layoutY="120.0"/>
+        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="400.0" prefWidth="600.0">
+            <children>
+                <JFXButton fx:id="endButton" buttonType="FLAT" layoutX="476.0" layoutY="347.0" mnemonicParsing="false"
+                           prefHeight="35.0" prefWidth="110.0" text="Exit"/>
+                <JFXButton fx:id="restartButton" buttonType="FLAT" layoutX="14.0" layoutY="350.0"
+                           mnemonicParsing="false" prefHeight="35.0" prefWidth="110.0" text="Restart"/>
+                <Label fx:id="message" layoutX="250.0" layoutY="29.0" text="EndMessage">
+                    <font>
+                        <Font name="Helvetica" size="18.0"/>
+                    </font>
+                </Label>
+                <ImageView fx:id="imgView" fitHeight="265.0" fitWidth="571.0" layoutX="15.0" layoutY="69.0"/>
+            </children>
+        </AnchorPane>
     </children>
-
 </StackPane>
