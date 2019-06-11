@@ -6,49 +6,64 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
-<StackPane fx:id="root" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1">
-    <children>
-        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="400.0" prefWidth="600.0"
-                    style="-fx-background-color: red;">
-            <children>
-                <ImageView fitHeight="70.0" fitWidth="97.0" layoutX="14.0" layoutY="14.0">
-                    <image>
-                        <Image url="@../../images/logo.png"/>
-                    </image>
-                </ImageView>
-                <JFXButton fx:id="serverButton" buttonType="RAISED" layoutX="472.0" layoutY="14.0"
-                           mnemonicParsing="false" prefHeight="35.0" prefWidth="115.0" text="Start Server"/>
+<StackPane fx:id="root"
+           xmlns:fx="http://javafx.com/fxml/1"
+           xmlns="http://javafx.com/javafx/2.2">
+    <!-- set margin https://stackoverflow.com/questions/16977100/confgure-margin-for-individual-element-via-java-fx-css -->
+    <GridPane style="-fx-background-color: RED; -fx-fit-to-width: true; -fx-fill-width: true" hgap="10" vgap="10">
+        <ImageView fitHeight="70.0" fitWidth="97.0"
+                   GridPane.fillWidth="true"
+                   GridPane.rowIndex="0" GridPane.columnIndex="0">
+            <image>
+                <Image url="@../../images/logo.png"/>
+            </image>
+        </ImageView>
 
-                <Label layoutX="59.0" layoutY="127.0" text="Enter your name:" textFill="WHITE">
-                    <font>
-                        <Font size="24.0"/>
-                    </font>
-                </Label>
-                <TextField fx:id="playerName" layoutX="14.0" layoutY="176.0" prefHeight="39.0" prefWidth="270.0"
-                           text="Player Name"/>
-                <JFXButton fx:id="joinButton" buttonType="RAISED" layoutX="14.0" layoutY="244.0" mnemonicParsing="false"
-                           prefHeight="35.0" prefWidth="115.0" text="Join"/>
-                <JFXButton fx:id="startButton" buttonType="RAISED" layoutX="169.0" layoutY="244.0"
-                           mnemonicParsing="false" prefHeight="35.0" prefWidth="115.0" text="Start"/>
+        <JFXButton fx:id="serverButton" buttonType="RAISED" GridPane.fillWidth="true"
+                   GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS"
+                   GridPane.rowIndex="0" GridPane.columnIndex="1"
+                   mnemonicParsing="false" prefHeight="35.0" prefWidth="115.0" text="Start Server"/>
 
-                <Label layoutX="368.0" layoutY="127.0" text="Current Players:" textFill="WHITE">
-                    <font>
-                        <Font size="24.0"/>
-                    </font>
-                </Label>
-                <TableView fx:id="playersTable" layoutX="316.0" layoutY="175.0" prefHeight="151.0" prefWidth="156.0"
-                           style="-fx-background-color: red;" AnchorPane.bottomAnchor="66.0"
-                           AnchorPane.leftAnchor="316.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="175.0">
-                    <columns>
-                        <TableColumn fx:id="playerIDColumn" prefWidth="147.0" text="Player ID"/>
-                        <TableColumn fx:id="playerNameColumn" prefWidth="146.0" text="Player Name"/>
-                    </columns>
-                    <columnResizePolicy>
-                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
-                    </columnResizePolicy>
-                </TableView>
+        <GridPane GridPane.rowIndex="1" GridPane.columnIndex="0">
+            <Label text="Enter your name:" textFill="WHITE" GridPane.rowIndex="0" GridPane.halignment="CENTER"
+                   GridPane.columnIndex="0">
+                <font>
+                    <Font size="24.0"/>
+                </font>
+            </Label>
 
-            </children>
-        </AnchorPane>
-    </children>
+
+            <TextField fx:id="playerName" prefHeight="39.0" prefWidth="270.0"
+                       text="Player Name" GridPane.rowIndex="1" GridPane.columnSpan="2"
+                       style="-fx-padding: 10 0 10 0"/>
+            <JFXButton fx:id="joinButton" buttonType="FLAT"
+                       mnemonicParsing="false" GridPane.rowIndex="2" GridPane.columnIndex="0"
+                       prefHeight="35.0" prefWidth="115.0" text="Join"/>
+            <JFXButton fx:id="startButton" buttonType="FLAT"
+                       GridPane.rowIndex="2" GridPane.columnIndex="1"
+                       mnemonicParsing="false" prefHeight="35.0" prefWidth="115.0" text="Start"/>
+        </GridPane>
+
+        <GridPane GridPane.rowIndex="1" GridPane.columnIndex="1">
+            <Label text="Current Players:" textFill="WHITE" GridPane.columnIndex="0" GridPane.halignment="CENTER"
+                   GridPane.rowIndex="0">
+                <font>
+                    <Font size="24.0"/>
+                </font>
+            </Label>
+            <TableView fx:id="playersTable" layoutX="316.0" layoutY="175.0" prefHeight="151.0"
+                       prefWidth="156.0" GridPane.rowIndex="1"
+                       style="-fx-background-color: red;" AnchorPane.bottomAnchor="66.0"
+                       AnchorPane.leftAnchor="316.0" AnchorPane.rightAnchor="14.0"
+                       AnchorPane.topAnchor="175.0">
+                <columns>
+                    <TableColumn fx:id="playerIDColumn" prefWidth="147.0" text="Player ID"/>
+                    <TableColumn fx:id="playerNameColumn" prefWidth="146.0" text="Player Name"/>
+                </columns>
+                <columnResizePolicy>
+                    <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+                </columnResizePolicy>
+            </TableView>
+        </GridPane>
+    </GridPane>
 </StackPane>

@@ -60,7 +60,11 @@ public final class GameOverviewController implements RequestEventHandler {
 	@PostConstruct
 	public void init() {
 		logger.info("in init start");
-		// Initialize the player table columns
+
+		playButton.setOnAction(action -> handlePlayButtonAction());
+		drawButton.setOnAction(action -> handleDrawButtonAction());
+		checkButton.setOnAction(action -> handleCheckButtonAction());
+
 		playerCardTypeColumn
 				.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getType().toString()));
 		playerCardColorColumn
@@ -77,11 +81,8 @@ public final class GameOverviewController implements RequestEventHandler {
 					setText(null);
 					setStyle("");
 				} else { // If the cell is not empty
-
 					setText(item); // Put the String data in the cell
-
 					CardInterface card = getTableView().getItems().get(getIndex());
-
 					switch (card.getColor()) {
 						case BLACK:
 							setStyle("-fx-background-color: black");
@@ -102,13 +103,11 @@ public final class GameOverviewController implements RequestEventHandler {
 				}
 			}
 		});
-		logger.info("in init before unoservice");
 
 		if (baseService.getUnoService() != null) {
 			baseService.getUnoService().addRequestEventListener(this);
 			updateViewFromState();
 		}
-		logger.info("in init after unoservice");
 	}
 
 	public void handlePlayButtonAction() {

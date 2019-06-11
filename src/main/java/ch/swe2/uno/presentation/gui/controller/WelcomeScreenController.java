@@ -3,11 +3,10 @@ package ch.swe2.uno.presentation.gui.controller;
 import ch.swe2.uno.business.player.PlayerInterface;
 import ch.swe2.uno.business.server.Request;
 import ch.swe2.uno.business.state.State;
+import ch.swe2.uno.presentation.gui.MainApp;
 import ch.swe2.uno.presentation.gui.events.RequestEventHandler;
 import ch.swe2.uno.presentation.network.client.Client;
 import ch.swe2.uno.presentation.services.BaseService;
-import ch.swe2.uno.presentation.services.NavigationService;
-import ch.swe2.uno.presentation.services.UnoService;
 import io.datafx.controller.ViewController;
 import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyObjectWrapper;
@@ -92,6 +91,12 @@ public final class WelcomeScreenController implements RequestEventHandler {
 				serverButton.setDisable(true);
 				serverButton.setText("Server Started...");
 			});
+		} else if (baseService.getUnoService().getClient() == null) {
+			Platform.runLater(() -> {
+				baseService.getUnoService().initClient();
+				serverButton.setDisable(true);
+				serverButton.setText("Server Started...");
+			});
 		}
 	}
 
@@ -109,6 +114,7 @@ public final class WelcomeScreenController implements RequestEventHandler {
 		try {
 			baseService.getUnoService().setState(baseService.getUnoService().getClient().sendRequest(Request.Command.JOIN, playerName.getText()));
 			baseService.getUnoService().setPlayerName(playerName.getText());
+			MainApp.getPrimaryStage().setTitle(String.format("UNO Game - %s", playerName.getText()));
 		} catch (Exception e) {
 			logger.warn("Error while joining", e);
 			throw new IllegalArgumentException();
