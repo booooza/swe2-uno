@@ -177,7 +177,7 @@
 *******************************************************************************/
 
 .jfx-decorator .resize-border {
-    -fx-border-color: -fx-decorator-color;
+    -fx-border-color: RED;
     -fx-border-width: 0 4 4 4;
 }
 

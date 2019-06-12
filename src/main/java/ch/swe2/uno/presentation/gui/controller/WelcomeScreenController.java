@@ -14,10 +14,10 @@ import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.geometry.HPos;
+import javafx.scene.control.*;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.GridPane;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,6 +42,14 @@ public final class WelcomeScreenController implements RequestEventHandler {
 	private Button serverButton;
 	@FXML
 	private Button startButton;
+	@FXML
+	private GridPane rootGrid;
+	@FXML
+	private ImageView logoImage;
+	@FXML
+	private Label playersTableLabel;
+	@FXML
+	private Label playerNameLabel;
 
 	@Inject
 	private BaseService baseService;
@@ -72,6 +80,14 @@ public final class WelcomeScreenController implements RequestEventHandler {
 		if (baseService.getUnoService() != null) {
 			baseService.getUnoService().addRequestEventListener(this);
 		}
+		// rootGrid.setGridLinesVisible(true);
+		rootGrid.setHalignment(logoImage, HPos.CENTER);
+		rootGrid.setHalignment(serverButton, HPos.CENTER);
+		rootGrid.setHalignment(playersTableLabel, HPos.CENTER);
+		rootGrid.setHalignment(playerNameLabel, HPos.CENTER);
+
+
+
 		checkIfServerIsAvailable();
 	}
 
