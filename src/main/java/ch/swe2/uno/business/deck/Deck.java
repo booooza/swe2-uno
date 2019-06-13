@@ -19,10 +19,14 @@ public class Deck {
 	private CardInterface topCard = null;
 	private List<CardInterface> discardPile = new ArrayList<>(108);
 
+	public Deck() {
+		create();
+	}
+
 	/**
 	 * Generate deck of cards based on game rules
 	 */
-	public void create() {
+	void create() {
 		// Iterate through every color
 		for (UnoColor unoColor : UnoColor.values()) {
 			// For all regular colors

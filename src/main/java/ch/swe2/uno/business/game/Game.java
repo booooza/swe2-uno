@@ -20,11 +20,12 @@ import java.util.concurrent.ThreadLocalRandom;
 public class Game {
 	private static Logger logger = LoggerFactory.getLogger(Game.class);
 	private volatile State state;
-	private Deck deck = new Deck();
+	private Deck deck;
 	private Gson ignored = FxGson.create();
 	private boolean isRunning;
 
-	public Game() {
+	public Game(Deck deck) {
+		this.deck = deck;
 		initialize();
 	}
 
@@ -55,9 +56,7 @@ public class Game {
 		}
 
 		if (!isRunning && state.getPlayers().size() >= 2) {
-			// Create deck & distribute cards
-			deck = new Deck();
-			deck.create();
+			// Distribute cards
 			deck.distribute(state.getPlayers());
 
 			int randNumber = ThreadLocalRandom.current().nextInt(0, state.getPlayers().size() - 1);
@@ -86,7 +85,8 @@ public class Game {
 			// Check if card matches current top card
 			if (card.getColor().equals(state.getTopDiscardPileCard().getColor()) ||
 					card.getNumber() == state.getTopDiscardPileCard().getNumber() ||
-					card.getType().equals(CardType.WILD)
+					card.getType().equals(CardType.WILD) ||
+					state.getTopDiscardPileCard().getType().equals(CardType.WILD)
 			) {
 				// Remove from players hand
 				removeCardFromPlayersHand(player, card);

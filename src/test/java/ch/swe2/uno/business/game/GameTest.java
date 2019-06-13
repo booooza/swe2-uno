@@ -1,6 +1,10 @@
 package ch.swe2.uno.business.game;
 
+import ch.swe2.uno.business.card.ActionCard;
 import ch.swe2.uno.business.card.CardInterface;
+import ch.swe2.uno.business.card.CardType;
+import ch.swe2.uno.business.card.UnoColor;
+import ch.swe2.uno.business.deck.Deck;
 import ch.swe2.uno.business.player.PlayerInterface;
 import ch.swe2.uno.business.state.State;
 import org.junit.jupiter.api.DisplayName;
@@ -19,12 +23,13 @@ public class GameTest {
 	@DisplayName("Register two players and initialize the game")
 	void testAddTwoPlayersAndInitialize() {
 		// Given
-		Game game = new Game();
+		Game game = new Game(new Deck());
 
 		// When
+		game.initialize();
 		game.addPlayer("Marc");
 		game.addPlayer("Luca");
-		State state = game.initialize();
+		State state = game.start();
 
 		// Then
 		assertTrue(game.isRunning());
@@ -37,27 +42,31 @@ public class GameTest {
 	}
 
 	@Test
-	@DisplayName("testPlayCardLegal")
-	void testPlayCardLegal() {
+	@DisplayName("Wild card is the top card on the discard pile")
+	void testTopDiscardPileCardIsWildCard() {
 		// Given
-		Game game = new Game();
+		Deck deck = new Deck();
+		CardInterface anyCard;
+		CardInterface wildcard = new ActionCard(CardType.WILD, UnoColor.BLACK, 88);
+		deck.addCardToDiscardPile(wildcard);
+		Game game = new Game(deck);
 
 		// When
+		game.initialize();
 		game.addPlayer("Marc");
 		game.addPlayer("Luca");
-		State state = game.initialize();
+		game.start();
 
-		// Find out current player
-		Optional<PlayerInterface> currentPlayer = state.getCurrentPlayer();
-		CardInterface topDiscardPileCard = state.getTopDiscardPileCard();
-
-		currentPlayer.ifPresent(c -> {
-
-		});
-
-		//
+		anyCard = game.getState().getCurrentPlayer().get().getHand().get(0);
+		game.playCard(
+				game.getState().getCurrentPlayer().get().getName(),
+				anyCard,
+				false,
+				UnoColor.RED
+		);
 
 		// Then
+		assertEquals(game.getState().getTopDiscardPileCard().getNumber(), anyCard.getNumber());
 	}
 
 	@Test
@@ -77,4 +86,6 @@ public class GameTest {
 	void testDrawCardIllegal() {
 
 	}
+
+
 }
