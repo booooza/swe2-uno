@@ -25,7 +25,8 @@ public class MultiThreadedServer implements Runnable {
 	private Thread runningThread;
 	private ExecutorService threadPool =
 			Executors.newFixedThreadPool(10);
-	public MultiThreadedServer(Game game) {
+
+	private MultiThreadedServer(Game game) {
 		this.serverPort = Server.SERVER_PORT;
 		this.game = game;
 	}
@@ -34,18 +35,18 @@ public class MultiThreadedServer implements Runnable {
 		return game;
 	}
 
-	public static MultiThreadedServer getInstance() {
+	static MultiThreadedServer getInstance() {
 		if (theInstance == null) {
 			theInstance = new MultiThreadedServer(new Game());
 		}
 		return theInstance;
 	}
 
-	public static HashMap<String, ClientHandlerThread> getClientInfo() {
+	static HashMap<String, ClientHandlerThread> getClientInfo() {
 		return clientInfo;
 	}
 
-	public static HashMap<String, ClientHandlerThread> getClientListenerInfo() {
+	static HashMap<String, ClientHandlerThread> getClientListenerInfo() {
 		return clientListenerInfo;
 	}
 
@@ -71,7 +72,7 @@ public class MultiThreadedServer implements Runnable {
 		}
 	}
 
-	public synchronized boolean isStopped() {
+	private synchronized boolean isStopped() {
 		return this.isStopped;
 	}
 

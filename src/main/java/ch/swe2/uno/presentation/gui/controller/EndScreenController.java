@@ -1,5 +1,6 @@
 package ch.swe2.uno.presentation.gui.controller;
 
+import ch.swe2.uno.business.server.Request;
 import ch.swe2.uno.business.state.State;
 import ch.swe2.uno.presentation.gui.events.RequestEventHandler;
 import ch.swe2.uno.presentation.services.BaseService;
@@ -16,7 +17,7 @@ import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
 @ViewController(value = "/fxml/views/EndScreen.fxml", title = "Game Overview")
-public class EndScreenController implements RequestEventHandler {
+public final class EndScreenController implements RequestEventHandler {
 	private static Logger logger = LoggerFactory.getLogger(WelcomeScreenController.class);
 
 	@FXML
@@ -46,6 +47,10 @@ public class EndScreenController implements RequestEventHandler {
 			message.setText("Fail, you have lost the game!");
 			imgView.setImage(new Image(EndScreenController.class.getResourceAsStream("/images/fail.png")));
 		}
+
+		if (baseService.getUnoService() != null) {
+			baseService.getUnoService().addRequestEventListener(this);
+		}
 	}
 
 
@@ -57,7 +62,7 @@ public class EndScreenController implements RequestEventHandler {
 
 	private void handleRestartButtonAction() {
 		logger.info("Restart button pressed");
-		baseService.getNavigationService().handleNavigation("Main");
+		baseService.getUnoService().getClient().sendRequest(Request.Command.RESTART, baseService.getUnoService().getPlayerName());
 	}
 
 	public synchronized void playerJoined(State state) {
@@ -74,5 +79,9 @@ public class EndScreenController implements RequestEventHandler {
 
 	public synchronized void finished(State state) {
 		// default empty
+	}
+
+	public synchronized void restarted(State state) {
+		baseService.getNavigationService().handleNavigation("main");
 	}
 }

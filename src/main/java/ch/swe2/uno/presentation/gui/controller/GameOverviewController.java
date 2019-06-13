@@ -14,7 +14,11 @@ import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.geometry.HPos;
 import javafx.scene.control.*;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Priority;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,6 +51,12 @@ public final class GameOverviewController implements RequestEventHandler {
 	private Button drawButton;
 	@FXML
 	private Button playButton;
+	@FXML
+	private ImageView gameLogo;
+	@FXML
+	private GridPane rootGrid;
+	@FXML
+	private GridPane actionsGrid;
 
 	private ObservableList<CardInterface> observablePlayerData = FXCollections.observableArrayList();
 
@@ -103,6 +113,10 @@ public final class GameOverviewController implements RequestEventHandler {
 				}
 			}
 		});
+
+		rootGrid.setHalignment(gameLogo, HPos.CENTER);
+		actionsGrid.setHalignment(unoButton, HPos.CENTER);
+		GridPane.setHgrow(unoButton, Priority.ALWAYS);
 
 		if (baseService.getUnoService() != null) {
 			baseService.getUnoService().addRequestEventListener(this);
@@ -213,5 +227,9 @@ public final class GameOverviewController implements RequestEventHandler {
 	public synchronized void finished(State state) {
 		baseService.getUnoService().setState(state);
 		baseService.getNavigationService().handleNavigation("EndScreen");
+	}
+
+	public synchronized void restarted(State state) {
+		// default empty
 	}
 }

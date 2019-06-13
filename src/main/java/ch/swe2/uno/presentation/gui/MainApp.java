@@ -50,20 +50,14 @@ public class MainApp extends Application {
 		decorator.setCustomMaximize(true);
 		decorator.setGraphic(new SVGGlyph(""));
 
-		double width = 600;
-		double height = 400;
-		//try {
-		//	Rectangle2D bounds = Screen.getScreens().get(0).getBounds();
-		//	width = bounds.getWidth() / 2.5;
-		//	height = bounds.getHeight() / 1.35;
-		//} catch (Exception e) {
-		//}
+		double height = 625.0;
+		double width = 1000.0;
 
 		Scene scene = new Scene(decorator, width, height);
 		final ObservableList<String> stylesheets = scene.getStylesheets();
 		stylesheets.addAll(JFoenixResources.load("css/jfoenix-fonts.css").toExternalForm(),
 				JFoenixResources.load("css/jfoenix-design.css").toExternalForm(),
-				MainApp.class.getResource("/css/uno-main.css").toExternalForm());
+				MainApp.class.getResource("/css/uno-dark.css").toExternalForm());
 
 		setPrimaryStage(stage);
 

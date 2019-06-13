@@ -1,19 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import com.jfoenix.controls.JFXButton?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
 <GridPane style="-fx-background-color: RED;"
-          hgap="10" vgap="10"
+          hgap="50" vgap="10"
           xmlns:fx="http://javafx.com/fxml/1"
           xmlns="http://javafx.com/javafx/2.2"
           alignment="center"
-          prefHeight="600"
-          prefWidth="800"
+          prefHeight="625.0"
+          prefWidth="1000.0"
           fx:id="rootGrid">
+    <padding>
+        <Insets top="50" right="50" bottom="50" left="50"/>
+    </padding>
     <children>
         <ImageView fx:id="logoImage" fitHeight="80.0" fitWidth="120.0"
                    GridPane.rowIndex="0" GridPane.columnIndex="0">
@@ -26,7 +30,7 @@
                    GridPane.rowIndex="0" GridPane.columnIndex="1"
                    mnemonicParsing="false" prefHeight="35.0" prefWidth="115.0" text="Start Server"/>
 
-        <GridPane GridPane.rowIndex="1" GridPane.columnIndex="0" vgap="20" hgap="20">
+        <GridPane GridPane.rowIndex="1" GridPane.columnIndex="0" vgap="10" hgap="10" fx:id="playerGrid">
             <children>
                 <Label text="Enter your name:" textFill="WHITE" GridPane.rowIndex="0" fx:id="playerNameLabel"
                        GridPane.columnIndex="0" GridPane.columnSpan="2">
@@ -35,12 +39,13 @@
                     </font>
                 </Label>
 
-                <TextField fx:id="playerName" prefHeight="39.0" prefWidth="270.0"
+                <TextField fx:id="playerName" prefHeight="39.0" prefWidth="270.0" style="-fx-text-fill: black;"
                            text="Player Name" GridPane.rowIndex="1" GridPane.columnSpan="2"/>
 
-                <JFXButton fx:id="joinButton" buttonType="FLAT"
+                <JFXButton fx:id="joinButton" buttonType="FLAT" textFill="BLACK"
                            mnemonicParsing="false" GridPane.rowIndex="2" GridPane.columnIndex="0"
                            prefHeight="35.0" prefWidth="115.0" text="Join"/>
+
                 <JFXButton fx:id="startButton" buttonType="FLAT"
                            GridPane.rowIndex="2" GridPane.columnIndex="1"
                            mnemonicParsing="false" prefHeight="35.0" prefWidth="115.0" text="Start"/>
@@ -58,7 +63,7 @@
 
         </GridPane>
 
-        <GridPane GridPane.rowIndex="1" GridPane.columnIndex="1" vgap="20" hgap="20">
+        <GridPane GridPane.rowIndex="1" GridPane.columnIndex="1" vgap="10" hgap="10">
             <children>
                 <Label text="Current Players:" textFill="WHITE" fx:id="playersTableLabel"
                        GridPane.rowIndex="0" GridPane.columnSpan="2">
@@ -66,8 +71,7 @@
                         <Font size="24.0"/>
                     </font>
                 </Label>
-                <TableView fx:id="playersTable" layoutX="316.0" layoutY="175.0" prefHeight="151.0"
-                           prefWidth="156.0" GridPane.rowIndex="1"
+                <TableView fx:id="playersTable" GridPane.rowIndex="1"
                            style="-fx-background-color: red;">
                     <columns>
                         <TableColumn fx:id="playerIDColumn" prefWidth="147.0" text="Player ID"/>
