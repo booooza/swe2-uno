@@ -36,8 +36,8 @@ public class AppPropsReader {
 				init();
 			}
 			return Integer.parseInt(appProps.getProperty(propertyName));
-		} catch (NullPointerException npE) {
-			logger.error(String.format("Root PATH corrupt. %s", npE.getMessage()));
+		} catch (Exception e) {
+			logger.error(String.format("Error loading appProps. %s", e.getMessage()), e);
 		}
 		return 1234;
 	}

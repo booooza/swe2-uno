@@ -3,11 +3,10 @@ package ch.swe2.uno.presentation.gui.controller;
 import ch.swe2.uno.business.player.PlayerInterface;
 import ch.swe2.uno.business.server.Request;
 import ch.swe2.uno.business.state.State;
+import ch.swe2.uno.presentation.gui.MainApp;
 import ch.swe2.uno.presentation.gui.events.RequestEventHandler;
 import ch.swe2.uno.presentation.network.client.Client;
 import ch.swe2.uno.presentation.services.BaseService;
-import ch.swe2.uno.presentation.services.NavigationService;
-import ch.swe2.uno.presentation.services.UnoService;
 import io.datafx.controller.ViewController;
 import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyObjectWrapper;
@@ -15,10 +14,10 @@ import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.geometry.HPos;
+import javafx.scene.control.*;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.GridPane;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,6 +42,14 @@ public final class WelcomeScreenController implements RequestEventHandler {
 	private Button serverButton;
 	@FXML
 	private Button startButton;
+	@FXML
+	private GridPane rootGrid;
+	@FXML
+	private ImageView logoImage;
+	@FXML
+	private Label playersTableLabel;
+	@FXML
+	private Label playerNameLabel;
 
 	@Inject
 	private BaseService baseService;
@@ -73,6 +80,14 @@ public final class WelcomeScreenController implements RequestEventHandler {
 		if (baseService.getUnoService() != null) {
 			baseService.getUnoService().addRequestEventListener(this);
 		}
+		// rootGrid.setGridLinesVisible(true);
+		rootGrid.setHalignment(logoImage, HPos.CENTER);
+		rootGrid.setHalignment(serverButton, HPos.CENTER);
+		rootGrid.setHalignment(playersTableLabel, HPos.CENTER);
+		rootGrid.setHalignment(playerNameLabel, HPos.CENTER);
+
+
+
 		checkIfServerIsAvailable();
 	}
 
@@ -87,6 +102,12 @@ public final class WelcomeScreenController implements RequestEventHandler {
 	private void startServer() {
 		if (Client.hostAvailabilityCheck() == false) {
 			baseService.getUnoService().startServer();
+			Platform.runLater(() -> {
+				baseService.getUnoService().initClient();
+				serverButton.setDisable(true);
+				serverButton.setText("Server Started...");
+			});
+		} else if (baseService.getUnoService().getClient() == null) {
 			Platform.runLater(() -> {
 				baseService.getUnoService().initClient();
 				serverButton.setDisable(true);
@@ -109,6 +130,7 @@ public final class WelcomeScreenController implements RequestEventHandler {
 		try {
 			baseService.getUnoService().setState(baseService.getUnoService().getClient().sendRequest(Request.Command.JOIN, playerName.getText()));
 			baseService.getUnoService().setPlayerName(playerName.getText());
+			MainApp.getPrimaryStage().setTitle(String.format("UNO Game - %s", playerName.getText()));
 		} catch (Exception e) {
 			logger.warn("Error while joining", e);
 			throw new IllegalArgumentException();

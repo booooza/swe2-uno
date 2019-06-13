@@ -6,39 +6,69 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
-<StackPane fx:id="root" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1">
+<GridPane style="-fx-background-color: RED;"
+          hgap="10" vgap="10"
+          xmlns:fx="http://javafx.com/fxml/1"
+          xmlns="http://javafx.com/javafx/2.2"
+          alignment="center"
+          prefHeight="600"
+          prefWidth="800"
+          fx:id="rootGrid">
     <children>
-        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="400.0" prefWidth="600.0"
-                    style="-fx-background-color: red;">
+        <ImageView fx:id="logoImage" fitHeight="80.0" fitWidth="120.0"
+                   GridPane.rowIndex="0" GridPane.columnIndex="0">
+            <image>
+                <Image url="@../../images/logo.png"/>
+            </image>
+        </ImageView>
+
+        <JFXButton fx:id="serverButton" buttonType="RAISED"
+                   GridPane.rowIndex="0" GridPane.columnIndex="1"
+                   mnemonicParsing="false" prefHeight="35.0" prefWidth="115.0" text="Start Server"/>
+
+        <GridPane GridPane.rowIndex="1" GridPane.columnIndex="0" vgap="20" hgap="20">
             <children>
-                <ImageView fitHeight="70.0" fitWidth="97.0" layoutX="14.0" layoutY="14.0">
-                    <image>
-                        <Image url="@../../images/logo.png"/>
-                    </image>
-                </ImageView>
-                <JFXButton fx:id="serverButton" buttonType="RAISED" layoutX="472.0" layoutY="14.0"
-                           mnemonicParsing="false" prefHeight="35.0" prefWidth="115.0" text="Start Server"/>
-
-                <Label layoutX="59.0" layoutY="127.0" text="Enter your name:" textFill="WHITE">
+                <Label text="Enter your name:" textFill="WHITE" GridPane.rowIndex="0" fx:id="playerNameLabel"
+                       GridPane.columnIndex="0" GridPane.columnSpan="2">
                     <font>
                         <Font size="24.0"/>
                     </font>
                 </Label>
-                <TextField fx:id="playerName" layoutX="14.0" layoutY="176.0" prefHeight="39.0" prefWidth="270.0"
-                           text="Player Name"/>
-                <JFXButton fx:id="joinButton" buttonType="RAISED" layoutX="14.0" layoutY="244.0" mnemonicParsing="false"
+
+                <TextField fx:id="playerName" prefHeight="39.0" prefWidth="270.0"
+                           text="Player Name" GridPane.rowIndex="1" GridPane.columnSpan="2"/>
+
+                <JFXButton fx:id="joinButton" buttonType="FLAT"
+                           mnemonicParsing="false" GridPane.rowIndex="2" GridPane.columnIndex="0"
                            prefHeight="35.0" prefWidth="115.0" text="Join"/>
-                <JFXButton fx:id="startButton" buttonType="RAISED" layoutX="169.0" layoutY="244.0"
+                <JFXButton fx:id="startButton" buttonType="FLAT"
+                           GridPane.rowIndex="2" GridPane.columnIndex="1"
                            mnemonicParsing="false" prefHeight="35.0" prefWidth="115.0" text="Start"/>
+            </children>
+            <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="10.0" prefWidth="30.0" percentWidth="50.0"/>
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="10.0" prefWidth="30.0" percentWidth="50.0"/>
+            </columnConstraints>
 
-                <Label layoutX="368.0" layoutY="127.0" text="Current Players:" textFill="WHITE">
+            <rowConstraints>
+                <RowConstraints vgrow="SOMETIMES" maxHeight="10.0" prefHeight="30.0" percentHeight="33.3"/>
+                <RowConstraints vgrow="SOMETIMES" maxHeight="10.0" prefHeight="30.0" percentHeight="33.3"/>
+                <RowConstraints vgrow="SOMETIMES" maxHeight="10.0" prefHeight="30.0" percentHeight="33.3"/>
+            </rowConstraints>
+
+        </GridPane>
+
+        <GridPane GridPane.rowIndex="1" GridPane.columnIndex="1" vgap="20" hgap="20">
+            <children>
+                <Label text="Current Players:" textFill="WHITE" fx:id="playersTableLabel"
+                       GridPane.rowIndex="0" GridPane.columnSpan="2">
                     <font>
                         <Font size="24.0"/>
                     </font>
                 </Label>
-                <TableView fx:id="playersTable" layoutX="316.0" layoutY="175.0" prefHeight="151.0" prefWidth="156.0"
-                           style="-fx-background-color: red;" AnchorPane.bottomAnchor="66.0"
-                           AnchorPane.leftAnchor="316.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="175.0">
+                <TableView fx:id="playersTable" layoutX="316.0" layoutY="175.0" prefHeight="151.0"
+                           prefWidth="156.0" GridPane.rowIndex="1"
+                           style="-fx-background-color: red;">
                     <columns>
                         <TableColumn fx:id="playerIDColumn" prefWidth="147.0" text="Player ID"/>
                         <TableColumn fx:id="playerNameColumn" prefWidth="146.0" text="Player Name"/>
@@ -47,8 +77,25 @@
                         <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
                     </columnResizePolicy>
                 </TableView>
-
             </children>
-        </AnchorPane>
+            <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="10.0" prefWidth="30.0" percentWidth="100.0"/>
+            </columnConstraints>
+
+            <rowConstraints>
+                <RowConstraints vgrow="SOMETIMES" maxHeight="10.0" prefHeight="30.0" percentHeight="33.3"/>
+                <RowConstraints vgrow="SOMETIMES" maxHeight="10.0" prefHeight="30.0" percentHeight="66.6"/>
+            </rowConstraints>
+        </GridPane>
     </children>
-</StackPane>
+
+    <columnConstraints>
+        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="50.0" prefWidth="100.0"/>
+        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="50.0" prefWidth="100.0"/>
+    </columnConstraints>
+
+    <rowConstraints>
+        <RowConstraints vgrow="SOMETIMES" maxHeight="10.0" prefHeight="30.0" percentHeight="30.0"/>
+        <RowConstraints vgrow="SOMETIMES" maxHeight="10.0" prefHeight="30.0" percentHeight="70.0"/>
+    </rowConstraints>
+</GridPane>

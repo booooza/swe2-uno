@@ -1,6 +1,10 @@
-/*
- *	Apply google Roboto font to all UI components
- */
+
+/*******************************************************************************
+*                                                                              *
+* Misc                                                                         *
+*                                                                              *
+*******************************************************************************/
+
 .root {
     -fx-font-family: Roboto;
     src: "/resources/roboto/Roboto-Regular.ttf";
@@ -10,11 +14,55 @@
     -fx-background-color: red;
 }
 
+.split-pane:horizontal > .split-pane-divider {
+    -fx-border-color: transparent red transparent red;
+    -fx-background-color: transparent, derive(red,20%);
+}
+
+.split-pane {
+     -fx-padding: 1 0 0 0;
+}
+
+/*
 .label {
     -fx-font-size: 12pt;
     -fx-font-family: "Helvetica";
     -fx-text-fill: white;
 }
+*/
+
+
+/*******************************************************************************
+*                                                                              *
+* Icons                                                                        *
+*                                                                              *
+*******************************************************************************/
+
+.icons-rippler {
+    -jfx-rippler-fill: #FE774D;
+    -jfx-mask-type: CIRCLE;
+}
+
+.icons-rippler1 {
+    -jfx-rippler-fill: #4285F4;
+    -jfx-mask-type: CIRCLE;
+}
+
+.icons-rippler:hover {
+    -fx-cursor: hand;
+}
+
+.icon {
+    -fx-fill: #FE774D;
+    -fx-padding: 10.0;
+    -fx-cursor: hand;
+}
+
+/*******************************************************************************
+*                                                                              *
+* Table                                                                        *
+*                                                                              *
+*******************************************************************************/
 
 .table-view {
     -fx-base: red;
@@ -45,31 +93,13 @@
     -fx-background-color: -fx-focus-color;
 }
 
-/*
-.split-pane:horizontal > .split-pane-divider {
-    -fx-border-color: transparent red transparent red;
-    -fx-background-color: transparent, derive(red,20%);
-}
+/*******************************************************************************
+*                                                                              *
+* Button / Toggle Button                                                       *
+*                                                                              *
+*******************************************************************************/
 
-.split-pane {
-    -fx-padding: 1 0 0 0;
-}
-*/
-.text-field {
-    -fx-font-size: 12pt;
-    -fx-font-family: "Helvetica";
-}
 
-/*
-.button, .toggle-button {
-    -fx-padding: 5 22 5 22;
-    -fx-background-radius: 0;
-    -fx-background-color: yellow;
-    -fx-font-family: Helvetica, Arial, sans-serif;
-    -fx-font-size: 12pt;
-    -fx-text-fill: black;
-}
-*/
 .button:hover, .toggle-button:hover {
     -fx-background-color: orange;
 }
@@ -79,30 +109,65 @@
     -fx-text-fill: black;
 }
 
-.uno-button {
-    -jfx-button-type: FLAT;
-    -fx-background-color: white;
-    -fx-text-fill: black;
+.jfx-toggle-button {
+    -jfx-toggle-color: #0F9D58;
 }
 
-.icon {
-    -fx-fill: #FE774D;
-    -fx-padding: 10.0;
-    -fx-cursor: hand;
+.custom-jfx-toggle-button {
+    -jfx-toggle-color: #4285F4;
 }
 
-.icons-rippler {
-    -jfx-rippler-fill: #FE774D;
-    -jfx-mask-type: CIRCLE;
+.custom-jfx-toggle-button-red {
+    -jfx-toggle-color: red;
+    -jfx-toggle-line-color: #ff8782;
 }
 
-.icons-rippler1 {
-    -jfx-rippler-fill: #4285F4;
-    -jfx-mask-type: CIRCLE;
+.toggle-label {
+    -fx-font-size: 14.0px;
 }
 
-.icons-rippler:hover {
-    -fx-cursor: hand;
+.toggle-icon1 .icon {
+    -fx-fill: #4285F4;
+}
+
+.toggle-icon1 {
+    -fx-pref-width: 80px;
+    -fx-background-radius: 80px;
+    -fx-pref-height: 80px;
+    -jfx-toggle-color: rgba(66.0, 133.0, 244.0, 0.29885056614875793);
+    -jfx-untoggle-color: transparent;
+}
+
+.toggle-icon1 .jfx-rippler {
+    -jfx-rippler-fill: rgba(66.0, 133.0, 244.0, 0.29885056614875793);
+}
+
+.toggle-icon2,
+.toggle-icon3 {
+    -fx-pref-width: 50px;
+    -fx-background-radius: 50px;
+    -fx-pref-height: 50px;
+}
+
+.toggle-icon3 {
+    -jfx-toggle-color: rgba(128, 128, 255, 0.2);
+    -jfx-untoggle-color: transparent;
+}
+
+.toggle-icon2 .icon {
+    -fx-fill: RED;
+}
+
+.toggle-icon2 .jfx-rippler {
+    -jfx-rippler-fill: RED;
+}
+
+.toggle-icon3 .icon {
+    -fx-fill: rgb(204.0, 204.0, 51.0);
+}
+
+.toggle-icon3 .jfx-rippler {
+    -jfx-rippler-fill: #0F9D58;
 }
 
 /*******************************************************************************
@@ -112,7 +177,7 @@
 *******************************************************************************/
 
 .jfx-decorator .resize-border {
-    -fx-border-color: -fx-decorator-color;
+    -fx-border-color: RED;
     -fx-border-width: 0 4 4 4;
 }
 
@@ -144,52 +209,4 @@
 .jfx-text-field .error-icon, .jfx-password-field .error-icon, .jfx-text-area .error-icon {
     -fx-text-fill: #D34336;
     -fx-font-size: 1em;
-}
-
-
-/*******************************************************************************
- *                                                                             *
- * JFX Tool Bar                                                                *
- *                                                                             *
- ******************************************************************************/
-
-.jfx-tool-bar {
-    -fx-font-size: 20.0;
-    -fx-font-weight: BOLD;
-    -fx-background-color: #5264AE;
-    -fx-pref-width: 100.0%;
-    -fx-pref-height: 64.0px;
-}
-
-.jfx-tool-bar HBox {
-    -fx-alignment: center;
-    -fx-spacing: 25.0;
-    -fx-padding: 0.0 10.0;
-}
-
-.jfx-tool-bar Label {
-    -fx-text-fill: WHITE;
-}
-
-.jfx-tool-bar .jfx-options-burger {
-    -fx-padding: 22px;
-}
-
-.jfx-tool-bar .jfx-options-burger StackPane {
-    -fx-pref-width: 4px;
-}
-
-.jfx-tool-bar .jfx-rippler {
-    -jfx-rippler-fill: WHITE;
-}
-
-.option-list-view {
-    -fx-pref-width: 160.0px;
-    -fx-background-color: WHITE;
-}
-
-.option-jfx-list-view-icon {
-    -fx-fill: #5264AE;
-    -fx-padding: 0.0 10.0 0.0 5.0;
-    -fx-cursor: hand;
 }
