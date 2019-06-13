@@ -1,6 +1,9 @@
 package ch.swe2.uno.business.deck;
 
 import ch.swe2.uno.business.card.CardInterface;
+import ch.swe2.uno.business.card.CardType;
+import ch.swe2.uno.business.card.NumberCard;
+import ch.swe2.uno.business.card.UnoColor;
 import ch.swe2.uno.business.player.Player;
 import ch.swe2.uno.business.player.PlayerInterface;
 import org.junit.jupiter.api.DisplayName;
@@ -74,5 +77,20 @@ public class DeckTest {
 
 		assertEquals(78, deck.getDrawPileSize());
 		assertEquals(1, deck.getDiscardPileSize());
+	}
+
+	@Test
+	@DisplayName("Top card of discard pile")
+	void testGetTopCardOfDiscardPile() {
+		// Given
+		Deck deck = new Deck();
+		CardInterface card = new NumberCard(CardType.NUMBERCARD, UnoColor.RED, 1);
+
+		// When
+		deck.create();
+		deck.addCardToDiscardPile(card);
+
+		// Then
+		assertEquals(UnoColor.RED, deck.getTopCardOfDiscardPile().getColor());
 	}
 }
