@@ -9,6 +9,17 @@
     <groupId>ch.swe2.uno</groupId>
     <artifactId>swe2-uno</artifactId>
     <version>0.0.1</version>
+
+    <repositories>
+        <repository>
+            <id>maven-central-repo</id>
+            <url>http://repo1.maven.org/maven2</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+
     <dependencies>
         <!-- JavaFX -->
         <!-- https://mvnrepository.com/artifact/org.openjfx/javafx-controls -->
@@ -118,6 +129,19 @@
             <groupId>javax.inject</groupId>
             <artifactId>javax.inject</artifactId>
             <version>1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.testfx</groupId>
+            <artifactId>testfx-core</artifactId>
+            <version>4.0.1-alpha</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.testfx</groupId>
+            <artifactId>testfx-junit</artifactId>
+            <version>4.0.1-alpha</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
     <build>
