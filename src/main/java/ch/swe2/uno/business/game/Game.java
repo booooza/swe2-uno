@@ -72,6 +72,12 @@ public class Game {
 		return new State();
 	}
 
+	public synchronized State restart() {
+		// TODO @Luca implement restart action
+		isRunning = false;
+		return state;
+	}
+
 	public synchronized void playCard(String playerName, CardInterface card, boolean uno, UnoColor chosenColor) {
 		PlayerInterface player;
 		Optional<PlayerInterface> optionalOfPlayer = state.getPlayerByName(playerName);
@@ -150,7 +156,7 @@ public class Game {
 		if (player.isCurrentTurn() && player.canDraw()) {
 			player.addCard(deck.drawCard());
 			player.setCanDraw(false);
-			
+
 			logger.info("Player {} has {} cards remaining in hand", player.getName(), player.getHand().size());
 
 			if (state.containsPlayer("Bot") && playerName.equals("Bot")) {

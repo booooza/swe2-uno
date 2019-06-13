@@ -10,4 +10,6 @@ public interface RequestEventHandler {
 	void played(State state);
 
 	void finished(State state);
+
+	void restarted(State state);
 }

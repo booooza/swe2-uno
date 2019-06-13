@@ -17,6 +17,7 @@ import javafx.fxml.FXML;
 import javafx.geometry.HPos;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.GridPane;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,6 +46,8 @@ public final class WelcomeScreenController implements RequestEventHandler {
 	@FXML
 	private GridPane rootGrid;
 	@FXML
+	private GridPane playerGrid;
+	@FXML
 	private ImageView logoImage;
 	@FXML
 	private Label playersTableLabel;
@@ -70,6 +73,12 @@ public final class WelcomeScreenController implements RequestEventHandler {
 			}
 		}));
 
+		playerName.setOnKeyPressed(ke -> {
+			if (ke.getCode().equals(KeyCode.ENTER)) {
+				handleJoinButtonAction();
+			}
+		});
+
 		startButton.setOnAction(action -> handleStartButtonAction());
 		joinButton.setOnAction(action -> handleJoinButtonAction());
 		serverButton.setOnAction(action -> handleServerButtonAction());
@@ -80,15 +89,18 @@ public final class WelcomeScreenController implements RequestEventHandler {
 		if (baseService.getUnoService() != null) {
 			baseService.getUnoService().addRequestEventListener(this);
 		}
-		// rootGrid.setGridLinesVisible(true);
+
 		rootGrid.setHalignment(logoImage, HPos.CENTER);
 		rootGrid.setHalignment(serverButton, HPos.CENTER);
 		rootGrid.setHalignment(playersTableLabel, HPos.CENTER);
 		rootGrid.setHalignment(playerNameLabel, HPos.CENTER);
 
-
+		playerGrid.setHalignment(joinButton, HPos.LEFT);
+		playerGrid.setHalignment(startButton, HPos.RIGHT);
 
 		checkIfServerIsAvailable();
+
+		Platform.runLater(() -> serverButton.requestFocus());
 	}
 
 	private void checkIfServerIsAvailable() {
@@ -181,6 +193,10 @@ public final class WelcomeScreenController implements RequestEventHandler {
 	}
 
 	public synchronized void finished(State state) {
+		// default empty
+	}
+
+	public synchronized void restarted(State state){
 		// default empty
 	}
 }

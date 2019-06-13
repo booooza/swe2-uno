@@ -81,8 +81,6 @@ public class ClientHandlerThread implements Runnable {
 						}
 
 						break;
-					case RESTART:
-						break;
 					case PLAY:
 						MultiThreadedServer.getGame().playCard(request.getPlayerName(), request.getCard(), request.getUno(), request.getChosenColor());
 						outputStream.reset();
@@ -111,6 +109,16 @@ public class ClientHandlerThread implements Runnable {
 					case GETSTATE:
 						outputStream.reset();
 						outputStream.writeObject(MultiThreadedServer.getGame().getState());
+						break;
+					case RESTART:
+						MultiThreadedServer.getGame().restart();
+						outputStream.reset();
+						outputStream.writeObject(MultiThreadedServer.getGame().getState());
+
+						for (ClientHandlerThread clientHandlerThread : clientListenerInfo.values()) {
+							clientHandlerThread.outputStream.reset();
+							clientHandlerThread.outputStream.writeObject(new Request(Request.Command.RESTART, Request.Direction.SERVER_TO_CLIENT, MultiThreadedServer.getGame().getState()));
+						}
 						break;
 					case QUIT:
 						break;

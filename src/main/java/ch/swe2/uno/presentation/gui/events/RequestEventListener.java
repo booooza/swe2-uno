@@ -34,7 +34,7 @@ public class RequestEventListener implements EventListener {
 					}
 					break;
 				case PLAYED:
-					if(((Request) event).getState().getWinner() != null){
+					if (((Request) event).getState().getWinner() != null) {
 						for (RequestEventHandler reqHandler : this.requestEventHandlers) {
 							Platform.runLater(() -> reqHandler.finished(((Request) event).getState()));
 						}
@@ -43,7 +43,11 @@ public class RequestEventListener implements EventListener {
 							Platform.runLater(() -> reqHandler.played(((Request) event).getState()));
 						}
 					}
-
+					break;
+				case RESTART:
+					for (RequestEventHandler reqHandler : this.requestEventHandlers) {
+						Platform.runLater(() -> reqHandler.restarted(((Request) event).getState()));
+					}
 					break;
 				case QUIT:
 					break;
