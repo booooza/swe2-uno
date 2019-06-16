@@ -64,6 +64,8 @@ public final class WelcomeScreenController implements RequestEventHandler {
 	@PostConstruct
 	public void init() {
 		// Initialize controls
+		joined = false;
+
 		playerNameColumn.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getName()));
 		playerIDColumn.setCellValueFactory(cellData -> new ReadOnlyObjectWrapper(cellData.getValue().getId()));
 
@@ -75,7 +77,9 @@ public final class WelcomeScreenController implements RequestEventHandler {
 
 		playerName.setOnKeyPressed(ke -> {
 			if (ke.getCode().equals(KeyCode.ENTER)) {
-				handleJoinButtonAction();
+				if (!joined) {
+					handleJoinButtonAction();
+				}
 			}
 		});
 

@@ -53,6 +53,30 @@
     -fx-text-fill: -fx-primary;
 }
 
+
+.jfx-toggle-button {
+    -fx-text-fill: -fx-primarytext;
+    -fx-background-color: -fx-primary;
+    -fx-border-color: -fx-secondary;
+    -fx-border-radius: 20px;
+    -fx-background-radius: 20px;
+    -fx-font-size: 12pt;
+}
+
+.custom-jfx-toggle-button {
+    -fx-text-fill: -fx-primarytext;
+    -fx-background-color: -fx-primary;
+    -fx-border-color: -fx-secondary;
+    -fx-border-radius: 20px;
+    -fx-background-radius: 20px;
+    -fx-font-size: 12pt;
+}
+
+.toggle-label {
+    -fx-font-size: 14.0px;
+}
+
+
 .text-field {
     -fx-text-fill: -fx-primarytext;
     -fx-font-size: 12pt;
@@ -61,7 +85,6 @@
 }
 
 /*Login Screen Specific*/
-
 
 .wrong-credentials {
     -jfx-unfocus-color: #ef5350;
