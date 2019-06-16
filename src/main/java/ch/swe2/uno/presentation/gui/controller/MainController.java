@@ -54,6 +54,6 @@ public final class MainController {
 		} catch (FlowException flowEx) {
 			logger.error(String.format("Exception: %s", flowEx.getMessage()), flowEx);
 		}
-		baseService.initNavigationService();
+		baseService.initNavigationService(context);
 	}
 }

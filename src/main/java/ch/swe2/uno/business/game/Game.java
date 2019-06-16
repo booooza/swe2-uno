@@ -180,7 +180,11 @@ public class Game {
 		Optional<CardInterface> optionalMatchingCard = randomCardMatchingTopCard("Bot");
 		if (optionalMatchingCard.isPresent()) {
 			CardInterface matchingCard = optionalMatchingCard.get();
-			playCard("Bot", matchingCard, cardsLeftInPlayersHand("Bot") == 1, UnoColor.RED);
+			UnoColor chosenColor = UnoColor.RED;
+			if (matchingCard.getType() == CardType.WILD) {
+				chosenColor = getColorFromRemainingCards("Bot");
+			}
+			playCard("Bot", matchingCard, cardsLeftInPlayersHand("Bot") == 2, chosenColor);
 			state.setMessage("Bot has played card " + matchingCard.getColor().toString() + " " + matchingCard.getNumber());
 			logger.info("Bot has played card {} {}", matchingCard.getColor().toString(), matchingCard.getNumber());
 		} else {
@@ -208,13 +212,30 @@ public class Game {
 
 	private Optional<CardInterface> randomCardMatchingTopCard(String playerName) {
 		if (state.getPlayerByName(playerName).isPresent()) {
-			return state.getPlayerByName(playerName).get().getHand().stream()
+			Optional<CardInterface> possibleCard = state.getPlayerByName(playerName).get().getHand().stream()
 					.filter(card -> card.getColor().equals(state.getTopDiscardPileCard().getColor())
 							|| card.getNumber() == state.getTopDiscardPileCard().getNumber())
 					.findAny();
+			if (!possibleCard.isPresent()) {
+				possibleCard = state.getPlayerByName(playerName).get().getHand().stream()
+						.filter(c -> c.getType() == CardType.WILD).findAny();
+			}
+			return possibleCard;
 		} else {
 			throw new NullPointerException();
 		}
+	}
+
+	private UnoColor getColorFromRemainingCards(String playerName) {
+		if (state.getPlayerByName(playerName).isPresent()) {
+			Optional<CardInterface> possibleCard = state.getPlayerByName(playerName).get().getHand().stream().filter(
+					card -> card.getType() != CardType.WILD).findFirst();
+			if (possibleCard.isPresent()) {
+				return possibleCard.get().getColor();
+			}
+		}
+		// return default color
+		return UnoColor.RED;
 	}
 
 	private int cardsLeftInPlayersHand(String playerName) {

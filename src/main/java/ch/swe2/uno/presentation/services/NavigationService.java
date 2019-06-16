@@ -6,6 +6,7 @@ import ch.swe2.uno.presentation.gui.controller.*;
 import io.datafx.controller.flow.Flow;
 import io.datafx.controller.flow.FlowException;
 import io.datafx.controller.flow.FlowHandler;
+import io.datafx.controller.flow.context.ViewFlowContext;
 import io.datafx.controller.util.VetoException;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -19,8 +20,9 @@ import java.io.IOException;
 
 public class NavigationService {
 	private static Logger logger = LoggerFactory.getLogger(NavigationService.class);
-
 	private static NavigationService theInstance;
+
+	private ViewFlowContext context;
 
 	private NavigationService() {
 		logger.info("NavigationService created");
@@ -33,27 +35,20 @@ public class NavigationService {
 		return theInstance;
 	}
 
-	void initNavigationService() {
-		FlowHandler flowHandler = (FlowHandler) MainController.getMainControllerViewFlowContext()
-				.getRegisteredObject("ContentFlowHandler");
-		Flow contentFlow = (Flow) MainController.getMainControllerViewFlowContext().getRegisteredObject("ContentFlow");
-		this.bindNodeToController("Main", MainController.class, contentFlow, flowHandler);
-		this.bindNodeToController("WelcomeScreen", WelcomeScreenController.class, contentFlow, flowHandler);
-		this.bindNodeToController("GameOverview", GameOverviewController.class, contentFlow, flowHandler);
-		this.bindNodeToController("EndScreen", EndScreenController.class, contentFlow, flowHandler);
+	void initNavigationService(ViewFlowContext context) {
+		this.context = context;
+		Flow contentFlow = (Flow) context.getRegisteredObject("ContentFlow");
+		this.bindNodeToController("Main", MainController.class, contentFlow);
+		this.bindNodeToController("WelcomeScreen", WelcomeScreenController.class, contentFlow);
+		this.bindNodeToController("GameOverview", GameOverviewController.class, contentFlow);
+		this.bindNodeToController("EndScreen", EndScreenController.class, contentFlow);
 	}
 
 	public void handleNavigation(String navTarget) {
 		try {
 			logger.info(String.format("Navigation Service handleNavigation to %s", navTarget));
-			if (MainController.getMainControllerViewFlowContext() != null) {
-				FlowHandler flowHandler = (FlowHandler) MainController.getMainControllerViewFlowContext()
-						.getRegisteredObject("ContentFlowHandler");
-				flowHandler.handle(navTarget);
-			} else {
-				logger.info(
-						String.format("Navigation Service handleNavigation context is null navTarget: %s", navTarget));
-			}
+			FlowHandler contentFlowHandler = (FlowHandler) context.getRegisteredObject("ContentFlowHandler");
+			contentFlowHandler.handle(navTarget);
 		} catch (FlowException | VetoException ex) {
 			logger.error(String.format("Error navigation to %s", navTarget), ex);
 		}
@@ -90,7 +85,7 @@ public class NavigationService {
 		}
 	}
 
-	private void bindNodeToController(String node, Class<?> controllerClass, Flow flow, FlowHandler flowHandler) {
+	private void bindNodeToController(String node, Class<?> controllerClass, Flow flow) {
 		flow.withGlobalLink(node, controllerClass);
 	}
 }
