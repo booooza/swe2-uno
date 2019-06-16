@@ -22,20 +22,18 @@ public class NavigationService {
 
 	private static NavigationService theInstance;
 
-	public NavigationService() {
-		logger.info("Navigation Service constructed");
+	private NavigationService() {
+		logger.info("NavigationService created");
 	}
 
-	public static NavigationService getInstance() {
+	static NavigationService getInstance() {
 		if (theInstance == null) {
 			theInstance = new NavigationService();
 		}
 		return theInstance;
 	}
 
-	public void initNavigationService() {
-		logger.info(String.format("initNavigationService {}", MainController.getMainControllerViewFlowContext()));
-
+	void initNavigationService() {
 		FlowHandler flowHandler = (FlowHandler) MainController.getMainControllerViewFlowContext()
 				.getRegisteredObject("ContentFlowHandler");
 		Flow contentFlow = (Flow) MainController.getMainControllerViewFlowContext().getRegisteredObject("ContentFlow");
@@ -43,8 +41,6 @@ public class NavigationService {
 		this.bindNodeToController("WelcomeScreen", WelcomeScreenController.class, contentFlow, flowHandler);
 		this.bindNodeToController("GameOverview", GameOverviewController.class, contentFlow, flowHandler);
 		this.bindNodeToController("EndScreen", EndScreenController.class, contentFlow, flowHandler);
-
-		logger.info(String.format("Nodes bound {}", MainController.getMainControllerViewFlowContext()));
 	}
 
 	public void handleNavigation(String navTarget) {
@@ -58,9 +54,7 @@ public class NavigationService {
 				logger.info(
 						String.format("Navigation Service handleNavigation context is null navTarget: %s", navTarget));
 			}
-		} catch (VetoException ex) {
-			logger.error(String.format("Error navigation to %s", navTarget), ex);
-		} catch (FlowException ex) {
+		} catch (FlowException | VetoException ex) {
 			logger.error(String.format("Error navigation to %s", navTarget), ex);
 		}
 	}
