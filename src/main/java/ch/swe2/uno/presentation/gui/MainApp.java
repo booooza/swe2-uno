@@ -32,7 +32,7 @@ public class MainApp extends Application {
 		return primaryStage;
 	}
 
-	private void setPrimaryStage(Stage pStage) {
+	static void setPrimaryStage(Stage pStage) {
 		MainApp.primaryStage = pStage;
 	}
 

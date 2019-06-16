@@ -147,6 +147,9 @@ public final class WelcomeScreenController implements RequestEventHandler {
 	}
 
 	private void handleJoinButtonAction() {
+		if (!Client.hostAvailabilityCheck()) {
+			return;
+		}
 		logger.info("Player Joined: " + playerName.getText());
 		joined = true;
 		try {

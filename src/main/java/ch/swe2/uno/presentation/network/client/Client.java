@@ -21,8 +21,14 @@ public class Client {
 	private volatile ClientRequestListenerThread clientRequestListenerThread = null;
 
 	public Client(ExecutorService threadPool) {
-		Client.SERVER_PORT = AppPropsReader.readIntValueFromAppPropsBy("SERVER_PORT");
-		Client.SERVER_ADDRESS = AppPropsReader.readStringValueFromAppPropsBy("SERVER_ADDRESS");
+		int serverPort = AppPropsReader.readIntValueFromAppPropsBy("SERVER_PORT");
+		String serverAddress = AppPropsReader.readStringValueFromAppPropsBy("SERVER_ADDRESS");
+		if (serverPort != 0) {
+			Client.SERVER_PORT = serverPort;
+		}
+		if (serverAddress != null && !(serverAddress.isEmpty())) {
+			Client.SERVER_ADDRESS = serverAddress;
+		}
 		initializeSockets(threadPool);
 	}
 
