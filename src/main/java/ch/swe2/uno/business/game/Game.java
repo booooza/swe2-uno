@@ -40,10 +40,16 @@ public class Game {
 		return state;
 	}
 
-	synchronized State initialize() {
+	private synchronized State removePlayers() {
+		if (!isRunning) {
+			state.removePlayers();
+		}
+		return state;
+	}
+
+	synchronized void initialize() {
 		logger.info("Starting the game");
 		state = new State(new ArrayList(), "Initial state");
-		return state;
 	}
 
 	public synchronized State start() {
@@ -75,7 +81,8 @@ public class Game {
 	public synchronized State restart() {
 		// TODO @Luca implement restart action
 		isRunning = false;
-		return state;
+		deck = new Deck();
+		return state.restart();
 	}
 
 	public synchronized void playCard(String playerName, CardInterface card, boolean uno, UnoColor chosenColor) {

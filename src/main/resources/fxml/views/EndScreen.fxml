@@ -36,13 +36,11 @@
         <JFXButton fx:id="endButton" buttonType="RAISED" GridPane.rowIndex="2" GridPane.columnIndex="2"
                    GridPane.halignment="CENTER"
                    mnemonicParsing="false" text="Exit"/>
-
-
     </children>
     <columnConstraints>
-        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="50.0" prefWidth="20.0"/>
-        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="50.0" prefWidth="60.0"/>
-        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="50.0" prefWidth="20.0"/>
+        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="50.0" prefWidth="10.0"/>
+        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="50.0" prefWidth="80.0"/>
+        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="50.0" prefWidth="10.0"/>
     </columnConstraints>
 
     <rowConstraints>

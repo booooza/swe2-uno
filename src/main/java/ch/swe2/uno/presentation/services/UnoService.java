@@ -53,8 +53,10 @@ public class UnoService {
 	}
 
 	public void initClient() {
-		client = new Client(this.threadPool);
-		client.setEventHandler(this.eventListener);
+		if (client == null) {
+			client = new Client(this.threadPool);
+			client.setEventHandler(this.eventListener);
+		}
 	}
 
 	public void stopService() {

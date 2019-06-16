@@ -89,6 +89,10 @@ public class State implements Serializable {
 		this.players.add(new Player(playerName, (long) this.players.size()));
 	}
 
+	public synchronized void removePlayers(){
+		this.players = new ArrayList<>();
+	}
+
 	public synchronized Boolean containsPlayer(String playerName) {
 		if (this.players != null) {
 			return this.players.stream().anyMatch(p -> p.getName().equals(playerName));
@@ -126,5 +130,11 @@ public class State implements Serializable {
 
 	public synchronized void setTopDiscardPileCard(CardInterface topDiscardPileCard) {
 		this.topDiscardPileCard = topDiscardPileCard;
+	}
+
+	public State restart() {
+		removePlayers();
+		setWinner("");
+		return this;
 	}
 }

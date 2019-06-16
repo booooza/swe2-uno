@@ -88,6 +88,10 @@ public final class WelcomeScreenController implements RequestEventHandler {
 
 		if (baseService.getUnoService() != null) {
 			baseService.getUnoService().addRequestEventListener(this);
+
+			if (baseService.getUnoService().getPlayerName() != null && !baseService.getUnoService().getPlayerName().isEmpty()) {
+				playerName.setText(baseService.getUnoService().getPlayerName());
+			}
 		}
 
 		rootGrid.setHalignment(logoImage, HPos.CENTER);
@@ -105,7 +109,9 @@ public final class WelcomeScreenController implements RequestEventHandler {
 
 	private void checkIfServerIsAvailable() {
 		if (Client.hostAvailabilityCheck()) {
-			baseService.getUnoService().initClient();
+			if (baseService.getUnoService().getClient() != null) {
+				baseService.getUnoService().initClient();
+			}
 			serverButton.setDisable(true);
 			serverButton.setText("Server Started...");
 		}
@@ -196,7 +202,7 @@ public final class WelcomeScreenController implements RequestEventHandler {
 		// default empty
 	}
 
-	public synchronized void restarted(State state){
+	public synchronized void restarted(State state) {
 		// default empty
 	}
 }

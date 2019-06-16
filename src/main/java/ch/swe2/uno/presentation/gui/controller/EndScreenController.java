@@ -6,17 +6,19 @@ import ch.swe2.uno.presentation.gui.events.RequestEventHandler;
 import ch.swe2.uno.presentation.services.BaseService;
 import io.datafx.controller.ViewController;
 import javafx.fxml.FXML;
+import javafx.geometry.HPos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.GridPane;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
-@ViewController(value = "/fxml/views/EndScreen.fxml", title = "Game Overview")
+@ViewController(value = "/fxml/views/EndScreen.fxml", title = "End Screen")
 public final class EndScreenController implements RequestEventHandler {
 	private static Logger logger = LoggerFactory.getLogger(WelcomeScreenController.class);
 
@@ -32,6 +34,9 @@ public final class EndScreenController implements RequestEventHandler {
 	@FXML
 	private Label message;
 
+	@FXML
+	private GridPane rootGrid;
+
 	@Inject
 	private BaseService baseService;
 
@@ -39,6 +44,8 @@ public final class EndScreenController implements RequestEventHandler {
 	public void init() {
 		endButton.setOnAction(action -> handleExitButtonAction());
 		restartButton.setOnAction(action -> handleRestartButtonAction());
+
+		rootGrid.setHalignment(message, HPos.CENTER);
 
 		if (baseService.getUnoService().getState().getWinner().equals(baseService.getUnoService().getPlayerName())) {
 			message.setText("Congrats, you have won the game!");
@@ -82,6 +89,6 @@ public final class EndScreenController implements RequestEventHandler {
 	}
 
 	public synchronized void restarted(State state) {
-		baseService.getNavigationService().handleNavigation("main");
+		baseService.getNavigationService().handleNavigation("WelcomeScreen");
 	}
 }
