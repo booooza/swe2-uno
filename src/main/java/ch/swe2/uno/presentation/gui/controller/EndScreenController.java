@@ -12,6 +12,7 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Priority;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -45,8 +46,6 @@ public final class EndScreenController implements RequestEventHandler {
 		endButton.setOnAction(action -> handleExitButtonAction());
 		restartButton.setOnAction(action -> handleRestartButtonAction());
 
-		rootGrid.setHalignment(message, HPos.CENTER);
-
 		if (baseService.getUnoService().getState().getWinner().equals(baseService.getUnoService().getPlayerName())) {
 			message.setText("Congrats, you have won the game!");
 			imgView.setImage(new Image(EndScreenController.class.getResourceAsStream("/images/success.png")));
@@ -58,6 +57,11 @@ public final class EndScreenController implements RequestEventHandler {
 		if (baseService.getUnoService() != null) {
 			baseService.getUnoService().addRequestEventListener(this);
 		}
+
+		rootGrid.setHalignment(message, HPos.CENTER);
+		rootGrid.setHalignment(imgView, HPos.CENTER);
+		GridPane.setHgrow(message, Priority.ALWAYS);
+		GridPane.setHgrow(imgView, Priority.ALWAYS);
 	}
 
 
