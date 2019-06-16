@@ -34,7 +34,7 @@ public class ClientRequestListenerThread implements Runnable {
 		}
 	}
 
-	public void setEventListener(EventListener eventListener) {
+	void setEventListener(EventListener eventListener) {
 		this.eventListener = eventListener;
 	}
 
@@ -68,6 +68,7 @@ public class ClientRequestListenerThread implements Runnable {
 
 	public synchronized void terminate() {
 		try {
+			isRunning = false;
 			outputStream.close();
 			inputStream.close();
 			clientRequestListenerSocket.close();

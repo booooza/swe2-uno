@@ -29,7 +29,7 @@ public class MultiThreadedServer implements Runnable {
 
 	private MultiThreadedServer(Game game) {
 		this.serverPort = Server.SERVER_PORT;
-		this.game = game;
+		MultiThreadedServer.game = game;
 	}
 
 	public synchronized static Game getGame() {
@@ -80,6 +80,13 @@ public class MultiThreadedServer implements Runnable {
 	public synchronized void stop() {
 		this.isStopped = true;
 		try {
+			for (ClientHandlerThread clientHandlerThread : clientListenerInfo.values()) {
+				clientHandlerThread.terminate();
+			}
+			for (ClientHandlerThread clientHandlerThread : clientInfo.values()) {
+				clientHandlerThread.terminate();
+			}
+			runningThread.stop();
 			this.serverSocket.close();
 		} catch (IOException e) {
 			throw new RuntimeException("Error closing server", e);

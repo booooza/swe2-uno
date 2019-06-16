@@ -2,7 +2,6 @@ package ch.swe2.uno.presentation.gui.controller;
 
 import ch.swe2.uno.presentation.gui.datafx.ExtendedAnimatedFlowContainer;
 import ch.swe2.uno.presentation.services.BaseService;
-import ch.swe2.uno.presentation.services.NavigationService;
 import io.datafx.controller.ViewController;
 import io.datafx.controller.flow.Flow;
 import io.datafx.controller.flow.FlowException;
@@ -25,24 +24,19 @@ import static io.datafx.controller.flow.container.ContainerAnimations.SWIPE_LEFT
 @ViewController(value = "/fxml/Main.fxml", title = "Main")
 public final class MainController {
 	private static Logger logger = LoggerFactory.getLogger(MainController.class);
-
+	private static ViewFlowContext staContext;
 	@FXMLViewFlowContext
 	private ViewFlowContext context;
-
-	private static ViewFlowContext staContext;
+	@FXML
+	private StackPane root;
+	@ActionHandler
+	private FlowActionHandler actionHandler;
+	@Inject
+	private BaseService baseService;
 
 	public static ViewFlowContext getMainControllerViewFlowContext() {
 		return staContext;
 	}
-
-	@FXML
-	private StackPane root;
-
-	@ActionHandler
-	private FlowActionHandler actionHandler;
-
-	@Inject
-	private BaseService baseService;
 
 	@PostConstruct
 	public void init() {

@@ -21,11 +21,11 @@ public class UnoService {
 	private State gameState;
 	private String playerName;
 
-	public UnoService() {
+	private UnoService() {
 		logger.info("UnoService created");
 	}
 
-	public static UnoService getInstance() {
+	static UnoService getInstance() {
 		if (theInstance == null) {
 			theInstance = new UnoService();
 		}
@@ -58,6 +58,7 @@ public class UnoService {
 	}
 
 	public void stopService() {
+		client.terminate();
 		threadPool.shutdown();
 	}
 

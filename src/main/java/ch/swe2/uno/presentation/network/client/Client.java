@@ -48,6 +48,11 @@ public class Client {
 		}
 	}
 
+	public void terminate(){
+		clientThread.terminate();
+		clientRequestListenerThread.terminate();
+	}
+
 	public synchronized void setEventHandler(EventListener eventListener) {
 		clientRequestListenerThread.setEventListener(eventListener);
 	}

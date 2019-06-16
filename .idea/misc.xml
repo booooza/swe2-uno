@@ -1,5 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="EntryPointsManager">
+    <list size="2">
+      <item index="0" class="java.lang.String" itemvalue="io.datafx.controller.flow.context.ActionHandler" />
+      <item index="1" class="java.lang.String" itemvalue="javafx.fxml.FXML" />
+    </list>
+    <writeAnnotations>
+      <writeAnnotation name="javafx.fxml.FXML" />
+      <writeAnnotation name="io.datafx.controller.flow.context.ActionHandler" />
+    </writeAnnotations>
+  </component>
   <component name="JavaScriptSettings">
     <option name="languageLevel" value="ES6" />
   </component>

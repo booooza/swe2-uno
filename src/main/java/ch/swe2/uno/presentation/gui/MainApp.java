@@ -2,8 +2,6 @@ package ch.swe2.uno.presentation.gui;
 
 import ch.swe2.uno.presentation.gui.controller.MainController;
 import com.jfoenix.assets.JFoenixResources;
-import com.jfoenix.controls.JFXDecorator;
-import com.jfoenix.svg.SVGGlyph;
 import io.datafx.controller.flow.Flow;
 import io.datafx.controller.flow.container.DefaultFlowContainer;
 import io.datafx.controller.flow.context.FXMLViewFlowContext;

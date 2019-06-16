@@ -1,6 +1,5 @@
 package ch.swe2.uno.presentation.services;
 
-import io.datafx.controller.flow.context.ViewFlowContext;
 import io.datafx.controller.injection.scopes.ApplicationScoped;
 
 @ApplicationScoped

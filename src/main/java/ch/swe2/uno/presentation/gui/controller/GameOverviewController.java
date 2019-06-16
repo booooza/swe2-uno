@@ -124,7 +124,7 @@ public final class GameOverviewController implements RequestEventHandler {
 		}
 	}
 
-	public void handlePlayButtonAction() {
+	private void handlePlayButtonAction() {
 		logger.info("Play button pressed");
 		CardInterface selectedCard = playerTable.getSelectionModel().getSelectedItem();
 		if (selectedCard != null) {
@@ -148,7 +148,7 @@ public final class GameOverviewController implements RequestEventHandler {
 		}
 	}
 
-	public void handleDrawButtonAction() {
+	private void handleDrawButtonAction() {
 		logger.info("Draw button pressed");
 		try {
 			baseService.getUnoService().setState(baseService.getUnoService().getClient()
@@ -161,7 +161,7 @@ public final class GameOverviewController implements RequestEventHandler {
 		}
 	}
 
-	public void handleCheckButtonAction() {
+	private void handleCheckButtonAction() {
 		// TODO Should only be called if player.canDraw() returns false!
 		logger.info("Check button pressed");
 		try {

@@ -112,7 +112,7 @@ public final class WelcomeScreenController implements RequestEventHandler {
 	}
 
 	private void startServer() {
-		if (Client.hostAvailabilityCheck() == false) {
+		if (!Client.hostAvailabilityCheck()) {
 			baseService.getUnoService().startServer();
 			Platform.runLater(() -> {
 				baseService.getUnoService().initClient();

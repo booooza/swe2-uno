@@ -136,4 +136,16 @@ public class ClientHandlerThread implements Runnable {
 			logger.error(String.format("Error in executing client's request. Details %s", ex.getMessage()));
 		}
 	}
+
+
+	void terminate() {
+		try {
+			isRunning = false;
+			outputStream.close();
+			inputStream.close();
+			socket.close();
+		} catch (Exception ex) {
+			logger.error(String.format("Error in terminating server. Details %s", ex.getMessage()));
+		}
+	}
 }

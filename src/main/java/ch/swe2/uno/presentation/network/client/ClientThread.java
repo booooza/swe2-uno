@@ -30,7 +30,6 @@ public class ClientThread implements Runnable {
 	public synchronized void run() {
 		try {
 			logger.info("now running on thread \"{}\" state {}", Thread.currentThread().getName(), Thread.currentThread().getState());
-
 			outputStream = new ObjectOutputStream(clientSocket.getOutputStream());
 			inputStream = new ObjectInputStream(clientSocket.getInputStream());
 		} catch (Exception ex) {
@@ -39,7 +38,7 @@ public class ClientThread implements Runnable {
 		}
 	}
 
-	public synchronized void terminate() {
+	synchronized void terminate() {
 		try {
 			outputStream.close();
 			inputStream.close();

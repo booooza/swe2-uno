@@ -60,11 +60,11 @@ public class Request implements Serializable {
 		return command;
 	}
 
-	public Direction getDirection() {
+	Direction getDirection() {
 		return direction;
 	}
 
-	public String getPlayerName() {
+	String getPlayerName() {
 		return playerName;
 	}
 
