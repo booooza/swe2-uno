@@ -1,5 +1,6 @@
 package ch.swe2.uno.business.server;
 
+import ch.swe2.uno.business.deck.Deck;
 import ch.swe2.uno.business.game.Game;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,7 +38,7 @@ public class MultiThreadedServer implements Runnable {
 
 	static MultiThreadedServer getInstance() {
 		if (theInstance == null) {
-			theInstance = new MultiThreadedServer(new Game());
+			theInstance = new MultiThreadedServer(new Game(new Deck()));
 		}
 		return theInstance;
 	}

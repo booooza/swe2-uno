@@ -12,23 +12,18 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @DisplayName("Player")
 class PlayerTest {
 
-	/*
-	@Mock
-	List<CardInterface> hand;
-
-	@Mock
-	CardInterface card;
-*/
 	@Test
 	@DisplayName("Test creation of player")
 	void testCreationOfPlayer() {
 		// Given
-		PlayerInterface player = new Player("Marc");
+		PlayerInterface player1 = new Player("Marc");
+		PlayerInterface player2 = new Player("Luca", 1L);
 
 		// When
 
 		// Then
-		assertEquals(player.getName(), "Marc");
+		assertEquals(player1.getName(), "Marc");
+		assertEquals(player2.getId(), 1L);
 	}
 
 	@Test
@@ -82,5 +77,18 @@ class PlayerTest {
 
 		// Then
 		assertEquals(1, player.getHand().size());
+	}
+
+	@Test
+	@DisplayName("Test set can draw flag")
+	void testSetCanDrawFlag() {
+		// Given
+		PlayerInterface player = new Player("Marc");
+
+		// When
+		player.setCanDraw(true);
+
+		// Then
+		assertTrue(player.canDraw());
 	}
 }
