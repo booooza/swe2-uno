@@ -7,6 +7,7 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
+<?import com.jfoenix.controls.JFXToggleButton?>
 <GridPane style="-fx-background-color: RED;"
           hgap="10" vgap="10"
           xmlns:fx="http://javafx.com/fxml/1"
@@ -92,7 +93,7 @@
                                    GridPane.halignment="RIGHT"
                                    GridPane.vgrow="ALWAYS"/>
 
-                        <ToggleButton fx:id="unoButton" mnemonicParsing="false" GridPane.rowIndex="3" text="Say UNO!"
+                        <JFXToggleButton fx:id="unoButton" mnemonicParsing="false" GridPane.rowIndex="3" text="Say UNO!"
                                       GridPane.columnIndex="0" GridPane.columnSpan="3" GridPane.hgrow="ALWAYS"
                                       prefWidth="Infinity" GridPane.vgrow="ALWAYS"/>
 

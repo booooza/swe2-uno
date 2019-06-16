@@ -1,4 +1,3 @@
-
 .root {
     -fx-font-family: Roboto;
     src: "/resources/roboto/Roboto-Regular.ttf";
@@ -21,24 +20,17 @@
     -fx-fill: -fx-primarytext;
 }
 
-
-.jfx-decorator .resize-border {
-    -fx-border-color: RED;
-    -fx-border-width: 0 4 4 4;
-}
-
-.jfx-decorator .jfx-decorator-title-container .jfx-decorator-text {
-    -fx-fill: WHITE;
-    -fx-font-size: 16;
-}
-
-.jfx-decorator .jfx-decorator-title-container .jfx-svg-glyph {
-    -fx-shape: "M377,538c22.3,38.8,12.4,66.4-15.5,82.4c-26.9,15.4-54,10.1-76.4-28.9l-44.8-78l19.8-11.4l45.4,79.2c15,26.2,32.2,31.1,47.2,22.5c16.4-9.4,20.2-26.6,5.3-52.6L312.7,472l19.8-11.4L377,538zM528.4,522.1l-20,11.5l-69.5-41.5c-16-9.7-32.7-20.6-47.1-31.8l-0.6,0.6c10.5,16,20.6,32.7,33.8,55.7l28.1,48.9l-18.3,10.5L359.6,445l21.6-12.4l69,40.9c16.5,9.7,32.5,20.5,46.1,31.1l0.4-0.5c-11.7-16.9-21.9-33.4-33.9-54.2L435,401.7l18.3-10.5L528.4,522.1zM621.6,379.9c26.1,45.5,14.9,82.6-16.9,100.9c-33.4,19.1-70.2,4.4-92.9-35.1c-23.7-41.2-16.3-81.4,17.3-100.7C563.8,325.1,600,342.3,621.6,379.9zM532.3,433.2c15.2,26.5,41.1,43.9,63.7,31c22.9-13.2,21.1-43.7,5.1-71.6c-14.3-25-40-44.3-63.4-30.9C513.6,375.5,517.6,407.6,532.3,433.2zM814.2,119.6l-4.4-15.6l-6.5-23.3c-14.4-51.5-67.9-81.5-119.4-67.1l-67.1,18.8L814.2,119.6zM986.9,746.3L913.3,484l-29.7-105.7L760.3,657.7l-120.5,273l289-81.1C973.4,837.1,999.4,790.8,986.9,746.3zM380.7,37.2c9.7,0,19.1,2,28.1,6l376.5,166.2c17,7.5,30.1,21.2,36.8,38.5c6.7,17.3,6.3,36.3-1.2,53.3l-9.8,22.1l-38.8,87.9c1.2-29.2-4.6-57-17.4-82.2C722,264.7,647.8,227.8,551.4,227.8c-70.4,0-145.4,19.3-217,55.8c-69.1,35.2-127.7,83.1-168.4,137l33.6-76.1L316.9,78.7C328.1,53.5,353.1,37.2,380.7,37.2M108.1,551.7c-4.5,35.3,0.8,68.8,16,98.7c32.8,64.3,106.9,101.2,203.4,101.2c70.3,0,145.4-19.3,217-55.8c61.9-31.6,115.4-73.3,155.1-120.4l-25.6,57.9L547,921.3c-11.1,25.2-36.2,41.5-63.7,41.5c-9.7,0-19.1-2-28.1-6L78.7,790.6c-35.1-15.5-51.1-56.7-35.6-91.8l9.8-22.1L108.1,551.7M380.7,10C343.5,10,308,31.5,292,67.8L174.7,333.5L28,665.7l-9.8,22.1c-21.6,48.9,0.6,106.1,49.5,127.7l376.5,166.2c12.7,5.6,26,8.3,39.1,8.3c37.2,0,72.7-21.5,88.6-57.7L699,644.4l136.9-310l9.8-22.1c21.6-48.9-0.6-106.1-49.5-127.7L419.7,18.3C407,12.7,393.7,10,380.7,10L380.7,10zM327.5,724.5c-82.4,0-150.1-29.5-179.1-86.4C97.2,537.6,186,389.8,346.8,307.8c69.7-35.5,141.5-52.8,204.6-52.8c82.4,0,150.1,29.5,179.1,86.4c51.2,100.5-37.6,248.3-198.3,330.2C462.5,707.2,390.7,724.5,327.5,724.5L327.5,724.5z";
-    -jfx-size: 15;
-    -fx-background-color: WHITE;
-}
-
 .button {
+    -fx-text-fill: -fx-primarytext;
+    -fx-background-color: -fx-primary;
+    -fx-border-color: -fx-secondary;
+    -fx-border-radius: 20px;
+    -fx-background-radius: 20px;
+    -fx-font-size: 12pt;
+}
+
+
+.jfx-toggle-button {
     -fx-text-fill: -fx-primarytext;
     -fx-background-color: -fx-primary;
     -fx-border-color: -fx-secondary;
@@ -53,130 +45,11 @@
     -fx-text-fill: -fx-primary;
 }
 
-
-.jfx-toggle-button {
-    -fx-text-fill: -fx-primarytext;
-    -fx-background-color: -fx-primary;
-    -fx-border-color: -fx-secondary;
-    -fx-border-radius: 20px;
-    -fx-background-radius: 20px;
-    -fx-font-size: 12pt;
-}
-
-.custom-jfx-toggle-button {
-    -fx-text-fill: -fx-primarytext;
-    -fx-background-color: -fx-primary;
-    -fx-border-color: -fx-secondary;
-    -fx-border-radius: 20px;
-    -fx-background-radius: 20px;
-    -fx-font-size: 12pt;
-}
-
-.toggle-label {
-    -fx-font-size: 14.0px;
-}
-
-
 .text-field {
     -fx-text-fill: -fx-primarytext;
     -fx-font-size: 12pt;
     -jfx-focus-color: -fx-secondary;
     -fx-text-fill: derive(-fx-secondary, 20%);
-}
-
-/*Login Screen Specific*/
-
-.wrong-credentials {
-    -jfx-unfocus-color: #ef5350;
-    -jfx-focus-color: #ef5350;
-}
-
-/*Main Screen CSS Styling starts here*/
-
-/*TablPane styling*/
-.tab {
-    -fx-background-color: -fx-primary;
-}
-
-.tab-header-background {
-    -fx-background-color: -fx-primary;
-}
-
-.tab-label {
-    -fx-text-fill: -fx-secondary;
-    -fx-font-size: 10pt;
-}
-
-
-.tab-main {
-    -fx-pref-height: 60;
-    -fx-max-height: 60;
-}
-
-.settings-tab {
-    -fx-background-color: derive(-fx-primary, 10%);
-    -fx-padding: 5px 20px 5px 20px;
-}
-
-.settings-tab:selected {
-    -fx-background-color: -fx-secondary;
-}
-
-.settings-tab:selected .tab-label {
-    -fx-text-fill: -fx-primary;
-}
-
-.settings-tab .tab-header-background {
-    -fx-background-color: derive(-fx-primary, -50%);
-}
-
-/*Menu bar Styling*/
-.menu-bar {
-    -fx-font-size: 14;
-    -fx-base: -fx-primary;
-    -fx-background-color: -fx-primary;
-}
-
-.context-menu {
-    -fx-background-color: derive(-fx-primary, 20%);
-}
-
-/*Hamburger Styling*/
-.jfx-hamburger-icon {
-    -fx-spacing: 7;
-}
-
-.jfx-hamburger-icon StackPane {
-    -fx-background-color: -fx-secondary;
-    -fx-background-radius: 5px;
-}
-
-/*Toolbar buttons*/
-.toolbar-button {
-    -fx-border-color: transparent;
-    -fx-background-color: derive(-fx-primary, 10%);
-    -fx-background-radius: 0px;
-    -fx-border-radius: 0px;
-}
-
-.toolbar-button:hover {
-    -fx-background-color: -fx-secondary;
-    -fx-text-fill: -fx-primary;
-}
-
-.toolbar-button:hover .glyph-icon, .toolbar-button:hover .glyph-icon {
-    -fx-fill: -fx-primary;
-}
-
-/*Text styling*/
-.main-text {
-    -fx-fill: -fx-secondary;
-    -fx-font-size: 14pt;
-    -fx-text-alignment: center;
-}
-
-.submission-container {
-    -fx-background-color: derive(-fx-primary, 10%);
 }
 
 /*Dialog styling*/
@@ -191,39 +64,6 @@
     -fx-background-color: -fx-color-1;
     -fx-border-color: derive(-fx-color-1, -20%);
     -fx-text-fill: white;
-}
-
-.jfx-layout-actions {
-    -fx-hgap: 8;
-}
-
-/*Chart Styling*/
-.data0.chart-pie {
-    -fx-pie-color: -fx-secondary;
-    -fx-border-color: derive(-fx-secondary, -30%);
-}
-
-.data1.chart-pie {
-    -fx-pie-color: derive(-fx-primary, 30%);
-    -fx-border-color: derive(-fx-primary, 30%);
-}
-
-.chart-pie-label {
-    -fx-fill: derive(-fx-secondary, -5%);
-}
-
-/*About window*/
-.about-text {
-    -fx-fill: -fx-secondary;
-}
-
-.about-button {
-    -fx-border-color: transparent;
-}
-
-/*Custom window background*/
-.custom-pane {
-    -fx-background-color: derive(-fx-primary, 5%);
 }
 
 /*TableView Default*/
