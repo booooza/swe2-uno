@@ -60,7 +60,6 @@ public class UnoService {
 	}
 
 	public void stopService() {
-		client.terminate();
 		threadPool.shutdown();
 	}
 
@@ -71,7 +70,7 @@ public class UnoService {
 	/**
 	 * Start new Server
 	 */
-	public void startServer() {
+	public void startService() {
 		String[] args = new String[]{};
 		Thread serverThread = new Thread(() -> {
 			try {

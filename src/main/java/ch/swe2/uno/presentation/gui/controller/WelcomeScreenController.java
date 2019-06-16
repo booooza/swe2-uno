@@ -123,7 +123,7 @@ public final class WelcomeScreenController implements RequestEventHandler {
 
 	private void startServer() {
 		if (!Client.hostAvailabilityCheck()) {
-			baseService.getUnoService().startServer();
+			baseService.getUnoService().startService();
 			Platform.runLater(() -> {
 				baseService.getUnoService().initClient();
 				serverButton.setDisable(true);
