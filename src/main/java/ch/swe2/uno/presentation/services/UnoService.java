@@ -52,10 +52,13 @@ public class UnoService {
 		return this.client;
 	}
 
-	public void initClient() {
-		if (client == null) {
-			client = new Client(this.threadPool);
-			client.setEventHandler(this.eventListener);
+	public synchronized void initClient() {
+		if (this.client == null) {
+			this.client = new Client(this.threadPool);
+			if(this.eventListener == null){
+				this.eventListener = new RequestEventListener();
+			}
+			this.client.setEventHandler(this.eventListener);
 		}
 	}
 
