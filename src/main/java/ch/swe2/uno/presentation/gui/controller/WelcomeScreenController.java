@@ -44,6 +44,8 @@ public final class WelcomeScreenController implements RequestEventHandler {
 	@FXML
 	private Button startButton;
 	@FXML
+	private Button clientButton;
+	@FXML
 	private GridPane rootGrid;
 	@FXML
 	private GridPane playerGrid;
@@ -84,20 +86,24 @@ public final class WelcomeScreenController implements RequestEventHandler {
 		startButton.setOnAction(action -> handleStartButtonAction());
 		joinButton.setOnAction(action -> handleJoinButtonAction());
 		serverButton.setOnAction(action -> handleServerButtonAction());
+		clientButton.setOnAction(action -> handleClientButtonAction());
 
 		startButton.setDisable(true);
-		joinButton.setDisable(false);
+		clientButton.setDisable(true);
+		joinButton.setDisable(true);
 
 		if (baseService.getUnoService() != null) {
 			baseService.getUnoService().addRequestEventListener(this);
 
-			if (baseService.getUnoService().getPlayerName() != null && !baseService.getUnoService().getPlayerName().isEmpty()) {
+			if (baseService.getUnoService().getPlayerName() != null
+					&& !baseService.getUnoService().getPlayerName().isEmpty()) {
 				playerName.setText(baseService.getUnoService().getPlayerName());
 			}
 		}
 
 		GridPane.setHalignment(logoImage, HPos.CENTER);
 		GridPane.setHalignment(serverButton, HPos.CENTER);
+		GridPane.setHalignment(clientButton, HPos.CENTER);
 		GridPane.setHalignment(playersTableLabel, HPos.CENTER);
 		GridPane.setHalignment(playerNameLabel, HPos.CENTER);
 
@@ -111,34 +117,45 @@ public final class WelcomeScreenController implements RequestEventHandler {
 
 	private void checkIfServerIsAvailable() {
 		if (Client.hostAvailabilityCheck()) {
-			if (baseService.getUnoService().getClient() != null) {
-				baseService.getUnoService().initClient();
-			}
 			serverButton.setDisable(true);
 			serverButton.setText("Server Started...");
+			clientButton.setDisable(false);
 		}
 	}
 
-	private void startServer() {
+	private void initClient() {
 		if (!Client.hostAvailabilityCheck()) {
-			baseService.getUnoService().startService();
-			Platform.runLater(() -> {
-				baseService.getUnoService().initClient();
-				serverButton.setDisable(true);
-				serverButton.setText("Server Started...");
-			});
+			try {
+				baseService.getUnoService().startService();
+				Platform.runLater(() -> {
+					serverButton.setDisable(true);
+					serverButton.setText("Server Started...");
+					clientButton.setDisable(false);
+				});
+			} catch (Exception ex) {
+				logger.error(String.format("Error starting server %s", ex.getMessage()), ex);
+			}
 		} else if (baseService.getUnoService().getClient() == null) {
 			Platform.runLater(() -> {
 				baseService.getUnoService().initClient();
-				serverButton.setDisable(true);
-				serverButton.setText("Server Started...");
+				clientButton.setDisable(true);
+				clientButton.setText("Client Started...");
+				joinButton.setDisable(false);
 			});
+		}
+	}
+
+	private void handleClientButtonAction() {
+		try {
+			initClient();
+		} catch (Exception ex) {
+			logger.error("Error starting server", ex);
 		}
 	}
 
 	private void handleServerButtonAction() {
 		try {
-			startServer();
+			initClient();
 		} catch (Exception ex) {
 			logger.error("Error starting server", ex);
 		}
@@ -154,7 +171,8 @@ public final class WelcomeScreenController implements RequestEventHandler {
 		logger.info("Player Joined: " + playerName.getText());
 		joined = true;
 		try {
-			baseService.getUnoService().setState(baseService.getUnoService().getClient().sendRequest(Request.Command.JOIN, playerName.getText()));
+			baseService.getUnoService().setState(
+					baseService.getUnoService().getClient().sendRequest(Request.Command.JOIN, playerName.getText()));
 			baseService.getUnoService().setPlayerName(playerName.getText());
 			MainApp.getPrimaryStage().setTitle(String.format("UNO Game - %s", playerName.getText()));
 		} catch (Exception e) {

@@ -47,6 +47,7 @@ public class Client {
 			Socket requestListenerSocket = new Socket(Client.SERVER_ADDRESS, Client.SERVER_PORT);
 			clientThread = new ClientThread(stateSocket);
 			clientRequestListenerThread = new ClientRequestListenerThread(requestListenerSocket);
+			logger.info("client threads for sockets created");
 			threadPool.execute(clientThread);
 			threadPool.execute(clientRequestListenerThread);
 		} catch (Exception ex) {
