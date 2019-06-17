@@ -1,0 +1,282 @@
+@startuml
+
+title __SWE2-UNO's Class Diagram__\n
+
+  package ch.swe2.uno.business.card {
+    abstract class AbstractCard {
+    }
+  }
+  
+
+  package ch.swe2.uno.business.card {
+    class ActionCard {
+    }
+  }
+  
+
+  package ch.swe2.uno.utils {
+    class AppPropsReader {
+    }
+  }
+  
+
+  package ch.swe2.uno.presentation.services {
+    class BaseService {
+    }
+  }
+  
+
+  package ch.swe2.uno.business.card {
+    interface CardInterface {
+    }
+  }
+  
+
+  package ch.swe2.uno.business.card {
+    enum CardType {
+    }
+  }
+  
+
+  package ch.swe2.uno.presentation.network.client {
+    class Client {
+    }
+  }
+  
+
+  package ch.swe2.uno.business.server {
+    class ClientHandlerThread {
+    }
+  }
+  
+
+  package ch.swe2.uno.presentation.network.client {
+    class ClientRequestListenerThread {
+    }
+  }
+  
+
+  package ch.swe2.uno.presentation.network.client {
+    class ClientThread {
+    }
+  }
+  
+
+  package ch.swe2.uno.presentation.gui {
+    package ch.swe2.uno.presentation.gui.controller {
+      class ColorDialogController {
+      }
+    }
+  }
+  
+
+  package ch.swe2.uno.utils {
+    class CustomClassLoader {
+    }
+  }
+  
+
+  package ch.swe2.uno.utils {
+    interface CustomClassLoaderListener {
+    }
+  }
+  
+
+  package ch.swe2.uno.business.deck {
+    class Deck {
+    }
+  }
+  
+
+  package ch.swe2.uno.presentation.gui {
+    package ch.swe2.uno.presentation.gui.controller {
+      class EndScreenController {
+      }
+    }
+  }
+  
+
+  package ch.swe2.uno.presentation.gui {
+    package ch.swe2.uno.presentation.gui.events {
+      interface EventListener {
+      }
+    }
+  }
+  
+
+  package ch.swe2.uno.presentation.gui {
+    package ch.swe2.uno.presentation.gui.datafx {
+      class ExtendedAnimatedFlowContainer {
+      }
+    }
+  }
+  
+
+  package ch.swe2.uno.business.game {
+    class Game {
+    }
+  }
+  
+
+  package ch.swe2.uno.presentation.gui {
+    package ch.swe2.uno.presentation.gui.controller {
+      class GameOverviewController {
+      }
+    }
+  }
+  
+
+  package ch.swe2.uno.presentation.gui {
+    class MainApp {
+    }
+  }
+  
+
+  package ch.swe2.uno.presentation.gui {
+    package ch.swe2.uno.presentation.gui.controller {
+      class MainController {
+      }
+    }
+  }
+  
+
+  package ch.swe2.uno.business.server {
+    class MultiThreadedServer {
+    }
+  }
+  
+
+  package ch.swe2.uno.presentation.services {
+    class NavigationService {
+    }
+  }
+  
+
+  package ch.swe2.uno.business.card {
+    class NumberCard {
+    }
+  }
+  
+
+  package ch.swe2.uno.business.player {
+    class Player {
+    }
+  }
+  
+
+  package ch.swe2.uno.business.player {
+    interface PlayerInterface {
+    }
+  }
+  
+
+  package ch.swe2.uno.business.server {
+    class Request {
+    }
+  }
+  
+
+  package ch.swe2.uno.presentation.gui {
+    package ch.swe2.uno.presentation.gui.events {
+      interface RequestEventHandler {
+      }
+    }
+  }
+  
+
+  package ch.swe2.uno.presentation.gui {
+    package ch.swe2.uno.presentation.gui.events {
+      class RequestEventListener {
+      }
+    }
+  }
+  
+
+  package ch.swe2.uno.business.server {
+    class Server {
+    }
+  }
+  
+
+  package ch.swe2.uno.business.state {
+    class State {
+    }
+  }
+  
+
+  package ch.swe2.uno.business.card {
+    enum UnoColor {
+    }
+  }
+  
+
+  package ch.swe2.uno.presentation.services {
+    class UnoService {
+    }
+  }
+  
+
+  package ch.swe2.uno.presentation.gui {
+    package ch.swe2.uno.presentation.gui.controller {
+      class WelcomeScreenController {
+      }
+    }
+  }
+  
+
+  AbstractCard -up-|> CardInterface
+  AbstractCard -up-|> Serializable
+  AbstractCard o-- CardType : type
+  AbstractCard o-- UnoColor : color
+  ActionCard -up-|> AbstractCard
+  ActionCard o-- UnoColor : chosenColor
+  BaseService o-- NavigationService : navigationService
+  BaseService o-- UnoService : unoService
+  Client o-- ClientThread : clientThread
+  Client o-- ClientRequestListenerThread : clientRequestListenerThread
+  ClientHandlerThread -up-|> Runnable
+  ClientRequestListenerThread -up-|> Runnable
+  ClientRequestListenerThread o-- EventListener : eventListener
+  ClientThread -up-|> Runnable
+  ColorDialogController o-- UnoColor : chosenColor
+  CustomClassLoader o-- CustomClassLoaderListener : listener
+  Deck o-- CardInterface : topCard
+  EndScreenController -up-|> RequestEventHandler
+  EndScreenController o-- BaseService : baseService
+  ExtendedAnimatedFlowContainer -up-|> FlowContainer
+  ExtendedAnimatedFlowContainer -up-|> AnimatedFlowContainer
+  Game o-- State : state
+  Game o-- Deck : deck
+  GameOverviewController -up-|> RequestEventHandler
+  GameOverviewController o-- BaseService : baseService
+  MainApp -up-|> Application
+  MainController o-- BaseService : baseService
+  MultiThreadedServer -up-|> Runnable
+  NumberCard -up-|> AbstractCard
+  Player -up-|> PlayerInterface
+  Player -up-|> Serializable
+  Request -up-|> Serializable
+  Request o-- Command : command
+  Request o-- Direction : direction
+  Request o-- CardInterface : card
+  Request o-- UnoColor : chosenColor
+  Request o-- State : state
+  RequestEventListener -up-|> EventListener
+  State -up-|> Serializable
+  State o-- CardInterface : topDiscardPileCard
+  State o-- PlayDirection : playDirection
+  UnoService o-- EventListener : eventListener
+  UnoService o-- Client : client
+  UnoService o-- State : gameState
+  WelcomeScreenController -up-|> RequestEventHandler
+  WelcomeScreenController o-- BaseService : baseService
+
+
+right footer
+
+
+PlantUML diagram generated by SketchIt! (https://bitbucket.org/pmesmeur/sketch.it)
+For more information about this tool, please contact philippe.mesmeur@gmail.com
+endfooter
+
+@enduml

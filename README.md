@@ -74,5 +74,8 @@ The following describes the official UNO game rules
 * The first player to score 500 points wins the game.
 
 ## Docs
+### Overview
+![overview](docs/swe2-uno-overview.svg)
+
 ### Activity Diagram
-![alt text](docs/activity.png)
+![activitydiagram](docs/activity.png)

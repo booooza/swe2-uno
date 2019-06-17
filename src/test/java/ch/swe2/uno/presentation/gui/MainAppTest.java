@@ -23,7 +23,7 @@ import org.testfx.framework.junit5.ApplicationExtension;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.testfx.framework.junit5.Start;
 
-@Tag("integration")
+@Tag("ui")
 @ExtendWith(ApplicationExtension.class)
 @TestMethodOrder(OrderAnnotation.class)
 public class MainAppTest {
