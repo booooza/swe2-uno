@@ -83,14 +83,23 @@ public class MainAppTest {
 	public void server_button_click_should_start_server(FxRobot robot) {
 		robot.clickOn("#serverButton");
 		Assertions.assertThat(robot.lookup("#serverButton").queryAs(Button.class)).hasText("Server Started...");
+		Assertions.assertThat(robot.lookup("#clientButton").queryAs(Button.class)).isEnabled();
 	}
 
 	@Test
 	@Order(5)
+	public void client_button_click_should_start_client(FxRobot robot) {
+		robot.clickOn("#clientButton");
+		Assertions.assertThat(robot.lookup("#clientButton").queryAs(Button.class)).hasText("Client Started...");
+		Assertions.assertThat(robot.lookup("#joinButton").queryAs(Button.class)).isEnabled();
+	}
+
+	@Test
+	@Order(6)
 	public void join_button_changes_text_after_join(FxRobot robot) {
 		robot.doubleClickOn("#playerName");
 		robot.write("Test Name");
 		robot.clickOn("#joinButton");
-		Assertions.assertThat(robot.lookup("#joinButton").queryAs(Button.class)).hasText("Joined");
+		Assertions.assertThat(MainApp.getPrimaryStage().getTitle().equals(String.format("UNO Game - %s", robot.lookup("#playerName").queryAs(TextField.class).getText())));
 	}
 }
