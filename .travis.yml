@@ -1,10 +1,42 @@
 language: java
 sudo: false
-install: true
-jdk:
-  - oraclejdk11
+matrix:
+  include:
+    # Ubuntu Linux (trusty) / Oracle JDK 8 / Headed (AWT Robot)
+    - os: linux
+      dist: trusty
+      jdk:
+        - oraclejdk11
+      env:
+        - _JAVA_OPTIONS="-Dtestfx.robot=awt"
+
+
 addons:
   sonarcloud:
-    organization: "booooza-github"
+      organization: "booooza-github"
+  apt:
+    packages:
+      - oracle-java8-installer
+
+before_install:
+  - if [[ "${TRAVIS_OS_NAME}" == linux ]]; then export DISPLAY=:99.0; sh -e /etc/init.d/xvfb start; fi
+
+install: true
+
+before_script:
+  - if [[ "${TRAVIS_OS_NAME}" == osx ]]; then brew update; brew cask reinstall caskroom/versions/java8; fi
+
 script:
   - mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent install sonar:sonar
+  
+before_cache:
+  - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
+  - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+  - rm -f  $HOME/.gradle/caches/*/fileHashes/fileHashes.bin
+  - rm -f  $HOME/.gradle/caches/*/fileHashes/fileHashes.lock
+
+cache:
+  directories:
+    - $HOME/.gradle/caches/
+    - $HOME/.gradle/wrapper/
+    - $HOME/.m2
