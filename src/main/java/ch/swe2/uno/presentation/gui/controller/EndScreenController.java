@@ -67,6 +67,7 @@ public final class EndScreenController implements RequestEventHandler {
 
 	private void handleExitButtonAction() {
 		logger.info("Exit button pressed");
+		baseService.getUnoService().getClient().sendRequest(Request.Command.QUIT, baseService.getUnoService().getPlayerName());
 		baseService.getUnoService().stopService();
 		System.exit(0);
 	}

@@ -43,6 +43,7 @@ public class ClientHandlerThread implements Runnable {
 			outputStream = new ObjectOutputStream(socket.getOutputStream());
 
 			long time = System.currentTimeMillis();
+			mainloop:
 			while (isRunning) {
 				try {
 					if (inputStream.available() > 0) {
@@ -52,6 +53,9 @@ public class ClientHandlerThread implements Runnable {
 					logger.info("Command {}", request.getCommand());
 					if (request.getDirection() == Request.Direction.SERVER_TO_CLIENT) {
 						break;
+					}
+					if(inputStream.markSupported()) {
+						inputStream.reset();
 					}
 					switch (request.getCommand()) {
 					case SUBSCRIBE:
@@ -128,7 +132,15 @@ public class ClientHandlerThread implements Runnable {
 						}
 						break;
 					case QUIT:
-						break;
+						outputStream.reset();
+						for (ClientHandlerThread clientHandlerThread : clientListenerInfo.values()) {
+							clientHandlerThread.outputStream.reset();
+							clientHandlerThread.outputStream.close();
+						}
+						MultiThreadedServer.getInstance().stop();
+						outputStream.close();
+						isRunning = false;
+						break mainloop;
 					default:
 						logger.info("Unknown command {}", request.getCommand());
 					}
@@ -137,10 +149,16 @@ public class ClientHandlerThread implements Runnable {
 					logger.error(String.format("eofEx in executing client's request. Details %s", eofEx.getMessage()),
 							eofEx);
 					try {
-						inputStream.reset();
+						if (inputStream.markSupported()) {
+							inputStream.reset();
+						}
+						isRunning = false;
+						inputStream.close();
+						continue;
 					} catch (Exception resetEx) {
 						logger.error(String.format("Error resetting inputStream. Details %s", resetEx.getMessage()),
 								resetEx);
+						isRunning = false;
 					}
 				}
 			}

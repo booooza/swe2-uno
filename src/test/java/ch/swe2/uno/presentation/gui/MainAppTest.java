@@ -64,15 +64,15 @@ public class MainAppTest {
 	@Test
 	@Order(2)
 	public void player_name_should_change(FxRobot robot) {
-		robot.clickOn("#playerName");
+		robot.doubleClickOn("#playerName");
 		robot.write("Test Name");
-		Assertions.assertThat(robot.lookup("#playerName").queryAs(TextField.class)).hasText("Test Name");
+		Assertions.assertThat(robot.lookup("#playerName").queryAs(TextField.class)).doesNotHaveText("Player Name");
 	}
 
 	@Test
 	@Order(3)
 	public void cannot_join_without_server_started(FxRobot robot) {
-		robot.clickOn("#playerName");
+		robot.doubleClickOn("#playerName");
 		robot.write("Test Name");
 		robot.clickOn("#joinButton");
 		Assertions.assertThat(robot.lookup("#joinButton").queryAs(Button.class)).hasText("Join");
@@ -88,7 +88,7 @@ public class MainAppTest {
 	@Test
 	@Order(5)
 	public void join_button_changes_text_after_join(FxRobot robot) {
-		robot.clickOn("#playerName");
+		robot.doubleClickOn("#playerName");
 		robot.write("Test Name");
 		robot.clickOn("#joinButton");
 		Assertions.assertThat(robot.lookup("#joinButton").queryAs(Button.class)).hasText("Joined");

@@ -15,9 +15,9 @@ import java.util.concurrent.Executors;
 public class UnoService {
 	private static Logger logger = LoggerFactory.getLogger(UnoService.class);
 	private static UnoService theInstance;
-	private ExecutorService threadPool = Executors.newFixedThreadPool(10);
-	private EventListener eventListener = new RequestEventListener();
-	private Client client;
+	private volatile ExecutorService threadPool = Executors.newFixedThreadPool(10);
+	private volatile EventListener eventListener = new RequestEventListener();
+	private volatile Client client = null;
 	private State gameState;
 	private String playerName;
 
@@ -48,12 +48,15 @@ public class UnoService {
 		this.playerName = playerName;
 	}
 
-	public Client getClient() {
+	public synchronized Client getClient() {
 		return this.client;
 	}
 
 	public synchronized void initClient() {
 		if (this.client == null) {
+			if(this.threadPool == null){
+				this.threadPool = Executors.newFixedThreadPool(10); 
+			}
 			this.client = new Client(this.threadPool);
 			if(this.eventListener == null){
 				this.eventListener = new RequestEventListener();
@@ -62,8 +65,8 @@ public class UnoService {
 		}
 	}
 
-	public void stopService() {
-		threadPool.shutdown();
+	public synchronized void stopService() {
+		this.threadPool.shutdown();
 	}
 
 	public void addRequestEventListener(RequestEventHandler requestEventHandler) {
