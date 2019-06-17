@@ -86,7 +86,7 @@ public class MultiThreadedServer implements Runnable {
 			for (ClientHandlerThread clientHandlerThread : clientInfo.values()) {
 				clientHandlerThread.terminate();
 			}
-			runningThread.stop();
+			this.threadPool.shutdown();
 			this.serverSocket.close();
 		} catch (IOException e) {
 			throw new RuntimeException("Error closing server", e);
@@ -100,5 +100,4 @@ public class MultiThreadedServer implements Runnable {
 			throw new RuntimeException("Cannot open port", e);
 		}
 	}
-
 }

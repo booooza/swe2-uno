@@ -1,6 +1,9 @@
 package ch.swe2.uno.business.server;
 
 import ch.swe2.uno.business.state.State;
+
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -14,6 +17,25 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @Tag("integration")
 @DisplayName("Client Thread Integration Tests (server needs to run)")
 class ClientHandlerThreadTest {
+
+	private Thread serverThread = null;
+
+	@BeforeAll
+	void initServerSocket() {
+		String[] args = new String[] {};
+		this.serverThread = new Thread(() -> {
+			try {
+				Server.main(args);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		});
+	}
+
+	@AfterAll
+	void endServerSocket() {
+		serverThread.stop();
+	}
 
 	@Test
 	@DisplayName("Test client thread START command")
@@ -29,7 +51,6 @@ class ClientHandlerThreadTest {
 		// Then
 		assertEquals(State.class, in.readObject().getClass());
 	}
-
 
 	@Test
 	@DisplayName("Test client thread DRAW command")

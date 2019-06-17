@@ -5,6 +5,7 @@ import ch.swe2.uno.presentation.gui.events.EventListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -28,7 +29,8 @@ public class ClientRequestListenerThread implements Runnable {
 		this.clientRequestListenerSocket = clientRequestListenerSocket;
 
 		try {
-			logger.info("Object created on thread \"{}\" state {}", Thread.currentThread().getName(), Thread.currentThread().getState());
+			logger.info("Object created on thread \"{}\" state {}", Thread.currentThread().getName(),
+					Thread.currentThread().getState());
 		} catch (Exception e) {
 			logger.error("Error initializing ClientThread from Socket");
 		}
@@ -41,7 +43,8 @@ public class ClientRequestListenerThread implements Runnable {
 	@Override
 	public synchronized void run() {
 		try {
-			logger.info("now running on thread \"{}\" state {}", Thread.currentThread().getName(), Thread.currentThread().getState());
+			logger.info("now running on thread \"{}\" state {}", Thread.currentThread().getName(),
+					Thread.currentThread().getState());
 			outputStream = new ObjectOutputStream(clientRequestListenerSocket.getOutputStream());
 			inputStream = new ObjectInputStream(clientRequestListenerSocket.getInputStream());
 			long time = System.currentTimeMillis();
@@ -61,7 +64,10 @@ public class ClientRequestListenerThread implements Runnable {
 			}
 			terminate();
 		} catch (Exception ex) {
-			logger.error(String.format("Error in executing client's request. Details %s", ex.getMessage()));
+			logger.error(
+					String.format("Error in executing client's request on client in clientrequestlistener. Details %s",
+							ex.getMessage()),
+					ex);
 			terminate();
 		}
 	}
@@ -73,10 +79,10 @@ public class ClientRequestListenerThread implements Runnable {
 			inputStream.close();
 			clientRequestListenerSocket.close();
 		} catch (IOException ioEx) {
-			logger.error(String.format("Error in terminating client's connection to the server. Details %s", ioEx.getMessage()));
+			logger.error(String.format("Error in terminating client's connection to the server. Details %s",
+					ioEx.getMessage()));
 		}
 	}
-
 
 	private void sendListenerConnectedMessage() {
 		try {
@@ -94,9 +100,11 @@ public class ClientRequestListenerThread implements Runnable {
 				return (Request) inputObject;
 			}
 		} catch (ClassNotFoundException cnfE) {
-			logger.error(String.format("Could not parse request from InputStream %s", cnfE.getMessage()));
+			logger.error(String.format("Could not parse request from InputStream %s", cnfE.getMessage()), cnfE);
+		} catch (EOFException eofEx) {
+			logger.error(String.format("EOFError in readRequestFromServer. %s", eofEx.getMessage()), eofEx);
 		} catch (IOException e) {
-			logger.error(String.format("Error sending request from client to server. %s", e.getMessage()));
+			logger.error(String.format("General Error in readRequestFromServer. %s", e.getMessage()), e);
 		}
 		return null;
 	}

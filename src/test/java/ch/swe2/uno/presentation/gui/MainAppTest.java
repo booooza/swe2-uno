@@ -16,8 +16,6 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.testfx.api.FxRobot;
 import org.testfx.assertions.api.Assertions;
 import org.testfx.framework.junit5.ApplicationExtension;
@@ -27,10 +25,6 @@ import org.testfx.framework.junit5.Start;
 @ExtendWith(ApplicationExtension.class)
 @TestMethodOrder(OrderAnnotation.class)
 public class MainAppTest {
-	private static Logger logger = LoggerFactory.getLogger(MainAppTest.class);
-
-	private static Stage primaryStage;
-
 	@FXMLViewFlowContext
 	private ViewFlowContext flowContext;
 

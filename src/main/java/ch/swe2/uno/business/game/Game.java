@@ -7,8 +7,6 @@ import ch.swe2.uno.business.card.UnoColor;
 import ch.swe2.uno.business.deck.Deck;
 import ch.swe2.uno.business.player.PlayerInterface;
 import ch.swe2.uno.business.state.State;
-import com.google.gson.Gson;
-import org.hildan.fxgson.FxGson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,7 +19,6 @@ public class Game {
 	private static Logger logger = LoggerFactory.getLogger(Game.class);
 	private volatile State state;
 	private Deck deck;
-	private Gson ignored = FxGson.create();
 	private boolean isRunning;
 
 	public Game(Deck deck) {
@@ -40,16 +37,9 @@ public class Game {
 		return state;
 	}
 
-	private synchronized State removePlayers() {
-		if (!isRunning) {
-			state.removePlayers();
-		}
-		return state;
-	}
-
 	synchronized void initialize() {
 		logger.info("Starting the game");
-		state = new State(new ArrayList(), "Initial state");
+		state = new State(new ArrayList<PlayerInterface>(), "Initial state");
 	}
 
 	public synchronized State start() {
@@ -79,7 +69,6 @@ public class Game {
 	}
 
 	public synchronized State restart() {
-		// TODO @Luca implement restart action
 		isRunning = false;
 		deck = new Deck();
 		return state.restart();

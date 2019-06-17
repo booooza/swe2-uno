@@ -5,13 +5,10 @@ import ch.swe2.uno.business.card.CardInterface;
 import ch.swe2.uno.business.card.CardType;
 import ch.swe2.uno.business.card.UnoColor;
 import ch.swe2.uno.business.deck.Deck;
-import ch.swe2.uno.business.player.PlayerInterface;
 import ch.swe2.uno.business.state.State;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -58,12 +55,7 @@ public class GameTest {
 		game.start();
 
 		anyCard = game.getState().getCurrentPlayer().get().getHand().get(0);
-		game.playCard(
-				game.getState().getCurrentPlayer().get().getName(),
-				anyCard,
-				false,
-				UnoColor.RED
-		);
+		game.playCard(game.getState().getCurrentPlayer().get().getName(), anyCard, false, UnoColor.RED);
 
 		// Then
 		assertEquals(game.getState().getTopDiscardPileCard().getNumber(), anyCard.getNumber());
@@ -86,6 +78,5 @@ public class GameTest {
 	void testDrawCardIllegal() {
 
 	}
-
 
 }

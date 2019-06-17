@@ -67,7 +67,7 @@ public final class WelcomeScreenController implements RequestEventHandler {
 		joined = false;
 
 		playerNameColumn.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getName()));
-		playerIDColumn.setCellValueFactory(cellData -> new ReadOnlyObjectWrapper(cellData.getValue().getId()));
+		playerIDColumn.setCellValueFactory(cellData -> new ReadOnlyObjectWrapper<Long>(cellData.getValue().getId()));
 
 		playerName.focusedProperty().addListener((ov, t, t1) -> Platform.runLater(() -> {
 			if (playerName.isFocused() && !playerName.getText().isEmpty()) {
@@ -96,13 +96,13 @@ public final class WelcomeScreenController implements RequestEventHandler {
 			}
 		}
 
-		rootGrid.setHalignment(logoImage, HPos.CENTER);
-		rootGrid.setHalignment(serverButton, HPos.CENTER);
-		rootGrid.setHalignment(playersTableLabel, HPos.CENTER);
-		rootGrid.setHalignment(playerNameLabel, HPos.CENTER);
+		GridPane.setHalignment(logoImage, HPos.CENTER);
+		GridPane.setHalignment(serverButton, HPos.CENTER);
+		GridPane.setHalignment(playersTableLabel, HPos.CENTER);
+		GridPane.setHalignment(playerNameLabel, HPos.CENTER);
 
-		playerGrid.setHalignment(joinButton, HPos.LEFT);
-		playerGrid.setHalignment(startButton, HPos.RIGHT);
+		GridPane.setHalignment(joinButton, HPos.LEFT);
+		GridPane.setHalignment(startButton, HPos.RIGHT);
 
 		checkIfServerIsAvailable();
 
@@ -159,7 +159,7 @@ public final class WelcomeScreenController implements RequestEventHandler {
 			MainApp.getPrimaryStage().setTitle(String.format("UNO Game - %s", playerName.getText()));
 		} catch (Exception e) {
 			logger.warn("Error while joining", e);
-			throw new IllegalArgumentException();
+			throw e;
 		}
 	}
 

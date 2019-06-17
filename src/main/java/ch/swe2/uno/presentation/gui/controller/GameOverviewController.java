@@ -114,8 +114,8 @@ public final class GameOverviewController implements RequestEventHandler {
 			}
 		});
 
-		rootGrid.setHalignment(gameLogo, HPos.CENTER);
-		actionsGrid.setHalignment(unoButton, HPos.CENTER);
+		GridPane.setHalignment(gameLogo, HPos.CENTER);
+		GridPane.setHalignment(unoButton, HPos.CENTER);
 		GridPane.setHgrow(unoButton, Priority.ALWAYS);
 
 		if (baseService.getUnoService() != null) {
@@ -162,7 +162,6 @@ public final class GameOverviewController implements RequestEventHandler {
 	}
 
 	private void handleCheckButtonAction() {
-		// TODO Should only be called if player.canDraw() returns false!
 		logger.info("Check button pressed");
 		try {
 			baseService.getUnoService().setState(baseService.getUnoService().getClient()

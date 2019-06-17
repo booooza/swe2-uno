@@ -58,8 +58,8 @@ public final class EndScreenController implements RequestEventHandler {
 			baseService.getUnoService().addRequestEventListener(this);
 		}
 
-		rootGrid.setHalignment(message, HPos.CENTER);
-		rootGrid.setHalignment(imgView, HPos.CENTER);
+		GridPane.setHalignment(message, HPos.CENTER);
+		GridPane.setHalignment(imgView, HPos.CENTER);
 		GridPane.setHgrow(message, Priority.ALWAYS);
 		GridPane.setHgrow(imgView, Priority.ALWAYS);
 	}

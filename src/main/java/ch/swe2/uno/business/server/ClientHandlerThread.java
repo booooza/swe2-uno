@@ -1,10 +1,9 @@
 package ch.swe2.uno.business.server;
 
-import com.google.gson.Gson;
-import org.hildan.fxgson.FxGson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.EOFException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
@@ -13,8 +12,6 @@ import java.util.UUID;
 
 public class ClientHandlerThread implements Runnable {
 	private static Logger logger = LoggerFactory.getLogger(ClientHandlerThread.class);
-
-	private Gson fxGson = FxGson.create();
 
 	private Socket socket;
 
@@ -32,30 +29,34 @@ public class ClientHandlerThread implements Runnable {
 		this.clientInfo = MultiThreadedServer.getClientInfo();
 		this.clientListenerInfo = MultiThreadedServer.getClientListenerInfo();
 
-		logger.info("Object created on thread \"{}\" state {}", Thread.currentThread().getName(), Thread.currentThread().getState());
+		logger.info("Object created on thread \"{}\" state {}", Thread.currentThread().getName(),
+				Thread.currentThread().getState());
 	}
 
 	@Override
 	public void run() {
 		try {
-			logger.info("now running on thread \"{}\" state {}", Thread.currentThread().getName(), Thread.currentThread().getState());
+			logger.info("now running on thread \"{}\" state {}", Thread.currentThread().getName(),
+					Thread.currentThread().getState());
 
 			inputStream = new ObjectInputStream(socket.getInputStream());
 			outputStream = new ObjectOutputStream(socket.getOutputStream());
 
 			long time = System.currentTimeMillis();
 			while (isRunning) {
-				if (inputStream.available() != 0) {
-					continue;
-				}
-				Request request = (Request) inputStream.readObject();
-				logger.info("Command {}", request.getCommand());
-				if (request.getDirection() == Request.Direction.SERVER_TO_CLIENT) {
-					break;
-				}
-				switch (request.getCommand()) {
+				try {
+					if (inputStream.available() > 0) {
+						continue;
+					}
+					Request request = (Request) inputStream.readObject();
+					logger.info("Command {}", request.getCommand());
+					if (request.getDirection() == Request.Direction.SERVER_TO_CLIENT) {
+						break;
+					}
+					switch (request.getCommand()) {
 					case SUBSCRIBE:
-						clientListenerInfo.put(String.format("%s-%s", request.getPlayerName(), UUID.randomUUID()), this);
+						clientListenerInfo.put(String.format("%s-%s", request.getPlayerName(), UUID.randomUUID()),
+								this);
 						break;
 					case JOIN:
 						outputStream.reset();
@@ -64,7 +65,8 @@ public class ClientHandlerThread implements Runnable {
 
 						for (ClientHandlerThread clientHandlerThread : clientListenerInfo.values()) {
 							clientHandlerThread.outputStream.reset();
-							clientHandlerThread.outputStream.writeObject(new Request(Request.Command.JOINED, Request.Direction.SERVER_TO_CLIENT, MultiThreadedServer.getGame().getState()));
+							clientHandlerThread.outputStream.writeObject(new Request(Request.Command.JOINED,
+									Request.Direction.SERVER_TO_CLIENT, MultiThreadedServer.getGame().getState()));
 						}
 
 						break;
@@ -77,18 +79,21 @@ public class ClientHandlerThread implements Runnable {
 
 						for (ClientHandlerThread clientHandlerThread : clientListenerInfo.values()) {
 							clientHandlerThread.outputStream.reset();
-							clientHandlerThread.outputStream.writeObject(new Request(Request.Command.STARTED, Request.Direction.SERVER_TO_CLIENT, MultiThreadedServer.getGame().getState()));
+							clientHandlerThread.outputStream.writeObject(new Request(Request.Command.STARTED,
+									Request.Direction.SERVER_TO_CLIENT, MultiThreadedServer.getGame().getState()));
 						}
 
 						break;
 					case PLAY:
-						MultiThreadedServer.getGame().playCard(request.getPlayerName(), request.getCard(), request.getUno(), request.getChosenColor());
+						MultiThreadedServer.getGame().playCard(request.getPlayerName(), request.getCard(),
+								request.getUno(), request.getChosenColor());
 						outputStream.reset();
 						outputStream.writeObject(MultiThreadedServer.getGame().getState());
 
 						for (ClientHandlerThread clientHandlerThread : clientListenerInfo.values()) {
 							clientHandlerThread.outputStream.reset();
-							clientHandlerThread.outputStream.writeObject(new Request(Request.Command.PLAYED, Request.Direction.SERVER_TO_CLIENT, MultiThreadedServer.getGame().getState()));
+							clientHandlerThread.outputStream.writeObject(new Request(Request.Command.PLAYED,
+									Request.Direction.SERVER_TO_CLIENT, MultiThreadedServer.getGame().getState()));
 						}
 						break;
 					case CHECK:
@@ -98,7 +103,8 @@ public class ClientHandlerThread implements Runnable {
 
 						for (ClientHandlerThread clientHandlerThread : clientListenerInfo.values()) {
 							clientHandlerThread.outputStream.reset();
-							clientHandlerThread.outputStream.writeObject(new Request(Request.Command.PLAYED, Request.Direction.SERVER_TO_CLIENT, MultiThreadedServer.getGame().getState()));
+							clientHandlerThread.outputStream.writeObject(new Request(Request.Command.PLAYED,
+									Request.Direction.SERVER_TO_CLIENT, MultiThreadedServer.getGame().getState()));
 						}
 						break;
 					case DRAW:
@@ -117,15 +123,26 @@ public class ClientHandlerThread implements Runnable {
 
 						for (ClientHandlerThread clientHandlerThread : clientListenerInfo.values()) {
 							clientHandlerThread.outputStream.reset();
-							clientHandlerThread.outputStream.writeObject(new Request(Request.Command.RESTART, Request.Direction.SERVER_TO_CLIENT, MultiThreadedServer.getGame().getState()));
+							clientHandlerThread.outputStream.writeObject(new Request(Request.Command.RESTART,
+									Request.Direction.SERVER_TO_CLIENT, MultiThreadedServer.getGame().getState()));
 						}
 						break;
 					case QUIT:
 						break;
 					default:
 						logger.info("Unknown command {}", request.getCommand());
+					}
+					logger.info("Request processed: {}", time);
+				} catch (EOFException eofEx) {
+					logger.error(String.format("eofEx in executing client's request. Details %s", eofEx.getMessage()),
+							eofEx);
+					try {
+						inputStream.reset();
+					} catch (Exception resetEx) {
+						logger.error(String.format("Error resetting inputStream. Details %s", resetEx.getMessage()),
+								resetEx);
+					}
 				}
-				logger.info("Request processed: {}", time);
 			}
 
 			// close connections
@@ -133,10 +150,12 @@ public class ClientHandlerThread implements Runnable {
 			inputStream.close();
 			socket.close();
 		} catch (Exception ex) {
-			logger.error(String.format("Error in executing client's request. Details %s", ex.getMessage()));
+			logger.error(
+					String.format("Error in executing client's request on server in clientthreadhandler. Details %s",
+							ex.getMessage()),
+					ex);
 		}
 	}
-
 
 	void terminate() {
 		try {
