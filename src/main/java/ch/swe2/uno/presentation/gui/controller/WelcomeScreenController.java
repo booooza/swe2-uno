@@ -77,9 +77,7 @@ public final class WelcomeScreenController implements RequestEventHandler {
 
 		playerName.setOnKeyPressed(ke -> {
 			if (ke.getCode().equals(KeyCode.ENTER)) {
-				if (!joined) {
-					handleJoinButtonAction();
-				}
+				handleJoinButtonAction();
 			}
 		});
 
@@ -147,6 +145,9 @@ public final class WelcomeScreenController implements RequestEventHandler {
 	}
 
 	private void handleJoinButtonAction() {
+		if (joined) {
+			return;
+		}
 		if (!Client.hostAvailabilityCheck()) {
 			return;
 		}
