@@ -77,8 +77,8 @@ The following describes the official UNO game rules
 ### Overview
 ![overview](docs/swe2-uno-overview.svg)
 
-### Activity Diagram
-![activitydiagram](docs/activity.png)
-
 ### Sequence Diagram
-![sequencediagram](docs/UNO Threads and Sockets.png)
+![sequencediagram](docs/swe2-uno-sequence.png)
+
+### Activity Diagram
+![activitydiagram](docs/swe2-uno-activity.png)
