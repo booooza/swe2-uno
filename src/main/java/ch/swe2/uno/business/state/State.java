@@ -74,11 +74,15 @@ public class State implements Serializable {
 			players.forEach(p -> p.setCanDraw(true));
 			players.forEach(PlayerInterface::toggleCurrentTurn);
 		} else {
-			Optional<PlayerInterface> nextPlayer = getNextPlayer();
-			if (nextPlayer.isPresent()) {
-				getCurrentPlayer().get().toggleCurrentTurn();
-				nextPlayer.get().toggleCurrentTurn();
-				nextPlayer.get().setCanDraw(true);
+			Optional<PlayerInterface> optionalNextPlayer = getNextPlayer();
+			if (optionalNextPlayer.isPresent()) {
+				PlayerInterface nextPlayer = optionalNextPlayer.get();
+				Optional<PlayerInterface> optionalCurrentPlayer = getCurrentPlayer();
+				if(optionalCurrentPlayer.isPresent()){
+					optionalCurrentPlayer.get().toggleCurrentTurn();
+				}
+				nextPlayer.toggleCurrentTurn();
+				nextPlayer.setCanDraw(true);
 			}
 		}
 	}

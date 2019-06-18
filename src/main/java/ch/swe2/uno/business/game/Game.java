@@ -43,7 +43,7 @@ public class Game {
 	}
 
 	public synchronized State start() {
-		if (state.getPlayers().size() == 0) {
+		if (!state.getPlayers().isEmpty()) {
 			throw new IllegalStateException("no player joined the game");
 		}
 
@@ -200,13 +200,15 @@ public class Game {
 	}
 
 	private Optional<CardInterface> randomCardMatchingTopCard(String playerName) {
-		if (state.getPlayerByName(playerName).isPresent()) {
-			Optional<CardInterface> possibleCard = state.getPlayerByName(playerName).get().getHand().stream()
+		Optional<PlayerInterface> optionalCurrentPlayer = state.getPlayerByName(playerName);
+		if (optionalCurrentPlayer.isPresent()) {
+			PlayerInterface currentPlayer = optionalCurrentPlayer.get();
+			Optional<CardInterface> possibleCard = currentPlayer.getHand().stream()
 					.filter(card -> card.getColor().equals(state.getTopDiscardPileCard().getColor())
 							|| card.getNumber() == state.getTopDiscardPileCard().getNumber())
 					.findAny();
 			if (!possibleCard.isPresent()) {
-				possibleCard = state.getPlayerByName(playerName).get().getHand().stream()
+				possibleCard = currentPlayer.getHand().stream()
 						.filter(c -> c.getType() == CardType.WILD).findAny();
 			}
 			return possibleCard;
@@ -216,8 +218,9 @@ public class Game {
 	}
 
 	private UnoColor getColorFromRemainingCards(String playerName) {
-		if (state.getPlayerByName(playerName).isPresent()) {
-			Optional<CardInterface> possibleCard = state.getPlayerByName(playerName).get().getHand().stream().filter(
+		Optional<PlayerInterface> optionalCurrentPlayer = state.getPlayerByName(playerName);
+		if (optionalCurrentPlayer.isPresent()) {
+			Optional<CardInterface> possibleCard = optionalCurrentPlayer.get().getHand().stream().filter(
 					card -> card.getType() != CardType.WILD).findFirst();
 			if (possibleCard.isPresent()) {
 				return possibleCard.get().getColor();
@@ -228,8 +231,9 @@ public class Game {
 	}
 
 	private int cardsLeftInPlayersHand(String playerName) {
-		if (state.getPlayerByName(playerName).isPresent()) {
-			return state.getPlayerByName(playerName).get().getHand().size();
+		Optional<PlayerInterface> optionalCurrentPlayer = state.getPlayerByName(playerName);
+		if (optionalCurrentPlayer.isPresent()) {
+			return optionalCurrentPlayer.get().getHand().size();
 		} else {
 			throw new NullPointerException();
 		}

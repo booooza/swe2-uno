@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Player implements PlayerInterface, Serializable {
+    private static final long serialVersionUID = 1L;
     // Attributes:
     private long id;
     private String name;
