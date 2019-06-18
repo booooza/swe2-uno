@@ -43,8 +43,7 @@ public class ClientHandlerThread implements Runnable {
 			outputStream = new ObjectOutputStream(socket.getOutputStream());
 
 			long time = System.currentTimeMillis();
-			mainloop:
-			while (isRunning) {
+			mainloop: while (isRunning) {
 				try {
 					if (inputStream.available() > 0) {
 						continue;
@@ -54,7 +53,7 @@ public class ClientHandlerThread implements Runnable {
 					if (request.getDirection() == Request.Direction.SERVER_TO_CLIENT) {
 						break;
 					}
-					if(inputStream.markSupported()) {
+					if (inputStream.markSupported()) {
 						inputStream.reset();
 					}
 					switch (request.getCommand()) {
@@ -168,10 +167,10 @@ public class ClientHandlerThread implements Runnable {
 			inputStream.close();
 			socket.close();
 		} catch (Exception ex) {
-			logger.error(
-					String.format("Error in executing client's request on server in clientthreadhandler. Details %s",
-							ex.getMessage()),
-					ex);
+			logger.info("ClientHandlerThread will continuously");
+			if (isRunning = false) {
+				terminate();
+			}
 		}
 	}
 
