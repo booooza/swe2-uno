@@ -77,13 +77,13 @@ public class ExtendedAnimatedFlowContainer extends AnimatedFlowContainer impleme
 
 	@Override
 	public <U> void setViewContext(ViewContext<U> context) {
-		updatePlaceholder(context.getRootNode());
+		updateUNOPlaceholder(context.getRootNode());
 		if (animation != null) {
 			animation.stop();
 		}
 		animation = new Timeline();
 		animation.getKeyFrames().addAll(animationProducer.apply(this));
-		animation.getKeyFrames().add(new KeyFrame(duration, (e) -> clearPlaceholder()));
+		animation.getKeyFrames().add(new KeyFrame(duration, (e) -> clearUNOPlaceholder()));
 		animation.play();
 	}
 
@@ -110,11 +110,11 @@ public class ExtendedAnimatedFlowContainer extends AnimatedFlowContainer impleme
 		return view;
 	}
 
-	private void clearPlaceholder() {
+	private void clearUNOPlaceholder() {
 		view.getChildren().remove(placeholder);
 	}
 
-	private void updatePlaceholder(Node newView) {
+	private void updateUNOPlaceholder(Node newView) {
 		if (view.getWidth() > 0 && view.getHeight() > 0) {
 			SnapshotParameters parameters = new SnapshotParameters();
 			parameters.setFill(Color.TRANSPARENT);
