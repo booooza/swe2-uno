@@ -62,7 +62,7 @@ public class State implements Serializable {
 
 	private Optional<PlayerInterface> getPreviousPlayer(PlayerInterface currentPlayer) {
 		int idx = players.indexOf(currentPlayer);
-		if (idx <= 0) {
+		if (idx < 0) {
 			return Optional.empty();
 		}
 		if (idx == 0) {
