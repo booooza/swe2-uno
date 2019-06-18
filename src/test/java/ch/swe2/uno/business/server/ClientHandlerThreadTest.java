@@ -15,14 +15,16 @@ import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@Tag("network")
+@Tag("integration")
 @TestMethodOrder(OrderAnnotation.class)
 @DisplayName("Client Thread Integration Tests")
 public class ClientHandlerThreadTest {
-
+	private static ExecutorService threadPool = Executors.newFixedThreadPool(2);
 	private static Thread serverThread = null;
 
 	@BeforeAll
@@ -35,7 +37,7 @@ public class ClientHandlerThreadTest {
 				e.printStackTrace();
 			}
 		});
-		serverThread.run();
+		threadPool.execute(serverThread);
 	}
 
 	@AfterAll
@@ -43,18 +45,28 @@ public class ClientHandlerThreadTest {
 		Socket socket = null;
 		try {
 			socket = new Socket("127.0.0.1", 1234);
-
 			ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
 			ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
 			out.writeObject(new Request(Request.Command.QUIT, Request.Direction.CLIENT_TO_SERVER, "Marc"));
-			State state = ((State) (in.readObject()));
 			assertEquals(false, Client.hostAvailabilityCheck());
 		} finally {
 			if (socket != null) {
 				socket.close();
 			}
 		}
-		serverThread.stop();
+		shutdownAndAwaitTermination(threadPool);
+	}
+
+	static void shutdownAndAwaitTermination(ExecutorService pool) {
+		pool.shutdown(); // Disable new tasks from being submitted
+		try {
+			pool.shutdownNow(); // Cancel currently executing tasks
+		} catch (Exception ie) {
+			// (Re-)Cancel if current thread also interrupted
+			pool.shutdownNow();
+			// Preserve interrupt status
+			Thread.currentThread().interrupt();
+		}
 	}
 
 	@Test
