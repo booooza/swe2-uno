@@ -27,7 +27,7 @@
             </font>
         </Label>
 
-        <ImageView fx:id="imgView" fitHeight="174.0" fitWidth="330.0" GridPane.rowIndex="1" GridPane.halignment="CENTER"
+        <ImageView fx:id="imgView" fitHeight="330.0" fitWidth="330.0" GridPane.rowIndex="1" GridPane.halignment="CENTER"
                    GridPane.columnIndex="1"  GridPane.hgrow="ALWAYS"/>
 
         <JFXButton fx:id="restartButton" buttonType="RAISED" GridPane.rowIndex="2" GridPane.columnIndex="0"
