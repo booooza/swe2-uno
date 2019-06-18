@@ -119,7 +119,14 @@ public final class WelcomeScreenController implements RequestEventHandler {
 		if (Client.hostAvailabilityCheck()) {
 			serverButton.setDisable(true);
 			serverButton.setText("Server Started...");
+			if(baseService.getUnoService() != null){
+				if(baseService.getUnoService().getClient() != null){
+					joinButton.setDisable(false);
+					return;
+				}
+			}
 			clientButton.setDisable(false);
+			return;
 		}
 	}
 
