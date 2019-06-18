@@ -1,7 +1,7 @@
 # UNO Game
 [![Build status](https://travis-ci.org/booooza/swe2-uno.svg?branch=master)](https://travis-ci.org/booooza/swe2-uno) [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=ch.swe2.uno%3Aswe2-uno&metric=coverage)](https://sonarcloud.io/dashboard?id=ch.swe2.uno%3Aswe2-uno)
 
-Simple Java-based UNO game developed during the course software engineering 2
+Highly over-engineered Java-based UNO game developed during the course software engineering 2
 
 ## Starting the JavaFX GUI
 Run `mvn compile exec:java`
@@ -79,3 +79,6 @@ The following describes the official UNO game rules
 
 ### Activity Diagram
 ![activitydiagram](docs/activity.png)
+
+### Sequence Diagram
+![sequencediagram](docs/UNO Threads and Sockets.png)
