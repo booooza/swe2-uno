@@ -18,7 +18,7 @@ import java.net.Socket;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@Tag("integration")
+@Tag("network")
 @TestMethodOrder(OrderAnnotation.class)
 @DisplayName("Client Thread Integration Tests")
 public class ClientHandlerThreadTest {

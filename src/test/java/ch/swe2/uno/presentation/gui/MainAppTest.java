@@ -1,6 +1,9 @@
 package ch.swe2.uno.presentation.gui;
 
 import ch.swe2.uno.presentation.gui.controller.MainController;
+
+import java.util.concurrent.TimeUnit;
+
 import com.jfoenix.assets.JFoenixResources;
 import io.datafx.controller.flow.Flow;
 import io.datafx.controller.flow.container.DefaultFlowContainer;
@@ -12,7 +15,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
-import org.assertj.core.api.Assert;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -97,10 +99,20 @@ public class MainAppTest {
 
 	@Test
 	@Order(6)
-	public void join_button_changes_text_after_join(FxRobot robot) {
+	public void join_button_changes_text_after_join_and_enables_start(FxRobot robot) {
 		robot.doubleClickOn("#playerName");
 		robot.write("Test Name");
 		robot.clickOn("#joinButton");
+		robot.sleep(3, TimeUnit.SECONDS);
 		Assertions.assertThat(robot.lookup("#joinButton").queryAs(Button.class)).hasText("Joined");
+	}
+
+	@Test
+	@Order(7)
+	public void start_game_navigated_to_gameoverview(FxRobot robot) {
+		robot.clickOn("#joinButton");
+		robot.sleep(3, TimeUnit.SECONDS);
+		robot.clickOn("#startButton");
+		Assertions.assertThat(robot.lookup("#playButton").queryAs(Button.class)).isVisible();
 	}
 }

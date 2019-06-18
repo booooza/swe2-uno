@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@Tag("integration")
+@Tag("network")
 @DisplayName("Game Integration Tests")
 public class GameTest {
 
