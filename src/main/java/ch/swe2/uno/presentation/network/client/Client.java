@@ -42,8 +42,9 @@ public class Client {
 	}
 
 	private void initializeSockets(ExecutorService threadPool) {
-		try (Socket stateSocket = new Socket(Client.SERVER_ADDRESS, Client.SERVER_PORT);
-			 Socket requestListenerSocket = new Socket(Client.SERVER_ADDRESS, Client.SERVER_PORT)) {
+		try {
+			Socket stateSocket = new Socket(Client.SERVER_ADDRESS, Client.SERVER_PORT);
+			Socket requestListenerSocket = new Socket(Client.SERVER_ADDRESS, Client.SERVER_PORT);
 			clientThread = new ClientThread(stateSocket);
 			clientRequestListenerThread = new ClientRequestListenerThread(requestListenerSocket);
 			logger.info("client threads for sockets created");
