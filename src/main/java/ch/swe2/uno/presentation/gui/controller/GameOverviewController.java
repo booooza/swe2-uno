@@ -22,6 +22,8 @@ import javafx.scene.layout.Priority;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Optional;
+
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
@@ -94,21 +96,21 @@ public final class GameOverviewController implements RequestEventHandler {
 					setText(item); // Put the String data in the cell
 					CardInterface card = getTableView().getItems().get(getIndex());
 					switch (card.getColor()) {
-						case BLACK:
-							setStyle("-fx-background-color: black");
-							break;
-						case BLUE:
-							setStyle("-fx-background-color: blue");
-							break;
-						case RED:
-							setStyle("-fx-background-color: red");
-							break;
-						case GREEN:
-							setStyle("-fx-background-color: green");
-							break;
-						case YELLOW:
-							setStyle("-fx-background-color: yellow; -fx-text-fill: black");
-							break;
+					case BLACK:
+						setStyle("-fx-background-color: black");
+						break;
+					case BLUE:
+						setStyle("-fx-background-color: blue");
+						break;
+					case RED:
+						setStyle("-fx-background-color: red");
+						break;
+					case GREEN:
+						setStyle("-fx-background-color: green");
+						break;
+					case YELLOW:
+						setStyle("-fx-background-color: yellow; -fx-text-fill: black");
+						break;
 					}
 				}
 			}
@@ -197,8 +199,9 @@ public final class GameOverviewController implements RequestEventHandler {
 
 		message.setText(baseService.getUnoService().getState().getMessage());
 
-		if (baseService.getUnoService().getState().getCurrentPlayer().isPresent()) {
-			PlayerInterface currentPlayer = baseService.getUnoService().getState().getCurrentPlayer().get();
+		Optional<PlayerInterface> optionalCurrentPlayer = baseService.getUnoService().getState().getCurrentPlayer();
+		if (optionalCurrentPlayer.isPresent()) {
+			PlayerInterface currentPlayer = optionalCurrentPlayer.get();
 			if (currentPlayer.getName().equals(baseService.getUnoService().getPlayerName())) {
 				// It my turn
 				this.playButton.setDisable(false);

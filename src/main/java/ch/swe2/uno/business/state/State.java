@@ -37,11 +37,13 @@ public class State implements Serializable {
 	}
 
 	private synchronized Optional<PlayerInterface> getNextPlayer() {
-		if (getCurrentPlayer().isPresent()) {
+		Optional<PlayerInterface> optionalCurrentPlayer = getCurrentPlayer();
+		if (optionalCurrentPlayer.isPresent()) {
+			PlayerInterface currentPlayer = optionalCurrentPlayer.get();
 			if (this.playDirection == Game.PlayDirection.TOP_DOWN) {
-				return getNextPlayer(getCurrentPlayer().get());
+				return getNextPlayer(currentPlayer);
 			} else if (this.playDirection == Game.PlayDirection.BOTTOM_UP) {
-				return getPreviousPlayer(getCurrentPlayer().get());
+				return getPreviousPlayer(currentPlayer);
 			}
 		}
 		return Optional.empty();
