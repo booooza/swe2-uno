@@ -40,13 +40,21 @@ public class ClientHandlerThreadTest {
 
 	@AfterAll
 	static void endServerSocket() throws Exception {
-		Socket socket = new Socket("127.0.0.1", 1234);
-		ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
-		ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
+		Socket socket = null;
+		try {
+			socket = new Socket("127.0.0.1", 1234);
 
-		out.writeObject(new Request(Request.Command.QUIT, Request.Direction.CLIENT_TO_SERVER, "Marc"));
-		State state = ((State) (in.readObject()));
-		assertEquals(false, Client.hostAvailabilityCheck());
+			ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
+			ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
+			out.writeObject(new Request(Request.Command.QUIT, Request.Direction.CLIENT_TO_SERVER, "Marc"));
+			State state = ((State) (in.readObject()));
+			assertEquals(false, Client.hostAvailabilityCheck());
+		} finally {
+			if (socket != null) {
+				socket.close();
+			}
+		}
+		serverThread.stop();
 	}
 
 	@Test
@@ -60,14 +68,13 @@ public class ClientHandlerThreadTest {
 
 		// When
 		out.writeObject(new Request(Request.Command.JOIN, Request.Direction.CLIENT_TO_SERVER, "Marc"));
-		
+
 		// Then
 		State state = ((State) (in.readObject()));
 		assertEquals(State.class, state.getClass());
 
 		socket.close();
 	}
-
 
 	@Test
 	@Order(2)
@@ -80,7 +87,7 @@ public class ClientHandlerThreadTest {
 
 		// When
 		out.writeObject(new Request(Request.Command.START, Request.Direction.CLIENT_TO_SERVER, "Marc"));
-		
+
 		// Then
 		State state = ((State) (in.readObject()));
 		assertEquals(State.class, state.getClass());
