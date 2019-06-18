@@ -80,7 +80,7 @@ public class NavigationService {
 
 			return controller.getChosenColor();
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error("Can not load color dialog, fallback to BLACK {}", e);
 			return UnoColor.BLACK;
 		}
 	}

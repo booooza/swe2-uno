@@ -83,7 +83,7 @@ public class UnoService {
 			try {
 				Server.main(args);
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error("Can not start server {}", e);
 			}
 		});
 		threadPool.execute(serverThread);
