@@ -43,7 +43,7 @@ public class Game {
 	}
 
 	public synchronized State start() {
-		if (!state.getPlayers().isEmpty()) {
+		if (state.getPlayers().isEmpty()) {
 			throw new IllegalStateException("no player joined the game");
 		}
 
