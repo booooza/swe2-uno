@@ -53,9 +53,9 @@ The following describes the official UNO game rules
 
 ### Setup
 
-1. Every player starts with seven cards, and they are dealt face down. 
-2. The rest of the cards are placed in a Draw Pile face down. 
-3. Next to the pile a space should be designated for a Discard Pile. 
+1. Every player starts with seven cards, and they are dealt face down.
+2. The rest of the cards are placed in a Draw Pile face down.
+3. Next to the pile a space should be designated for a Discard Pile.
 4. The top card should be placed face up in the Discard Pile.
 5. Cards are played by laying them face-up on top of the discard pile. Play proceeds clockwise around the table.
 
@@ -94,6 +94,7 @@ The following describes the official UNO game rules
 ![overview](docs/swe2-uno-overview.svg)
 
 ### Sequence Diagram
+
 ![sequencediagram](docs/swe2-uno-sequence.png)
 
 ### Activity Diagram
