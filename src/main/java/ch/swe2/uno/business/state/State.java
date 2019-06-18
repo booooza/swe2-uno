@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 public class State implements Serializable {
+	private static final long serialVersionUID = 1L;
 	private List<PlayerInterface> players;
 	private CardInterface topDiscardPileCard;
 	private Game.PlayDirection playDirection;

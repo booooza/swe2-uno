@@ -16,7 +16,7 @@ import java.util.concurrent.Executors;
 public class MultiThreadedServer implements Runnable {
 	private static Logger logger = LoggerFactory.getLogger(MultiThreadedServer.class);
 	private static MultiThreadedServer theInstance;
-	private volatile static Game game;
+	private static Game game;
 	// Connection state info
 	private static LinkedHashMap<String, ClientHandlerThread> clientInfo = new LinkedHashMap<String, ClientHandlerThread>();
 	private static LinkedHashMap<String, ClientHandlerThread> clientListenerInfo = new LinkedHashMap<String, ClientHandlerThread>();

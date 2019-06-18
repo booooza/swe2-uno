@@ -17,8 +17,8 @@ public class Client {
 	private static int SERVER_PORT = 1234;
 	private static String SERVER_ADDRESS = "localhost";
 	private static Logger logger = LoggerFactory.getLogger(Client.class);
-	private volatile ClientThread clientThread = null;
-	private volatile ClientRequestListenerThread clientRequestListenerThread = null;
+	private ClientThread clientThread = null;
+	private ClientRequestListenerThread clientRequestListenerThread = null;
 
 	public Client(ExecutorService threadPool) {
 		int serverPort = AppPropsReader.readIntValueFromAppPropsBy("SERVER_PORT");

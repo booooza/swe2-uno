@@ -7,6 +7,7 @@ import ch.swe2.uno.business.state.State;
 import java.io.Serializable;
 
 public class Request implements Serializable {
+	private static final long serialVersionUID = 1L;
 	private Command command;
 	private Direction direction;
 	private String playerName;

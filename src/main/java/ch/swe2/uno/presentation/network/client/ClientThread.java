@@ -14,8 +14,8 @@ public class ClientThread implements Runnable {
 	private static Logger logger = LoggerFactory.getLogger(ClientThread.class);
 	private final Socket clientSocket;
 
-	private volatile ObjectInputStream inputStream = null;
-	private volatile ObjectOutputStream outputStream = null;
+	private ObjectInputStream inputStream = null;
+	private ObjectOutputStream outputStream = null;
 
 	ClientThread(Socket clientSocket) {
 		this.clientSocket = clientSocket;
