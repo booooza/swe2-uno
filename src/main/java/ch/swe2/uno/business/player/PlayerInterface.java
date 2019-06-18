@@ -2,9 +2,10 @@ package ch.swe2.uno.business.player;
 
 import ch.swe2.uno.business.card.CardInterface;
 
+import java.io.Serializable;
 import java.util.List;
 
-public interface PlayerInterface {
+public interface PlayerInterface extends Serializable {
     long getId();
     String getName();
     List<CardInterface> getHand();

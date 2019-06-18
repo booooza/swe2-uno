@@ -69,7 +69,7 @@ public final class WelcomeScreenController implements RequestEventHandler {
 		joined = false;
 
 		playerNameColumn.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getName()));
-		playerIDColumn.setCellValueFactory(cellData -> new ReadOnlyObjectWrapper<Long>(cellData.getValue().getId()));
+		playerIDColumn.setCellValueFactory(cellData -> new ReadOnlyObjectWrapper<>(cellData.getValue().getId()));
 
 		playerName.focusedProperty().addListener((ov, t, t1) -> Platform.runLater(() -> {
 			if (playerName.isFocused() && !playerName.getText().isEmpty()) {
@@ -119,14 +119,11 @@ public final class WelcomeScreenController implements RequestEventHandler {
 		if (Client.hostAvailabilityCheck()) {
 			serverButton.setDisable(true);
 			serverButton.setText("Server Started...");
-			if(baseService.getUnoService() != null){
-				if(baseService.getUnoService().getClient() != null){
-					joinButton.setDisable(false);
-					return;
-				}
+			if(baseService.getUnoService() != null && baseService.getUnoService().getClient() != null){
+				joinButton.setDisable(false);
+				return;
 			}
 			clientButton.setDisable(false);
-			return;
 		}
 	}
 
@@ -175,7 +172,7 @@ public final class WelcomeScreenController implements RequestEventHandler {
 		if (!Client.hostAvailabilityCheck()) {
 			return;
 		}
-		logger.info("Player Joined: " + playerName.getText());
+		logger.info("Player Joined: {}", playerName.getText());
 		joined = true;
 		try {
 			baseService.getUnoService().setState(
@@ -184,12 +181,11 @@ public final class WelcomeScreenController implements RequestEventHandler {
 			MainApp.getPrimaryStage().setTitle(String.format("UNO Game - %s", playerName.getText()));
 		} catch (Exception e) {
 			logger.warn("Error while joining", e);
-			throw e;
 		}
 	}
 
 	private void handleStartButtonAction() {
-		logger.info("Player who started game: " + playerName.getText());
+		logger.info("Player who started game: {}", playerName.getText());
 		try {
 			baseService.getUnoService().setPlayerName(playerName.getText());
 			baseService.getUnoService().getClient().sendRequest(Request.Command.START, playerName.getText());

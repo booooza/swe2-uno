@@ -23,7 +23,6 @@ public class MultiThreadedServer implements Runnable {
 	private ServerSocket serverSocket;
 	private int serverPort;
 	private boolean isStopped;
-	private Thread runningThread;
 	private ExecutorService threadPool =
 			Executors.newFixedThreadPool(10);
 
@@ -52,16 +51,12 @@ public class MultiThreadedServer implements Runnable {
 	}
 
 	public void run() {
-		synchronized (this) {
-			this.runningThread = Thread.currentThread();
-		}
 		openServerSocket();
 
 		while (!isStopped()) {
 			try {
 				Socket cS = serverSocket.accept();
 				this.threadPool.execute(new ClientHandlerThread(cS));
-				//new ClientHandlerThread(cS, game);
 			} catch (IOException e) {
 				if (isStopped()) {
 					logger.info("Server stopped...");

@@ -17,10 +17,10 @@ class ActionCardTest {
 
         // Then
         assertEquals(UnoColor.BLACK, card.getColor());
-        assertEquals(UnoColor.BLACK.getColor(), "Black");
+        assertEquals("Black", UnoColor.BLACK.getColor());
         assertEquals(88, card.getNumber());
         assertEquals(CardType.WILD, card.getType());
-        assertEquals(CardType.WILD.getType(), "Wild");
+        assertEquals("Wild", CardType.WILD.getType());
     }
 
     @Test

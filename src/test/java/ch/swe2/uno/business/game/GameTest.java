@@ -60,22 +60,4 @@ public class GameTest {
 		// Then
 		assertEquals(game.getState().getTopDiscardPileCard().getNumber(), anyCard.getNumber());
 	}
-
-	@Test
-	@DisplayName("testPlayCardIllegal")
-	void testPlayCardIllegal() {
-
-	}
-
-	@Test
-	@DisplayName("testDrawCardLegal")
-	void testDrawCardLegal() {
-
-	}
-
-	@Test
-	@DisplayName("testDrawCardIllegal")
-	void testDrawCardIllegal() {
-
-	}
 }

@@ -28,6 +28,7 @@ public class ColorDialogController {
 	 */
 	@FXML
 	private void initialize() {
+		// Needs to be empty
 	}
 
 	/**

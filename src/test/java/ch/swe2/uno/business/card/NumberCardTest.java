@@ -19,10 +19,10 @@ class NumberCardTest {
 
 		// Then
 		assertEquals(UnoColor.RED, card.getColor());
-		assertEquals(UnoColor.RED.getColor(), "Red");
+		assertEquals("Red", UnoColor.RED.getColor());
 		assertEquals(1, card.getNumber());
 		assertEquals(CardType.NUMBERCARD, card.getType());
-		assertEquals(CardType.NUMBERCARD.getType(), "Number");
+		assertEquals("Number", CardType.NUMBERCARD.getType());
 	}
 
 	@Test

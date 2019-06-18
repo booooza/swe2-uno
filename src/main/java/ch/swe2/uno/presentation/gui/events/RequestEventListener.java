@@ -14,6 +14,7 @@ public class RequestEventListener implements EventListener {
 	private List<RequestEventHandler> requestEventHandlers = new ArrayList<>();
 
 	public RequestEventListener() {
+		// Needs to be empty
 	}
 
 	public void addEventHandler(RequestEventHandler requestEventHandler) {

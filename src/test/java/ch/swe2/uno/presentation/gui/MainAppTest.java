@@ -12,6 +12,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
+import org.assertj.core.api.Assert;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -100,6 +101,6 @@ public class MainAppTest {
 		robot.doubleClickOn("#playerName");
 		robot.write("Test Name");
 		robot.clickOn("#joinButton");
-		Assertions.assertThat(MainApp.getPrimaryStage().getTitle().equals(String.format("UNO Game - %s", robot.lookup("#playerName").queryAs(TextField.class).getText())));
+		Assertions.assertThat(robot.lookup("#joinButton").queryAs(Button.class)).hasText("Joined");
 	}
 }

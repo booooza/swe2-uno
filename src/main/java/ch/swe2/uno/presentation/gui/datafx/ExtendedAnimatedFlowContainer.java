@@ -93,6 +93,7 @@ public class ExtendedAnimatedFlowContainer extends AnimatedFlowContainer impleme
 	 *
 	 * @return image view place holder
 	 */
+	@Override
 	public ImageView getPlaceholder() {
 		return placeholder;
 	}
@@ -102,6 +103,7 @@ public class ExtendedAnimatedFlowContainer extends AnimatedFlowContainer impleme
 	 *
 	 * @return the duration for the animation
 	 */
+	@Override
 	public Duration getDuration() {
 		return duration;
 	}
