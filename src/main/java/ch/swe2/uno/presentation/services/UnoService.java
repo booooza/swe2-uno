@@ -13,11 +13,12 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class UnoService {
+	private static final long serialVersionUID = 1L;
 	private static Logger logger = LoggerFactory.getLogger(UnoService.class);
 	private static UnoService theInstance;
-	private volatile ExecutorService threadPool = Executors.newFixedThreadPool(10);
-	private volatile EventListener eventListener = new RequestEventListener();
-	private volatile Client client = null;
+	private ExecutorService threadPool = Executors.newFixedThreadPool(10);
+	private EventListener eventListener = new RequestEventListener();
+	private Client client = null;
 	private State gameState;
 	private String playerName;
 

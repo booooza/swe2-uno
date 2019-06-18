@@ -3,6 +3,7 @@ package ch.swe2.uno.business.card;
 import java.io.Serializable;
 
 public abstract class AbstractCard implements CardInterface, Serializable {
+    private static final long serialVersionUID = 1L;
     private final CardType type;
     private final UnoColor color;
     private final int number;

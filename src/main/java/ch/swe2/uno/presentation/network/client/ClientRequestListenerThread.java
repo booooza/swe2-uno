@@ -18,12 +18,12 @@ public class ClientRequestListenerThread implements Runnable {
 
 	private final Socket clientRequestListenerSocket;
 
-	private volatile ObjectInputStream inputStream = null;
-	private volatile ObjectOutputStream outputStream = null;
+	private ObjectInputStream inputStream = null;
+	private ObjectOutputStream outputStream = null;
 
 	private volatile boolean isRunning = true;
 
-	private volatile EventListener eventListener;
+	private EventListener eventListener;
 
 	ClientRequestListenerThread(Socket clientRequestListenerSocket) {
 		this.clientRequestListenerSocket = clientRequestListenerSocket;

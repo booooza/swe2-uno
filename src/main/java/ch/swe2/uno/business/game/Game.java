@@ -17,7 +17,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class Game {
 	private static Logger logger = LoggerFactory.getLogger(Game.class);
-	private volatile State state;
+	private State state;
 	private Deck deck;
 	private boolean isRunning;
 
@@ -39,7 +39,7 @@ public class Game {
 
 	synchronized void initialize() {
 		logger.info("Starting the game");
-		state = new State(new ArrayList<PlayerInterface>(), "Initial state");
+		state = new State(new ArrayList<>(), "Initial state");
 	}
 
 	public synchronized State start() {
