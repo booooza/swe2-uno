@@ -1,15 +1,13 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<?xml version="1.0" encoding="UTF-8" ?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <!-- Output to jar format -->
     <packaging>jar</packaging>
-
+    
     <groupId>ch.swe2.uno</groupId>
     <artifactId>swe2-uno</artifactId>
     <version>0.0.1</version>
-
+    
     <repositories>
         <repository>
             <id>maven-central-repo</id>
@@ -19,7 +17,7 @@
             </snapshots>
         </repository>
     </repositories>
-
+    
     <dependencies>
         <!-- JavaFX -->
         <!-- https://mvnrepository.com/artifact/org.openjfx/javafx-controls -->
@@ -34,7 +32,7 @@
             <artifactId>javafx-fxml</artifactId>
             <version>11.0.2</version>
         </dependency>
-
+        
         <!-- Testing -->
         <!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api -->
         <dependency>
@@ -78,7 +76,7 @@
             <version>jdk-11+26</version>
             <scope>test</scope>
         </dependency>
-
+        
         <!-- Logging -->
         <!-- https://mvnrepository.com/artifact/ch.qos.logback/logback-classic -->
         <dependency>
@@ -86,14 +84,14 @@
             <artifactId>logback-classic</artifactId>
             <version>1.2.3</version>
         </dependency>
-
+        
         <!-- https://mvnrepository.com/artifact/commons-io/commons-io -->
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
             <version>2.6</version>
         </dependency>
-
+        
         <!-- JFoenix -->
         <!-- https://mvnrepository.com/artifact/com.jfoenix/jfoenix -->
         <dependency>
@@ -101,7 +99,7 @@
             <artifactId>jfoenix</artifactId>
             <version>9.0.9</version>
         </dependency>
-
+        
         <!-- https://mvnrepository.com/artifact/io.datafx/datafx -->
         <dependency>
             <groupId>io.datafx</groupId>
@@ -126,7 +124,7 @@
             <artifactId>injection</artifactId>
             <version>8.0.1</version>
         </dependency>
-
+        
         <!-- https://mvnrepository.com/artifact/javax.annotation/javax.annotation-api -->
         <dependency>
             <groupId>javax.annotation</groupId>
@@ -138,6 +136,12 @@
             <groupId>javax.inject</groupId>
             <artifactId>javax.inject</artifactId>
             <version>1</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.javassist/javassist -->
+        <dependency>
+            <groupId>org.javassist</groupId>
+            <artifactId>javassist</artifactId>
+            <version>3.25.0-GA</version>
         </dependency>
     </dependencies>
     <build>
